@@ -751,7 +751,7 @@ class Mob {
   }
   // update
   u(d) {
-    let ay = (this.gravity ? 900 : 0) + this.ay; // Gravity
+    let ay = (this.gravity ? 300 : 0) + this.ay; // Gravity
     this.dx += this.ax * d;
     this.dy += ay * d;
     this.x += this.dx * d;
@@ -1110,9 +1110,6 @@ class Ship extends Mob {
     if (this.dx !== 0) {
       this.dx += (-Math.sign(this.dx) * D);
     }
-    if (this.dy !== 0) {
-      this.dy += (-Math.sign(this.dy) * D);
-    }
     // Inertia
     if (Math.abs(this.turnScale) < 0.01) {
       this.turnScale = 0;
@@ -1149,16 +1146,14 @@ class Ship extends Mob {
     camera.y = this.y;
   }
   k(){
-    var PY = 10;
+    var PY = 5;
     var PX = 500;
     this.ax = 0;
     if (isDown(this.keys[0])){ // Increase Thrust
-      this.ay -= PY;
+      this.ay -= PY; // TODO: Affect acceleration indirectly
     } else if (isDown(this.keys[1])){ // Reduce Thrust
       this.ay += PY;
     } 
-    if (this.ay < 0)
-      this.ay += rand.range(-3, 3); 
     if (this.fuel <= 0) {
       this.ay = 0;
     }
