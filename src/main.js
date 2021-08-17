@@ -667,7 +667,7 @@ function typed(keyCode, callback){
 }
 
 const Renderer = {
-  render(c,ins,x,y,s,over,flip,scalex) {
+  render(c,ins,x,y,s,over,flip,scalex, rotation) {
     var sx = s
     if (scalex)
       sx = s * scalex;
@@ -678,6 +678,9 @@ const Renderer = {
     c.globalAlpha = 1;
     x = x - camera.x + W / 2;
     y = y - camera.y + H / 2;
+    c.translate(x, y);
+    c.rotate(rotation + Math.PI / 2);
+    c.translate(-x, -y);
     while(i < ins.length + 2) {
       let co = ins[i++];
       switch (co) {
@@ -733,6 +736,7 @@ const Renderer = {
         c.lineTo(co*sx*xFlip+x, ins[i++]*s+y);
       }
     };
+    c.setTransform(1, 0, 0, 1, 0, 0);
   }
 }   
 
@@ -742,7 +746,8 @@ var mobDestroyed = false;
 class Mob {
   constructor(app, lists) {
     this.app = a[app];
-    this.dx = this.dy = this.ax = this.ay = 0;
+    this.dv = this.av = 0;
+    this.rotation = 0;
     this.turnScale = 0;
     mobs.push(this);
     lists.forEach(l => l.push(this));
@@ -751,11 +756,11 @@ class Mob {
   }
   // update
   u(d) {
-    let ay = (this.gravity ? 300 : 0) + this.ay; // Gravity
-    this.dx += this.ax * d;
-    this.dy += ay * d;
-    this.x += this.dx * d;
-    this.y += this.dy * d;
+    this.dv += this.av * d;
+    const dx = Math.cos(this.rotation) * this.dv;
+    const dy = Math.sin(this.rotation) * this.dv;
+    this.x += dx * d;
+    this.y += dy * d;
   }
 
   destroy() {
@@ -781,23 +786,11 @@ class Mob {
 class BGObject {
   constructor(app, lists) {
     this.app = a[app];
-    this.dx = this.dy = this.ax = this.ay = 0;
     this.turnScale = 0;
     mobs.push(this);
     lists.forEach(l => l.push(this));
     this.lists = lists;
     this.ch = [];
-  }
-  // update
-  u(d) {
-   /* this.dx += this.ax * d;
-    this.dy += this.ay * d;*/
-    this.x += this.dx * d;
-    if (p1) {
-      // TODO: Parallax effect, with object drawn in a different plane, far from the player
-    } else {
-      this.y += this.dy * d;
-    }
   }
 
   destroy() {
@@ -871,7 +864,7 @@ function renderMob(m, flip) {
     turnScale = 1 - Math.abs(m.turnScale);
   } 
   if (!m.specialRender) {
-    Renderer.render(ctx,m.app,m.x,m.y,m.scale,m.blink?0:undefined,flip,turnScale);
+    Renderer.render(ctx,m.app,m.x,m.y,m.scale,m.blink?0:undefined,flip,turnScale,m.rotation);
   }
 }
 var timers = [];
@@ -890,7 +883,7 @@ raf(function(d) {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   layers.forEach(l => l.forEach(m => {
     m.k && m.k(); // TODO this is only for the ship, put it somewhere
-    m.u(d);
+    m.u && m.u(d);
     renderMob(m);
     renderMob(m, true); // TODO: Only if m.flipped
     /*if (true) {// Debug 
@@ -994,9 +987,9 @@ function renderUI(c) {
     c.font = "12px Courier New";
     c.textAlign="left"; 
     c.fillStyle= "#ffffff";
-    c.fillText("Alt: " + -Math.floor(p1.y - H + 20), 20, 85);
-    c.fillText("Thrust: " + -p1.ay,20, 100);
-    c.fillText("Speed: " + Math.floor(-p1.dy), 20, 115);
+    c.fillText("Waypoint [Earth]: " + Math.floor(dist(p1, earth) - 108), 20, 85);
+    c.fillText("Thrust: " + p1.av,20, 100);
+    c.fillText("Speed: " + Math.floor(p1.dv), 20, 115);
     c.fillText("Fuel: " + Math.floor(p1.fuel), 20, 130);
   } 
   if (gState == 3) {
@@ -1009,6 +1002,7 @@ function renderUI(c) {
 }
 
 var camera = {x : 0, y : 0};
+const rotSpeed = Math.PI / 90;
 
 var ef = { // Enemy Factory
   i(){
@@ -1106,9 +1100,9 @@ class Ship extends Mob {
   u(d) {
     super.u(d);
     // Damp
-    var D = 200 * d;
-    if (this.dx !== 0) {
-      this.dx += (-Math.sign(this.dx) * D);
+    var D = 2 * d;
+    if (this.dv !== 0) {
+      this.dv -= this.dv * D;
     }
     // Inertia
     if (Math.abs(this.turnScale) < 0.01) {
@@ -1119,11 +1113,13 @@ class Ship extends Mob {
       this.turnScale -= 0.01;
     }
     // BOundaries
-    if (this.dy < -500) {
-      //this.dy = -500; // Temporary
+    if (this.dv > 2000) {
+      this.dv = 2000; // Temporary
     }
-    if (this.x < 0) this.x = 0;
-    if (this.x > W) this.x = W;
+
+    /**
+     * Replace with collision with planet
+    
     if (this.y > H - 20) {
       // Ground for now
       if (this.dy > 60) {
@@ -1137,7 +1133,8 @@ class Ship extends Mob {
         this.y = H - 20;
       }
     }
-    this.fuel += this.ay * d * 0.003;
+    */
+    this.fuel -= this.av * d * 0.003;
     if (this.fuel < 0) {
       this.fuel = 0;
     }
@@ -1146,37 +1143,34 @@ class Ship extends Mob {
     camera.y = this.y;
   }
   k(){
-    var PY = 5;
-    var PX = 500;
-    this.ax = 0;
+    var PY = 20;
     if (isDown(this.keys[0])){ // Increase Thrust
-      this.ay -= PY; // TODO: Affect acceleration indirectly
+      this.av += PY; // TODO: Affect acceleration indirectly
     } else if (isDown(this.keys[1])){ // Reduce Thrust
-      this.ay += PY;
-    } 
+      this.av = -200;
+    } else {
+      this.av = 0;
+    }
     if (this.fuel <= 0) {
-      this.ay = 0;
+      this.av = 0;
     }
-    if (this.ay > 0) {
-      this.ay = 0;
-    }
-    if (this.ay < -2000) {
-      this.ay = -2000;
+    if (this.av > 1000) {
+      this.av = 1000;
     }
     if (isDown(this.keys[2])){
       this.flipped = true;
-      this.ax = -PX;
       this.turnScale -= 0.02;
       if (this.turnScale < -0.5) {
         this.turnScale = -0.5;
       }
+      this.rotation -= rotSpeed;
     } else if (isDown(this.keys[3])){
       this.flipped = true;
-      this.ax = PX;
       this.turnScale += 0.02;
       if (this.turnScale > 0.5) {
         this.turnScale = 0.5;
       }
+      this.rotation += rotSpeed;
     }
     if (isDown(this.keys[4])) {
       this.fire();
@@ -1206,7 +1200,7 @@ class Ship extends Mob {
   }
   updateScoreArray() {
     this.scoreArray = [];
-    var ss = '0000000'+Math.abs(this.ay);
+    var ss = '0000000'+Math.abs(this.av);
     ss = ss.substr(ss.length - 5)
     for (var i = 0, len = ss.length; i < len; i += 1) {
       this.scoreArray.push(+ss.charAt(i));
@@ -1425,6 +1419,7 @@ const a = { // Appearances
 }
 
 var p1;
+let earth;
 
 function createPlanet (x, y, size) {
   var t = new Planet('planet', [layers[2]]);
@@ -1437,23 +1432,22 @@ function createPlanet (x, y, size) {
   t.color1 = getRandomColor();
   t.color2 = getRandomColor();
   t.scale = 1;
+  return t;
 }
 function startGame() {
   // themeAudio.play();
   function createShip(a,x,k){
     var p = new Ship(a, [players, layers[2]]);
-    p.gravity = true;
     p.energy = 0;
     p.x = x;
     p.y = H - 20;
-    p.dx = 0;
-    p.dy = 0;
     p.size = 20;
     p.score = 0;
     p.updateScoreArray();
     p.scale = 2;
     p.fuel = 10000;
     p.keys=k;
+    p.rotation = -Math.PI / 2;
     return p;
   }
 
@@ -1461,7 +1455,8 @@ function startGame() {
   camera.x = p1.x;
   camera.y = p1.y;
   stars50();
-  createPlanet(p1.x, p1.y + 108, 100);
+  if (!earth) 
+    earth = createPlanet(p1.x, p1.y + 108, 100);
 }
 
 // Enemy Waves
@@ -1570,7 +1565,6 @@ function stars50(){
     var t = new Star('star'+size, [layers[0]]);
     t.x = rand.range(p1.x - W / 2, p1.x + W / 2);
     t.y = rand.range(p1.y - H / 2, p1.y + H / 2);
-    t.dy = rand.range(5, 10);
     t.size = size;
     t.kob = true;
     t.kot = true;
