@@ -870,7 +870,9 @@ function renderMob(m, flip) {
   if ((m.turnScale > 0 && flip) || (m.turnScale < 0 && !flip)) {
     turnScale = 1 - Math.abs(m.turnScale);
   } 
-  Renderer.render(ctx,m.app,m.x,m.y,m.scale,m.blink?0:undefined,flip,turnScale);
+  if (!m.specialRender) {
+    Renderer.render(ctx,m.app,m.x,m.y,m.scale,m.blink?0:undefined,flip,turnScale);
+  }
 }
 var timers = [];
 raf(function(d) {
@@ -1324,7 +1326,9 @@ class Planet extends BGObject {
     grad.addColorStop(1, this.color2);
     c.fillStyle=grad;
     c.beginPath();
-    c.arc(this.x,this.y,this.size,0,Math.PI*2,true);
+    const x = this.x - camera.x + W / 2;
+    const y = this.y - camera.y + H / 2;
+    c.arc(x,y,this.size,0,Math.PI*2,true);
     c.fill();
   }
 }
@@ -1404,7 +1408,7 @@ const a = { // Appearances
   star1: [WH,'c',1],
   star2: [WH,'c',2],
   star3: [WH,'c',3],
-  planet: ['G1','c',10],
+  planet: ['G1','c',100],
   bullet: [RD,'c',4],
   mine: ['#888888','p',0,-3, 1,-2, 3,-3, 2,-1, 3,0, 2,1, 3,3, 1,2, 0,3, 'f','o','#dd0000','c',1],
   e1: ['#888888','c',15,'o','#dd0000','c',5],
@@ -1426,8 +1430,20 @@ const a = { // Appearances
 }
 
 var p1;
+
+function createPlanet (x, y, size) {
+  var t = new Planet('planet', [layers[2]]);
+  t.x = x;
+  t.y = y;
+  t.size = size;
+  var angle = seeded() * (2 * Math.PI);
+  t.gax = Math.cos(angle) * t.size;
+  t.gay = Math.sin(angle) * t.size;
+  t.color1 = getRandomColor();
+  t.color2 = getRandomColor();
+  t.scale = 1;
+}
 function startGame() {
-  stars50();
   // themeAudio.play();
   function createShip(a,x,k){
     var p = new Ship(a, [players, layers[2]]);
@@ -1447,11 +1463,10 @@ function startGame() {
   }
 
   p1 = createShip('ship', W / 2, ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space' ]);
-  // timers.push([()=>newWave(), 5]); TODO: Enable waves but different
-  var ground = new BGObject('floor', [layers[0]]);
-  ground.x = p1.x;
-  ground.y = p1.y;
-  ground.scale = 1;
+  camera.x = p1.x;
+  camera.y = p1.y;
+  stars50();
+  createPlanet(p1.x, p1.y + 108, 100);
 }
 
 // Enemy Waves
@@ -1558,12 +1573,12 @@ function stars50(){
   for (var i = 0; i < 50; i++) {
     var size = rand.range(1, 3);
     var t = new Star('star'+size, [layers[0]]);
-    t.x = rand.range(0, W);
-    t.y = rand.range(0, H);
+    t.x = rand.range(p1.x - W / 2, p1.x + W / 2);
+    t.y = rand.range(p1.y - H / 2, p1.y + H / 2);
     t.dy = rand.range(5, 10);
     t.size = size;
     t.kob = true;
-    t.kot = false; // These stars start outside the camera
+    t.kot = true;
     t.scale = 1;
   }
 }
