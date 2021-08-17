@@ -895,12 +895,18 @@ raf(function(d) {
     const targets = m.hits == 'p' ? players : enemies;
     //m.hits && (m.hits === 'p' ? !player.dead && collide(player, m) : enemies.forEach(e => collide(e, m)));
     m.hits && targets.forEach(e => collide(e, m));
-    if (
-      (m.kob && m.y > camera.y + H / 2 + m.size) ||
-      (m.kot && m.y < camera.y - H / 2 - m.size) ||
-      (m.kor && m.x > W + m.size) ||
-      (m.kol && m.x < -m.size)) {
-      m.destroy();
+    let killType;
+    if (m.kob && m.y > camera.y + H / 2 + m.size) {
+      killType = 'kob';
+    } else if (m.kot && m.y < camera.y - H / 2 - m.size) {
+      killType = 'kot';
+    } else if (m.kor && m.x > camera.x + W / 2 + m.size) {
+      killType = 'kor';
+    } else if (m.kol && m.x < camera.x - W / 2 - m.size) {
+      killType = 'kol';
+    }
+    if(killType) {
+      m.destroy(killType);
     }
   }))
 
@@ -1279,30 +1285,36 @@ class Enemy extends Mob {
 }
 
 class Star extends BGObject {
-  destroy(m) {
+  destroy(killType) {
     const kob = this.y > camera.y + H / 2 + this.size;
     super.destroy();
     // Create a new Star
     var size = rand.range(1, 3);
     var t = new Star('star'+size, [layers[0]]);
-    t.x = rand.range(0, W);
-    if (p1) {
-      if (kob) {
+    
+    switch (killType) {
+      case 'kob':
+        t.x = rand.range(p1.x - W/2, p1.x + W/2);
         t.y = p1.y - H/2 - size;
-      } else {
+        break;
+      case 'kot':
+        t.x = rand.range(p1.x - W/2, p1.x + W/2);
         t.y = p1.y + H/2 + size;
-      }
-    } else {
-      if (kob) {
-        t.y = -size;
-      } else {
-        t.y = H + size;
-      }
+        break;
+      case 'kol':
+        t.x = p1.x + W/2 - size;
+        t.y = rand.range(p1.y - H/2, p1.y + H/2);
+        break;
+      case 'kor':
+        t.x = p1.x - W/2 + size;  
+        t.y = rand.range(p1.y - H/2, p1.y + H/2);
+        break;
     }
-    t.dy = rand.range(50, 100);
     t.size = size;
     t.kot = true;
     t.kob = true;
+    t.kol = true;
+    t.kor = true;
     t.scale = 1;
   }
 }
@@ -1568,6 +1580,8 @@ function stars50(){
     t.size = size;
     t.kob = true;
     t.kot = true;
+    t.kol = true;
+    t.kor = true;
     t.scale = 1;
   }
 }
