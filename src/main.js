@@ -841,6 +841,13 @@ function raf(fn) {
 function dist(a,b) {
   return Math.abs(a.x-b.x) + Math.abs(a.y-b.y);
 }
+
+function rdist(a, b) {
+  var aa = a.x - b.x;
+  var bb = a.y - b.y;
+  return Math.sqrt( aa*aa + bb*bb );
+}
+
 function collide(a, b) {
   if (dist(a,b) < a.size + b.size) {
     a.collide(b);
@@ -993,7 +1000,7 @@ function renderUI(c) {
     c.font = "12px Courier New";
     c.textAlign="left"; 
     c.fillStyle= "#ffffff";
-    c.fillText("Waypoint [Earth]: " + Math.floor(dist(p1, earth) - 108), 20, 85);
+    c.fillText("Waypoint [Earth]: " + Math.floor(rdist(p1, earth) - 508), 20, 85);
     c.fillText("Thrust: " + p1.av,20, 100);
     c.fillText("Speed: " + Math.floor(p1.dv), 20, 115);
     c.fillText("Fuel: " + Math.floor(p1.fuel), 20, 130);
@@ -1409,7 +1416,7 @@ const a = { // Appearances
   star1: [WH,'c',1],
   star2: [WH,'c',2],
   star3: [WH,'c',3],
-  planet: ['G1','c',100],
+  planet: ['G1','c',500],
   bullet: [RD,'c',4],
   mine: ['#888888','p',0,-3, 1,-2, 3,-3, 2,-1, 3,0, 2,1, 3,3, 1,2, 0,3, 'f','o','#dd0000','c',1],
   e1: ['#888888','c',15,'o','#dd0000','c',5],
@@ -1468,7 +1475,7 @@ function startGame() {
   camera.y = p1.y;
   stars50();
   if (!earth) 
-    earth = createPlanet(p1.x, p1.y + 108, 100);
+    earth = createPlanet(p1.x, p1.y + 508, 500);
 }
 
 // Enemy Waves
