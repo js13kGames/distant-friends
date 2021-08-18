@@ -526,6 +526,11 @@ function renderUI(c) {
     c.fillText("Speed: " + Math.floor(p1.dv), 20, 115);
     c.fillText("Fuel: " + Math.floor(p1.fuel), 20, 130);
     c.fillText(p1.landed ? "[Landed]" : "", 20, 145);
+    if (p1.won) {
+      c.font = "14px Courier New";
+      c.textAlign="center"; 
+      c.fillText("Congrats, the song is now complete!",W/2, 40);
+    }
   } 
   if (gState == 3) {
     c.font = "32px Brush Script MT";
@@ -749,7 +754,17 @@ class Ship extends Mob {
           if (!this.visitedPlanets[m.name]) {
             this.songFragments[m.songFragmentIndex] = 'yes';
             this.visitedPlanets[m.name] = "yes";
-          } 
+          }
+          let allFragments = true;
+          for (let i = 0; i < FRAGMENTS.length; i++) {
+            if (!this.songFragments[i]) {
+              allFragments = false;
+              break;
+            }
+          }
+          if (allFragments) {
+            victory();
+          }
         } else {
           // Bounce!
           this.dv = -500;
@@ -996,7 +1011,8 @@ const a = { // Appearances
 }
 
 var p1;
-let currentWaypoint, earth, geckolandia;
+let currentWaypoint, currentWaypointIndex;
+let planets;
 
 function createPlanet (x, y, size, name, songFragmentIndex) {
   var t = new Planet('planet', [layers[2]]);
@@ -1033,16 +1049,41 @@ function startGame() {
     return p;
   }
 
+  if (!planets)  {
+    planets = [];
+    for (let i = 0; i < FRAGMENTS.length; i++) {
+      let planetPosition;
+      retry: while (true) {
+        planetPosition = { x: rand.range (-10000, 10000),  y: rand.range (-10000, 10000)};
+        for (let j = 0; j < planets.length; j++) {
+          if (rdist(planets[j], planetPosition) < 2000) {
+            continue retry;
+          }
+        }
+        break;
+      }
+      planets.push(createPlanet(planetPosition.x, planetPosition.y, rand.range(200, 700), getPlanetName(), i));
+    }
+  }
+  currentWaypoint = planets[0];
+  currentWaypointIndex = 0;
+
   p1 = createShip('ship', W / 2, ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space' ]);
+  const randomAngle = rand.range(0, 2*Math.PI);
+  const randDist = rand.range (800, 1000);
+  p1.x = Math.cos(randomAngle) * randDist + planets[0].x;
+  p1.y = Math.sin(randomAngle) * randDist + planets[0].y;
+
   camera.x = p1.x;
   camera.y = p1.y;
   stars50();
-  if (!earth) 
-    earth = createPlanet(p1.x, p1.y + 1508, 500, 'Earth', 2);
-  if (!geckolandia) 
-    geckolandia = createPlanet(p1.x, p1.y - 508, 200, 'Geckolandia', 5);
-  currentWaypoint = earth;
 
+}
+
+const planetNames = ['Mercuria', 'Afrodin', 'Gaia', 'Heracle', 'Zyus', 'Sarton', 'Apos', 'Ninua'];
+
+function getPlanetName() {
+  return planetNames.pop();
 }
 
 // Enemy Waves
@@ -1142,11 +1183,11 @@ typed(13, () => {
       gState = 2;
     }, 1500);
   } else if (gState == 2) {
-    if (currentWaypoint == earth) {
-      currentWaypoint = geckolandia;
-    } else {
-      currentWaypoint = earth;
+    currentWaypointIndex++;
+    if (currentWaypointIndex >= planets.length) {
+      currentWaypointIndex = 0;
     }
+    currentWaypoint = planets[currentWaypointIndex];
   } else if (gState == 3) {
     restart();
     gState = 2;
@@ -1176,6 +1217,10 @@ function title(){
 
 function gameOver() {
   gState = 3;
+}
+
+function victory() {
+  p1.won = true;
 }
 
 function restart() {
