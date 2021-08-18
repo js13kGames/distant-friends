@@ -676,8 +676,8 @@ const Renderer = {
     var i = 1;
     drawlLine = false;
     c.globalAlpha = 1;
-    x = x - camera.x + W / 2;
-    y = y - camera.y + H / 2;
+    x = cameraX(x);
+    y = cameraY(y);
     c.translate(x, y);
     c.rotate(rotation + Math.PI / 2);
     c.translate(-x, -y);
@@ -1167,17 +1167,17 @@ class Ship extends Mob {
     if (this.fuel <= 0) {
       this.av = 0;
     }
-    if (this.av > 1000) {
+    if (this.av > 1000) { // max thrust
       this.av = 1000;
     }
-    if (isDown(this.keys[2])){
+    if (isDown(this.keys[2])){ // Left
       this.flipped = true;
       this.turnScale -= 0.02;
       if (this.turnScale < -0.5) {
         this.turnScale = -0.5;
       }
       this.rotation -= rotSpeed;
-    } else if (isDown(this.keys[3])){
+    } else if (isDown(this.keys[3])){ // Right
       this.flipped = true;
       this.turnScale += 0.02;
       if (this.turnScale > 0.5) {
@@ -1185,7 +1185,7 @@ class Ship extends Mob {
       }
       this.rotation += rotSpeed;
     }
-    if (isDown(this.keys[4])) {
+    if (isDown(this.keys[4])) { // Space
       this.fire();
     }
   }
@@ -1195,15 +1195,7 @@ class Ship extends Mob {
     }
     this.fireBlocked = true;
     setTimeout(() => this.fireBlocked = false, 100);
-    var b = new Mob('missile', [layers[1]]);
-    b.x = this.x;
-    b.y = this.y;
-    b.dy = -rand.range(550, 600);
-    b.size = 5;
-    b.hits = 'e'; // Enemy
-    b.kot = true;
-    b.scale = 4;
-    b.player = this;
+    new Rocket(this.x + rand.range(-20, 20), this.y + rand.range(-20, 20), this.rotation);
     playSound(2);
   }
   destroyed(m) {
@@ -1231,6 +1223,29 @@ class Ship extends Mob {
     if (!players.filter(p=>!p.dead).length) {
       gameOver();
     }
+  }
+}
+
+class Rocket extends Mob {
+  constructor(x, y, d) {
+    super('missile', [layers[1]]);
+    this.x = x;
+    this.y = y;
+    this.rotation = d;
+    this.av = 300;
+    this.dv = -50;
+    this.size = 5;
+    this.hits = 'e'; // Enemy
+    this.scale = 4;
+    setTimeout(()=>this.explode(), rand.range(1100, 1300));
+  }
+  explode() {
+    playSound(0);
+    var e = new Explosion(20);
+    e.x = this.x;
+    e.y = this.y;
+    sfx.push(e);
+    this.destroy();
   }
 }
 
@@ -1326,6 +1341,9 @@ class Star extends BGObject {
   }
 }
 
+function cameraX(x) { return x - camera.x + W / 2}
+function cameraY(y) { return y - camera.y + H / 2}
+
 class Planet extends BGObject {
   specialRender(c) {
     c.globalAlpha = 1;
@@ -1334,8 +1352,8 @@ class Planet extends BGObject {
     grad.addColorStop(1, this.color2);
     c.fillStyle=grad;
     c.beginPath();
-    const x = this.x - camera.x + W / 2;
-    const y = this.y - camera.y + H / 2;
+    const x = cameraX(this.x);
+    const y = cameraY(this.y);
     c.arc(x,y,this.size,0,Math.PI*2,true);
     c.fill();
   }
@@ -1364,7 +1382,7 @@ class Explosion {
       var size = this.s0 + segmentProgress * (this.sf-this.s0);
       c.fillStyle = '#eecc00';
       c.beginPath();
-      c.arc(this.x,this.y,size,0,Math.PI*2,true);
+      c.arc(cameraX(this.x), cameraY(this.y),size,0,Math.PI*2,true);
       c.fill();
     } else {
       // Fading fire
@@ -1372,8 +1390,8 @@ class Explosion {
       var size = segmentProgress * this.sf;
       c.fillStyle = '#bb9900';
       c.beginPath();
-      c.arc(this.x,this.y,this.sf,0,Math.PI*2,true);
-      c.arc(this.x,this.y,size,0,Math.PI*2,false);
+      c.arc(cameraX(this.x), cameraY(this.y),this.sf,0,Math.PI*2,true);
+      c.arc(cameraX(this.x), cameraY(this.y),size,0,Math.PI*2,false);
       c.fill();
     }
   }
