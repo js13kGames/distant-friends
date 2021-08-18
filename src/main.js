@@ -1002,7 +1002,7 @@ function renderUI(c) {
     c.font = "12px Courier New";
     c.textAlign="left"; 
     c.fillStyle= "#ffffff";
-    c.fillText("Waypoint [Earth]: " + Math.floor(rdist(p1, earth) - 508), 20, 85);
+    c.fillText("Waypoint ["+currentWaypoint.name+"]: " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), 20, 85);
     c.fillText("Thrust: " + p1.av,20, 100);
     c.fillText("Speed: " + Math.floor(p1.dv), 20, 115);
     c.fillText("Fuel: " + Math.floor(p1.fuel), 20, 130);
@@ -1447,7 +1447,7 @@ const a = { // Appearances
   star1: [WH,'c',1],
   star2: [WH,'c',2],
   star3: [WH,'c',3],
-  planet: ['G1','c',500],
+  planet: ['G1','c', 1],
   bullet: [RD,'c',4],
   mine: ['#888888','p',0,-3, 1,-2, 3,-3, 2,-1, 3,0, 2,1, 3,3, 1,2, 0,3, 'f','o','#dd0000','c',1],
   e1: ['#888888','c',15,'o','#dd0000','c',5],
@@ -1469,10 +1469,11 @@ const a = { // Appearances
 }
 
 var p1;
-let earth;
+let currentWaypoint, earth, geckolandia;
 
-function createPlanet (x, y, size) {
+function createPlanet (x, y, size, name) {
   var t = new Planet('planet', [layers[2]]);
+  t.name = name;
   t.isPlanet = true;
   t.x = x;
   t.y = y;
@@ -1482,7 +1483,7 @@ function createPlanet (x, y, size) {
   t.gay = Math.sin(angle) * t.size;
   t.color1 = getRandomColor();
   t.color2 = getRandomColor();
-  t.scale = 1;
+  t.scale = size;
   t.hits = 'p';
   return t;
 }
@@ -1508,7 +1509,11 @@ function startGame() {
   camera.y = p1.y;
   stars50();
   if (!earth) 
-    earth = createPlanet(p1.x, p1.y + 1508, 500);
+    earth = createPlanet(p1.x, p1.y + 1508, 500, 'Earth');
+  if (!geckolandia) 
+    geckolandia = createPlanet(p1.x, p1.y - 508, 200, 'Geckolandia');
+  currentWaypoint = earth;
+
 }
 
 // Enemy Waves
@@ -1605,6 +1610,12 @@ typed(13, () => {
       startingGame = false;
       gState = 2;
     }, 1500);
+  } else if (gState == 2) {
+    if (currentWaypoint == earth) {
+      currentWaypoint = geckolandia;
+    } else {
+      currentWaypoint = earth;
+    }
   } else if (gState == 3) {
     restart();
     gState = 2;
