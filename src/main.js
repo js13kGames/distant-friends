@@ -166,7 +166,7 @@ function typed(keyCode, callback){
 }
 
 const Renderer = {
-  render(c,ins,x,y,s,over,flip,scalex, rotation) {
+  render(c,ins,x,y,s,over,flip,scalex, rotation, fixedToCamera) {
     var sx = s
     if (scalex)
       sx = s * scalex;
@@ -175,8 +175,10 @@ const Renderer = {
     var i = 1;
     drawlLine = false;
     c.globalAlpha = 1;
-    x = cameraX(x);
-    y = cameraY(y);
+    if (!fixedToCamera) {
+      x = cameraX(x);
+      y = cameraY(y);
+    }
     c.translate(x, y);
     c.rotate(rotation + Math.PI / 2);
     c.translate(-x, -y);
@@ -501,7 +503,12 @@ function renderUI(c) {
     c.font = "12px Courier New";
     c.textAlign="left"; 
     c.fillStyle= "#ffffff";
-    c.fillText("Waypoint ["+currentWaypoint.name+"]: " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), 20, 85);
+    const angle = Math.atan2(p1.y - currentWaypoint.y, p1.x - currentWaypoint.x) + Math.PI;
+    Renderer.render(c, a.triangle, W / 2, H - 40, 2, undefined, false, undefined, angle, true);
+    Renderer.render(c, a.triangle, W / 2, H - 40, 2, undefined, true, undefined, angle, true);
+    c.textAlign="center"; 
+    c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
+    c.textAlign="left"; 
     c.fillText("Thrust: " + p1.av,20, 100);
     c.fillText("Speed: " + Math.floor(p1.dv), 20, 115);
     c.fillText("Fuel: " + Math.floor(p1.fuel), 20, 130);
@@ -928,6 +935,9 @@ const a = { // Appearances
     'o','#ff3333','p',0,1,-2.5,1,-2.5,2,-1.5,3,0,3,'f',
     'o','#000000','v',0,-6,2,1.5,'f',
     'o','#ff0000','vh',0,-6,2,1.5,0.5,Math.PI-0.5,'f',*/
+  ],
+  triangle: [
+    '#eeeeee','p',0,4,-6,4,0,-2,'f',
   ],
   floor: [
     '#888888','p',0,2,3,2,3,3,1,4,0,4,'f',
