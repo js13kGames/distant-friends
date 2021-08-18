@@ -482,23 +482,26 @@ function renderUI(c) {
     c.fillStyle= "#00ff00";
     c.fillText("Loading Music...",10,50);
   } else if (gState == 1) {
-    c.font = "20px Brush Script MT";
+    c.font = "24px Courier New";
     c.textAlign="center"; 
-    c.fillStyle= "#00ff00";
-    c.fillText("SPACE",W/2,50);
-    c.font = "18px Courier New";
+    c.fillStyle= "#cf3436";
+    c.fillText("SPACE SONG",W/2,50);
+    c.font = "14px Courier New";
+    c.fillStyle= "#ea0a8e";
     c.fillText("INSTRUCTIONS",W/2,90);
     c.fillStyle= "#ffffff";
     c.fillText("Left/Right to steer",W/2,130);
-    c.fillText("Up/Down to control thrust",W/2,170);
-    c.fillText("Plant the flag in the moon and return",W/2,210);
+    c.fillText("Up/Down to control thrust",W/2,150);
+    c.fillText("Enter to change waypoint",W/2,170);
+    c.fillText("Make your way to the planets",W/2,190);
+    c.fillText("to find the six fragments of the song.",W/2,210);
     c.font = "18px Courier New";
-    c.fillStyle= "#00ff00";
+    c.fillStyle= "#ea0a8e";
     c.fillText("Press Enter to start",W/2,290);
     c.fillStyle= "#ffffff";
-    c.font = "18px Courier New";
+    c.font = "12px Courier New";
     c.fillText("Programmed by Slashie",W/2,330);
-    c.fillText("Sounds by QuietGecko", W/2,360);
+    c.fillText("Sounds by QuietGecko", W/2,350);
   } else if (gState == 2 || gState == 3) {
     //Renderer.render(c,a.scoreBack,250,600,NS*2.5,undefined,true);
     //renderScore(c, 0, 350, p1.scoreArray)
