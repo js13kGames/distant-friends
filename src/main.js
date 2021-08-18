@@ -508,6 +508,7 @@ function renderUI(c) {
     Renderer.render(c, a.triangle, W / 2, H - 40, 2, undefined, true, undefined, angle, true);
     c.textAlign="center"; 
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
+    c.fillText("[Enter] to change", W / 2, H - 5);
     c.textAlign="left"; 
     c.fillText("Thrust: " + p1.av,20, 100);
     c.fillText("Speed: " + Math.floor(p1.dv), 20, 115);
