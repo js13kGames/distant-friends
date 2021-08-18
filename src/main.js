@@ -771,6 +771,7 @@ class Mob {
     this.ch.forEach(c => c.destroy());
   }
 
+  /*
   collide(m) {
     this.destroy();
     m.destroy();
@@ -781,6 +782,7 @@ class Mob {
       sfx.push(e);
     }
   }
+  */
 }
 
 class BGObject {
@@ -849,7 +851,7 @@ function rdist(a, b) {
 }
 
 function collide(a, b) {
-  if (dist(a,b) < a.size + b.size) {
+  if (rdist(a,b) < a.size + b.size) {
     a.collide(b);
   }
 }
@@ -1004,6 +1006,7 @@ function renderUI(c) {
     c.fillText("Thrust: " + p1.av,20, 100);
     c.fillText("Speed: " + Math.floor(p1.dv), 20, 115);
     c.fillText("Fuel: " + Math.floor(p1.fuel), 20, 130);
+    c.fillText(p1.landed ? "[Landed]" : "", 20, 145);
   } 
   if (gState == 3) {
     c.font = "32px Brush Script MT";
@@ -1130,23 +1133,6 @@ class Ship extends Mob {
       this.dv = 2000; // Temporary
     }
 
-    /**
-     * Replace with collision with planet
-    
-    if (this.y > H - 20) {
-      // Ground for now
-      if (this.dy > 60) {
-        // Crash!
-        this.dy = 0;
-        this.y = H - 20;
-        this.destroy();
-      } else {
-        // Land
-        this.dy = 0;
-        this.y = H - 20;
-      }
-    }
-    */
     this.fuel -= this.av * d * 0.003;
     if (this.fuel < 0) {
       this.fuel = 0;
@@ -1159,7 +1145,8 @@ class Ship extends Mob {
     var PY = 20;
     if (isDown(this.keys[0])){ // Increase Thrust
       this.av += PY; // TODO: Affect acceleration indirectly
-    } else if (isDown(this.keys[1])){ // Reduce Thrust
+      this.landed = false;
+    } else if (!this.landed && isDown(this.keys[1])){ // Reduce Thrust
       this.av = -200;
     } else {
       this.av = 0;
@@ -1169,6 +1156,9 @@ class Ship extends Mob {
     }
     if (this.av > 1000) { // max thrust
       this.av = 1000;
+    }
+    if (this.landed) {
+      return;
     }
     if (isDown(this.keys[2])){ // Left
       this.flipped = true;
@@ -1222,6 +1212,25 @@ class Ship extends Mob {
     this.dead = true;
     if (!players.filter(p=>!p.dead).length) {
       gameOver();
+    }
+  }
+  collide(m) {
+    if (m.isPlanet) {
+      if (this.landed) {
+        // Ignore collision (This is unlikely to happen due to the re-placement on landing)
+      } else {
+        if (this.dv <= 0) {  // Landing
+          this.landed = true;
+          this.dv = 0;
+          const angle = Math.atan2(this.y - m.y, this.x - m.x);
+          this.rotation = angle; // TODO: Tween rotation?
+          this.x = m.x + Math.cos(angle) * (m.size + this.size + 1);
+          this.y = m.y + Math.sin(angle) * (m.size + this.size + 1);
+        } else {
+          // Bounce!
+          this.dv = -500;
+        }
+      }
     }
   }
 }
@@ -1344,7 +1353,7 @@ class Star extends BGObject {
 function cameraX(x) { return x - camera.x + W / 2}
 function cameraY(y) { return y - camera.y + H / 2}
 
-class Planet extends BGObject {
+class Planet extends Mob {
   specialRender(c) {
     c.globalAlpha = 1;
     var grad=c.createLinearGradient(this.x-this.gax,this.y-this.gay,this.x+this.gax,this.y+this.gay);
@@ -1356,6 +1365,10 @@ class Planet extends BGObject {
     const y = cameraY(this.y);
     c.arc(x,y,this.size,0,Math.PI*2,true);
     c.fill();
+  }
+
+  collide(m) {
+    console.log(m,'collided');
   }
 }
 
@@ -1460,6 +1473,7 @@ let earth;
 
 function createPlanet (x, y, size) {
   var t = new Planet('planet', [layers[2]]);
+  t.isPlanet = true;
   t.x = x;
   t.y = y;
   t.size = size;
@@ -1469,6 +1483,7 @@ function createPlanet (x, y, size) {
   t.color1 = getRandomColor();
   t.color2 = getRandomColor();
   t.scale = 1;
+  t.hits = 'p';
   return t;
 }
 function startGame() {
@@ -1478,7 +1493,7 @@ function startGame() {
     p.energy = 0;
     p.x = x;
     p.y = H - 20;
-    p.size = 20;
+    p.size = 8;
     p.score = 0;
     p.updateScoreArray();
     p.scale = 2;
@@ -1493,7 +1508,7 @@ function startGame() {
   camera.y = p1.y;
   stars50();
   if (!earth) 
-    earth = createPlanet(p1.x, p1.y + 508, 500);
+    earth = createPlanet(p1.x, p1.y + 1508, 500);
 }
 
 // Enemy Waves
