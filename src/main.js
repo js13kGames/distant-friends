@@ -474,6 +474,8 @@ function renderDigit(c, x, y, digit) {
 const W = canvas.width;
 const H = canvas.height;
 
+const FRAGMENTS = ['🎹','🎻','🎷','🎸','🎺','🥁'];
+
 function renderUI(c) {
   if (gState == 0) {
     c.font = "18px Courier New";
@@ -503,10 +505,20 @@ function renderUI(c) {
     c.font = "12px Courier New";
     c.textAlign="left"; 
     c.fillStyle= "#ffffff";
+    let soundFragmentsTxt = '';
+    for (let i = 0; i < 6; i++) {
+      if (p1.songFragments[i]) {
+        soundFragmentsTxt += FRAGMENTS[i];
+      } else {
+        soundFragmentsTxt += "❓";
+      }
+    }
+
     const angle = Math.atan2(p1.y - currentWaypoint.y, p1.x - currentWaypoint.x) + Math.PI;
     Renderer.render(c, a.triangle, W / 2, H - 40, 2, undefined, false, undefined, angle, true);
     Renderer.render(c, a.triangle, W / 2, H - 40, 2, undefined, true, undefined, angle, true);
     c.textAlign="center"; 
+    c.fillText(soundFragmentsTxt, W / 2, 20);
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
     c.fillText("[Enter] to change", W / 2, H - 5);
     c.textAlign="left"; 
@@ -733,6 +745,11 @@ class Ship extends Mob {
           this.rotation = angle; // TODO: Tween rotation?
           this.x = m.x + Math.cos(angle) * (m.size + this.size + 1);
           this.y = m.y + Math.sin(angle) * (m.size + this.size + 1);
+
+          if (!this.visitedPlanets[m.name]) {
+            this.songFragments[m.songFragmentIndex] = 'yes';
+            this.visitedPlanets[m.name] = "yes";
+          } 
         } else {
           // Bounce!
           this.dv = -500;
@@ -981,7 +998,7 @@ const a = { // Appearances
 var p1;
 let currentWaypoint, earth, geckolandia;
 
-function createPlanet (x, y, size, name) {
+function createPlanet (x, y, size, name, songFragmentIndex) {
   var t = new Planet('planet', [layers[2]]);
   t.name = name;
   t.isPlanet = true;
@@ -995,6 +1012,7 @@ function createPlanet (x, y, size, name) {
   t.color2 = getRandomColor();
   t.scale = size;
   t.hits = 'p';
+  t.songFragmentIndex = songFragmentIndex;
   return t;
 }
 function startGame() {
@@ -1010,6 +1028,8 @@ function startGame() {
     p.fuel = 10000;
     p.keys=k;
     p.rotation = -Math.PI / 2;
+    p.songFragments = {};
+    p.visitedPlanets = {};
     return p;
   }
 
@@ -1018,9 +1038,9 @@ function startGame() {
   camera.y = p1.y;
   stars50();
   if (!earth) 
-    earth = createPlanet(p1.x, p1.y + 1508, 500, 'Earth');
+    earth = createPlanet(p1.x, p1.y + 1508, 500, 'Earth', 2);
   if (!geckolandia) 
-    geckolandia = createPlanet(p1.x, p1.y - 508, 200, 'Geckolandia');
+    geckolandia = createPlanet(p1.x, p1.y - 508, 200, 'Geckolandia', 5);
   currentWaypoint = earth;
 
 }
