@@ -1184,21 +1184,13 @@ function newWave(){
   timers.push([()=>newWave(), 3]);
 }
 
-var startingGame = false;
 typed(13, () => {
   if (gState == 1) {
     zzfxX=new(top.AudioContext||webkitAudioContext);
     startSong();
-    if (startingGame) {
-      return;
-    }
-    startingGame = true;
     playSound(4);
-    setTimeout(() => {
-      startGame();
-      startingGame = false;
-      gState = 2;
-    }, 1500);
+    startGame();
+    gState = 2;
   } else if (gState == 2) {
     currentWaypointIndex++;
     if (currentWaypointIndex >= planets.length) {
