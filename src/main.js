@@ -503,8 +503,7 @@ function renderUI(c) {
     c.fillStyle= "#ea0a8e";
     c.fillText("INSTRUCTIONS",W/2,90);
     c.fillStyle= "#ffffff";
-    c.fillText("Left/Right to steer",W/2,130);
-    c.fillText("Up/Down to control thrust",W/2,150);
+    c.fillText("Use Arrow Keys to move",W/2,130);
     c.fillText("Enter to change waypoint",W/2,170);
     c.fillText("Make your way to the planets",W/2,210);
     c.fillText("to find the six fragments of the song.",W/2,230);
@@ -531,17 +530,17 @@ function renderUI(c) {
     }
 
     const angle = Math.atan2(p1.y - currentWaypoint.y, p1.x - currentWaypoint.x) + Math.PI;
-    Renderer.render(c, a.triangle, W / 2, H - 40, 2, undefined, false, undefined, angle, true);
-    Renderer.render(c, a.triangle, W / 2, H - 40, 2, undefined, true, undefined, angle, true);
+    Renderer.render(c, a.triangle, W / 2, H - 60, 2, undefined, false, undefined, angle, true);
+    Renderer.render(c, a.triangle, W / 2, H - 60, 2, undefined, true, undefined, angle, true);
     c.textAlign="center"; 
     c.fillText(soundFragmentsTxt, W / 2, 20);
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
     c.fillText("[Enter] to change", W / 2, H - 5);
     c.textAlign="left"; 
-    c.fillText("Thrust: " + p1.av,20, 100);
+    /*c.fillText("Thrust: " + p1.av,20, 100);
     c.fillText("Speed: " + Math.floor(p1.dv), 20, 115);
     c.fillText("Fuel: " + Math.floor(p1.fuel), 20, 130);
-    c.fillText(p1.landed ? "[Landed]" : "", 20, 145);
+    c.fillText(p1.landed ? "[Landed]" : "", 20, 145);*/
     if (p1.won) {
       c.font = font(24);
       c.textAlign="center"; 
