@@ -910,14 +910,14 @@ function cameraY(y) { return y - camera.y + H / 2}
 class Planet extends Mob {
   specialRender(c) {
     c.globalAlpha = 1;
-    var grad=c.createLinearGradient(this.x-this.gax,this.y-this.gay,this.x+this.gax,this.y+this.gay);
+    const thex = cameraX(this.x);
+    const they = cameraY(this.y);
+    var grad=c.createLinearGradient(thex-this.gax,they-this.gay,thex+this.gax,they+this.gay);
     grad.addColorStop(0, this.color1);
     grad.addColorStop(1, this.color2);
     c.fillStyle=grad;
     c.beginPath();
-    const x = cameraX(this.x);
-    const y = cameraY(this.y);
-    c.arc(x,y,this.size,0,Math.PI*2,true);
+    c.arc(thex,they,this.size,0,Math.PI*2,true);
     c.fill();
   }
 
