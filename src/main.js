@@ -471,41 +471,54 @@ function renderDigit(c, x, y, digit) {
 }
 
 // THE GAME!
-const W = canvas.width;
-const H = canvas.height;
+let W = canvas.width;
+let H = canvas.height;
+(function() {
+  window.addEventListener('resize', resizeCanvas, false);
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    W = canvas.width;
+    H = canvas.height;
+  }
+  
+  resizeCanvas();
+})();
+
+const font = (s) => s + 'px Courier New';
 
 const FRAGMENTS = ['🎹','🎻','🎷','🎸','🎺','🥁'];
 
 function renderUI(c) {
   if (gState == 0) {
-    c.font = "18px Courier New";
+    c.font = font(18);
     c.fillStyle= "#00ff00";
     c.fillText("Loading Music...",10,50);
   } else if (gState == 1) {
-    c.font = "24px Courier New";
+    c.font = font(48);
     c.textAlign="center"; 
     c.fillStyle= "#cf3436";
     c.fillText("SPACE SONG",W/2,50);
-    c.font = "14px Courier New";
+    c.font = font(20);
     c.fillStyle= "#ea0a8e";
     c.fillText("INSTRUCTIONS",W/2,90);
     c.fillStyle= "#ffffff";
     c.fillText("Left/Right to steer",W/2,130);
     c.fillText("Up/Down to control thrust",W/2,150);
     c.fillText("Enter to change waypoint",W/2,170);
-    c.fillText("Make your way to the planets",W/2,190);
-    c.fillText("to find the six fragments of the song.",W/2,210);
-    c.font = "18px Courier New";
+    c.fillText("Make your way to the planets",W/2,210);
+    c.fillText("to find the six fragments of the song.",W/2,230);
+    c.font = font(32);
     c.fillStyle= "#ea0a8e";
     c.fillText("Press Enter to start",W/2,290);
     c.fillStyle= "#ffffff";
-    c.font = "12px Courier New";
+    c.font = font(18);
     c.fillText("Programmed by Slashie",W/2,330);
     c.fillText("Sounds by QuietGecko", W/2,350);
   } else if (gState == 2 || gState == 3) {
     //Renderer.render(c,a.scoreBack,250,600,NS*2.5,undefined,true);
     //renderScore(c, 0, 350, p1.scoreArray)
-    c.font = "12px Courier New";
+    c.font = font(16);
     c.textAlign="left"; 
     c.fillStyle= "#ffffff";
     let soundFragmentsTxt = '';
@@ -530,13 +543,13 @@ function renderUI(c) {
     c.fillText("Fuel: " + Math.floor(p1.fuel), 20, 130);
     c.fillText(p1.landed ? "[Landed]" : "", 20, 145);
     if (p1.won) {
-      c.font = "14px Courier New";
+      c.font = font(24);
       c.textAlign="center"; 
       c.fillText("Congrats, the song is now complete!",W/2, 40);
     }
   } 
   if (gState == 3) {
-    c.font = "32px Brush Script MT";
+    c.font = font(32);
     c.textAlign="center"; 
     c.fillStyle= "#00ff00";
     c.fillText("GAME OVER",W/2,100);
@@ -1038,6 +1051,7 @@ function startGame() {
   function createShip(a,x,k){
     var p = new Ship(a, [players, layers[2]]);
     p.energy = 0;
+    p.dv = 480;
     p.x = x;
     p.y = H - 20;
     p.size = 8;
@@ -1057,15 +1071,15 @@ function startGame() {
     for (let i = 0; i < FRAGMENTS.length; i++) {
       let planetPosition;
       retry: while (true) {
-        planetPosition = { x: rand.range (-10000, 10000),  y: rand.range (-10000, 10000)};
+        planetPosition = { x: rand.range (-25000, 25000),  y: rand.range (-25000, 25000)};
         for (let j = 0; j < planets.length; j++) {
-          if (rdist(planets[j], planetPosition) < 2000) {
+          if (rdist(planets[j], planetPosition) < 5000) {
             continue retry;
           }
         }
         break;
       }
-      planets.push(createPlanet(planetPosition.x, planetPosition.y, rand.range(200, 700), getPlanetName(), i));
+      planets.push(createPlanet(planetPosition.x, planetPosition.y, rand.range(1000, 3500), getPlanetName(), i));
     }
   }
   currentWaypoint = planets[0];
@@ -1073,7 +1087,7 @@ function startGame() {
 
   p1 = createShip('ship', W / 2, ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space' ]);
   const randomAngle = rand.range(0, 2*Math.PI);
-  const randDist = rand.range (800, 1000);
+  const randDist = rand.range (4000, 5000);
   p1.x = Math.cos(randomAngle) * randDist + planets[0].x;
   p1.y = Math.sin(randomAngle) * randDist + planets[0].y;
 
