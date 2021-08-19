@@ -1070,7 +1070,7 @@ function startGame() {
     for (let i = 0; i < FRAGMENTS.length; i++) {
       let planetPosition;
       retry: while (true) {
-        planetPosition = { x: rand.range (-25000, 25000),  y: rand.range (-25000, 25000)};
+        planetPosition = { x: rand.range (-10000, 10000),  y: rand.range (-10000, 10000)};
         for (let j = 0; j < planets.length; j++) {
           if (rdist(planets[j], planetPosition) < 5000) {
             continue retry;
