@@ -15,9 +15,6 @@ zzfxV=.3
 // zzfxR - global sample rate
 zzfxR=44100
 
-// zzfxX - the common audio context
-zzfxX=new(top.AudioContext||webkitAudioContext);
-
 // ---------- End of ZZFX
 
 // ---------- Pasted ZZFXM
@@ -1148,6 +1145,8 @@ function newWave(){
 typed(13, () => {
   if (gState == 0) {
     if (musicLoaded) {
+      // zzfxX - the common audio context
+      zzfxX=new(window.AudioContext||webkitAudioContext);
       title()
     }
   } else if (gState == 1) {
