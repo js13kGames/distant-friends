@@ -534,7 +534,7 @@ function renderUI(c) {
     c.font = font(18);
     c.fillText("Programmed by Slashie",W/2,330);
     c.fillText("Sounds by QuietGecko", W/2,350);
-  } else if (gState == 2 || gState == 3) {
+  } else if (gState == 2 || gState == 3 || gState == 10) {
     //Renderer.render(c,a.scoreBack,250,600,NS*2.5,undefined,true);
     //renderScore(c, 0, 350, p1.scoreArray)
     c.font = font(16);
@@ -573,6 +573,18 @@ function renderUI(c) {
     c.fillStyle= "#00ff00";
     c.fillText("GAME OVER",W/2,100);
     c.fillText("Press Enter to restart",W/2,150);
+  }
+  if (gState == 10) {
+    c.fillStyle = "#000";
+    c.globalAlpha = 0.5;
+    c.fillRect(0, H - 180, W, 125);
+    c.globalAlpha = 1;
+    Renderer.renderShapes(c, suit, 150, H - 130, 2, -Math.PI / 2, 50, 30, true);
+    Renderer.renderShapes(c, dog, 150, H - 160, 2, -Math.PI / 2, 50, 30, true);
+    c.font = font(24);
+    c.fillStyle= "#FFF";
+    c.textAlign="left"; 
+    c.fillText(conversationText, 250, H - 150);
   }
 }
 
@@ -737,6 +749,60 @@ const buddyShape = [
   ]
 ];
 
+const suit = [
+  [
+    "M50 50L34 52Q23 56 20 65L50 65",
+    "#9c96c9", 2, "#dfe4ec",
+  ]
+]
+
+const dog = [
+  [
+    //ear1
+    "M30 18L26 13Q28 9 25 7L15 5Q9 6 10 10Q10 13 16 13L16 10L28 21",
+    "#d9b06e", 2, "#d9b06e",
+    "noflip"
+  ],
+  [
+    //ear2
+    "M66 17L69 13Q67 9 70 5L75 4Q81 4 87 9Q91 15 85 16Q78 15 74 10L67 21",
+    "#d9b06e", 2, "#d9b06e",
+    "noflip"
+  ],
+  [
+    //head
+    "M50 10Q28 13 20 24Q15 34 17 47Q12 53 14 59Q20 66 30 68Q41 70 50 69",
+    "#d9b06e", 2, "#d9b06e"
+  ],
+  [
+    //eyebrow
+    "M35 21L41 24Q43 27 39 27L33 23Q32 21 35 21",
+    "#441e01", 2, "#441e01"
+  ],
+  [
+    //mouth
+    "M50 57Q44 57 38 52",
+    "#441e01", 2, "#441e01"
+  ],
+  [
+    // nose
+    "C",
+    50, 47, 4, "#441e01", 2, "#441e01",
+    "noflip"
+  ],
+  [
+    // eyeBack
+    "C",
+    34, 37, 9, "#f3f0ea", 1, "#f3f0ea"
+  ],
+  [
+    // Eyeball
+    "C",
+    36, 39,5, "#211b24", 2, "#211b24"
+  ]
+]
+
+
 class Ship extends Mob {
   specialRender(c) {
     Renderer.renderShapes(c, shipShape, this.x, this.y, this.scale, this.rotation, 50, 50);
@@ -772,6 +838,10 @@ class Ship extends Mob {
     camera.y = this.y;
   }
   k(){
+    if (gState != 2 && gState != 3) {
+      this.av = 0;
+      return;
+    }
     var PY = 20;
     if (isDown(this.keys[0])){ // Increase Thrust
       this.av += PY; // TODO: Affect acceleration indirectly
@@ -871,6 +941,7 @@ class Ship extends Mob {
           if (allFragments) {
             victory();
           }
+          showConversation("Welcome to " + m.name +". Can I help you with anything?")
         } else {
           // Bounce!
           this.dv = -500;
@@ -878,6 +949,12 @@ class Ship extends Mob {
       }
     }
   }
+}
+
+let conversationText = "Test";
+function showConversation(text) {
+  gState = 10;
+  conversationText = text;
 }
 
 class Rocket extends Mob {
@@ -1296,7 +1373,10 @@ typed(13, () => {
   } else if (gState == 3) {
     restart();
     gState = 2;
+  } else if (gState == 10) {
+    gState = 2;
   }
+
 });
 
 function stars50(){
