@@ -122,6 +122,18 @@ function typed(keyCode, callback){
 }
 
 const Renderer = {
+  renderShapes(c, shapes, x, y, scale, rotation, pivotX, pivotY) {
+    shapes.forEach(sh => {
+      if (sh[0] == "C") {
+        this.renderCircle(c, sh[1], sh[2], sh[3], sh[4], x, y);
+      } else {
+        this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, rotation, pivotX, pivotY);
+        if (!sh[4]) {
+          this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, rotation, pivotX, pivotY, true);
+        }
+      }
+    });
+  },
   renderPath(c, path, strokeStyle, lineWidth, fillStyle, x, y, scale, rotation, pivotX, pivotY, flip, fixedToCamera) {
     c.strokeStyle = strokeStyle;
     c.lineWidth = lineWidth;
@@ -646,52 +658,76 @@ var ef = { // Enemy Factory
 }
 ef.i();
 
+const shipShape = [
+  [
+    // Thruster 2
+    "M49 82L28 82L26 88L49 88Z",
+    "#131047", 2, "#5b5e8b"
+  ],
+  [
+    // Thruster 1
+    "M49 77L26 77L24 85L49 85Z",
+    "#131047", 2, "#5b5e8b"
+  ],
+  [
+    // Wing
+    "M28 71L15 69Q16 53 31 46Z",
+    "#b82782", 2, "#eb29a4"
+  ],
+  [
+    // Body
+    "M49 13Q33 17 30 35L25 73L28 76Q30 79 49 79Z",
+    "#dadde2", 2, "#dadde2"
+  ],
+  [
+    // Window
+    "C",
+    28, "#6772dc", 3, "#100e1b"
+  ],
+  [
+    // Purple Cover
+    "M27 58L36 67L49 58L49 81L21 80Z",
+    "#b82782", 2, "#eb29a4"
+  ],
+]
+
+const buddyShape = [
+  [ // ear1
+    "M37 15Q36 11 27 10Q22 19 29 26Z",
+    "#e7ad3f", 2, "#e7ad3f",
+    // TODO: Flipside with different colors "#ede9ea", 2, "#ede9ea"
+  ],
+  [ // ear2
+    "M34 18Q33 14 29 14Q26 18 31 25Z",
+    "#d66ead", 2, "#d66ead"
+  ],
+  [ // head
+    "M50 10Q28 15 24 37A4 6 0 0 0 24 52Q34 59 50 58Z",
+    "#eeeaeb", 2, "#eeeaeb"
+  ],
+  [ // band
+    "M50 10Q28 16 24 37Q47 33 57 14Z",
+    "#ecae41", 2, "#ecae41"
+  ],
+  [ // eye
+    "M42 34Q38 20 31 34",
+    "#733621", 2, false
+  ],
+  [ // nose
+    "M50 38Q40 41 50 44",
+    "#dc7ab7", 2, "#dc7ab7"
+  ],
+  [ // mouth
+    "M50 47Q45 47 42 45Q40 54 50 55",
+    "#c52c5a", 2, "#c52c5a"
+  ]
+];
+
 class Ship extends Mob {
   specialRender(c) {
-    const body = "M49 13Q33 17 30 35L25 73L28 76Q30 79 49 79Z";
-    const wing = "M28 71L15 69Q16 53 31 46Z";
-    const purpleCover = "M27 58L36 67L49 58L49 81L21 80Z";
-    const thruster1 = "M49 77L26 77L24 85L49 85Z";
-    const thruster2 = "M49 82L28 82L26 88L49 88Z";
-    Renderer.renderPath(c,thruster2, "#131047", 2, "#5b5e8b", this.x, this.y, this.scale, this.rotation, 50, 50);
-    Renderer.renderPath(c,thruster2, "#131047", 2, "#5b5e8b", this.x, this.y, this.scale, this.rotation, 50, 50, true);
-    Renderer.renderPath(c,thruster1, "#131047", 2, "#5b5e8b", this.x, this.y, this.scale, this.rotation, 50, 50);
-    Renderer.renderPath(c,thruster1, "#131047", 2, "#5b5e8b", this.x, this.y, this.scale, this.rotation, 50, 50, true);
-    Renderer.renderPath(c,wing, "#b82782", 2, "#eb29a4", this.x, this.y, this.scale, this.rotation, 50, 50);
-    Renderer.renderPath(c,wing, "#b82782", 2, "#eb29a4", this.x, this.y, this.scale, this.rotation, 50, 50, true);
-    Renderer.renderPath(c,body, "#dadde2", 2, "#dadde2", this.x, this.y, this.scale, this.rotation, 50, 50);
-    Renderer.renderPath(c,body, "#dadde2", 2, "#dadde2", this.x, this.y, this.scale, this.rotation, 50, 50, true);
-    Renderer.renderCircle(c, 28, "#6772dc", 3, "#100e1b", this.x, this.y);
-    Renderer.renderPath(c,purpleCover, "#b82782", 2, "#eb29a4", this.x, this.y, this.scale, this.rotation, 50, 50);
-    Renderer.renderPath(c,purpleCover, "#b82782", 2, "#eb29a4", this.x, this.y, this.scale, this.rotation, 50, 50, true);
-    
-    const buddyScale = this.scale * 0.3;
-    const buddyX = this.x;
-    const buddyY = this.y;
-    const buddyPivotX = 50;
-    const buddyPivotY = 30; // For some reason we can use this to position him vertically
+    Renderer.renderShapes(c, shipShape, this.x, this.y, this.scale, this.rotation, 50, 50);
+    Renderer.renderShapes(c, buddyShape, this.x, this.y, this.scale * 0.3, this.rotation, 50, 30);
 
-    const head = "M50 10Q28 15 24 37A4 6 0 0 0 24 52Q34 59 50 58Z";
-    const ear1="M37 15Q36 11 27 10Q22 19 29 26Z";
-    const ear2="M34 18Q33 14 29 14Q26 18 31 25Z";
-    const band="M50 10Q28 16 24 37Q47 33 57 14Z";
-    const eye="M42 34Q38 20 31 34";
-    const nose="M50 38Q40 41 50 44";
-    const mouth="M50 47Q45 47 42 45Q40 54 50 55";
-
-    Renderer.renderPath(c,ear1, "#e7ad3f", 2, "#e7ad3f", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY);
-    Renderer.renderPath(c,ear1, "#ede9ea", 2, "#ede9ea", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY, true);
-    Renderer.renderPath(c,ear2, "#d66ead", 2, "#d66ead", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY);
-    Renderer.renderPath(c,ear2, "#d66ead", 2, "#d66ead", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY, true);
-    Renderer.renderPath(c,head, "#eeeaeb", 2, "#eeeaeb", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY);
-    Renderer.renderPath(c,head, "#eeeaeb", 2, "#eeeaeb", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY, true);
-    Renderer.renderPath(c,band, "#ecae41", 2, "#ecae41", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY);
-    Renderer.renderPath(c,eye, "#733621", 2, false, buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY);
-    Renderer.renderPath(c,eye, "#733621", 2, false, buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY, true);
-    Renderer.renderPath(c,nose, "#dc7ab7", 2, "#dc7ab7", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY);
-    Renderer.renderPath(c,nose, "#dc7ab7", 2, "#dc7ab7", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY, true);
-    Renderer.renderPath(c,mouth, "#c52c5a", 2, "#c52c5a", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY);
-    Renderer.renderPath(c,mouth, "#c52c5a", 2, "#c52c5a", buddyX, buddyY, buddyScale, this.rotation, buddyPivotX, buddyPivotY, true);
   }
   u(d) {
     super.u(d);
