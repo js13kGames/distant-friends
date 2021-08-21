@@ -122,14 +122,17 @@ function typed(keyCode, callback){
 }
 
 const Renderer = {
-  renderShapes(c, shapes, x, y, scale, rotation, pivotX, pivotY) {
+  renderShapes(c, shapes, x, y, scale, rotation, pivotX, pivotY, fixedToCamera) {
     shapes.forEach(sh => {
       if (sh[0] == "C") {
-        this.renderCircle(c, sh[1], sh[2], sh[3], sh[4], x, y);
+        this.renderCircle(c, sh[3], sh[4], sh[5], sh[6], sh [1] * scale + x, sh[2]  * scale + y, scale, pivotX, pivotY, false, fixedToCamera);
+        if (!sh[7]) {
+          this.renderCircle(c, sh[3], sh[4], sh[5], sh[6], -sh [1] * scale + x, sh[2]  * scale + y, scale, pivotX, pivotY, true, fixedToCamera);
+        }
       } else {
-        this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, rotation, pivotX, pivotY);
+        this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, rotation, pivotX, pivotY, false, fixedToCamera);
         if (!sh[4]) {
-          this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, rotation, pivotX, pivotY, true);
+          this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, rotation, pivotX, pivotY, true, fixedToCamera);
         }
       }
     });
@@ -157,7 +160,7 @@ const Renderer = {
       c.fill(p2d);
     c.setTransform(1, 0, 0, 1, 0, 0);
   },
-  renderCircle(c, radius, strokeStyle, lineWidth, fillStyle, x, y, fixedToCamera) {
+  renderCircle(c, radius, strokeStyle, lineWidth, fillStyle, x, y, scale, pivotX, pivotY, flip, fixedToCamera) {
     c.strokeStyle = strokeStyle;
     c.lineWidth = lineWidth;
     c.fillStyle = fillStyle;
@@ -165,10 +168,20 @@ const Renderer = {
       x = cameraX(x);
       y = cameraY(y);
     }
+    pivotX = pivotX * scale;
+    pivotY = pivotY * scale;
+    const transPivotX = flip ? x + pivotX : x - pivotX;
+    c.translate(transPivotX, y - pivotY);
+    /*const rotaPivotX = flip ? -pivotX : pivotX;
+    c.translate(rotaPivotX, pivotY);
+    c.rotate(rotation + Math.PI / 2);
+    c.translate(-rotaPivotX, -pivotY);*/
+    c.scale(scale * (flip ? -1 : 1), scale);
     c.beginPath();
-    c.arc(x, y, radius, 0, Math.PI*2);
+    c.arc(0, 0, radius, 0, Math.PI*2);
     c.stroke();
     c.fill();
+    c.setTransform(1, 0, 0, 1, 0, 0);
   },
   render(c,ins,x,y,s,over,flip,scalex, rotation, fixedToCamera) {
     var sx = s
@@ -682,7 +695,8 @@ const shipShape = [
   [
     // Window
     "C",
-    28, "#6772dc", 3, "#100e1b"
+    50, 50, 14, "#6772dc", 3, "#100e1b",
+    "noflip"
   ],
   [
     // Purple Cover
