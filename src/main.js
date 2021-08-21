@@ -345,7 +345,7 @@ raf(function(d) {
     })
     timers = timers.filter(f => !f.d);
   }
-  ctx.fillStyle = '#000000';
+  ctx.fillStyle = '#05063c';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   layers.forEach(l => l.forEach(m => {
     m.k && m.k(); // TODO this is only for the ship, put it somewhere
