@@ -506,6 +506,35 @@ const font = (s) => s + 'px Courier New';
 
 const FRAGMENTS = ['🎹','🎻','🎷','🎸','🎺','🥁'];
 
+const FRIENDS = [
+  {
+    name: 'Kori',
+    memories: ["I wonder how he's doing... we stopped talking because we disagreed about the best food"],
+    findSequence: [
+      {
+        planet: 'Ninua',
+        city: 'Arkadia',
+        sequence: [
+          [ 'dog', "Hey pal! it's so great to see you again, I missed you!"]
+        ],
+        giveInstrument: 1
+      }
+    ]
+  }
+]
+
+const triggers = {};
+
+FRIENDS.forEach(friend => {
+  const first = friend.findSequence[0];
+  triggers[first.planet + "-" + first.city] = first;
+  friend.findSequence.forEach((f, i) => {
+    if (i < friend.findSequence.length - 1) {
+      f.next = friend.findSequence[i + 1];
+    }
+  })
+})
+
 function renderUI(c) {
   if (gState == 0) {
     c.font = font(18);
@@ -557,10 +586,6 @@ function renderUI(c) {
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
     c.fillText("[Enter] to change", W / 2, H - 5);
     c.textAlign="left"; 
-    /*c.fillText("Thrust: " + p1.av,20, 100);
-    c.fillText("Speed: " + Math.floor(p1.dv), 20, 115);
-    c.fillText("Fuel: " + Math.floor(p1.fuel), 20, 130);
-    c.fillText(p1.landed ? "[Landed]" : "", 20, 145);*/
     if (p1.won) {
       c.font = font(24);
       c.textAlign="center"; 
@@ -579,8 +604,8 @@ function renderUI(c) {
     c.globalAlpha = 0.5;
     c.fillRect(0, H - 180, W, 125);
     c.globalAlpha = 1;
-    Renderer.renderShapes(c, suit, 150, H - 130, 2, -Math.PI / 2, 50, 30, true);
-    Renderer.renderShapes(c, dog, 150, H - 160, 2, -Math.PI / 2, 50, 30, true);
+    Renderer.renderShapes(c, SHAPES.suit, 150, H - 130, 2, -Math.PI / 2, 50, 30, true);
+    Renderer.renderShapes(c, conversationApp, 150, H - 160, 2, -Math.PI / 2, 50, 30, true);
     c.font = font(24);
     c.fillStyle= "#FFF";
     c.textAlign="left"; 
@@ -591,140 +616,134 @@ function renderUI(c) {
 var camera = {x : 0, y : 0};
 const rotSpeed = Math.PI / 90;
 
-
-const shipShape = [
-  [
-    // Thruster 2
-    "M49 82L28 82L26 88L49 88Z",
-    "#131047", 2, "#5b5e8b"
+const SHAPES = {
+  ship: [
+    [
+      // Thruster 2
+      "M49 82L28 82L26 88L49 88Z",
+      "#131047", 2, "#5b5e8b"
+    ],
+    [
+      // Thruster 1
+      "M49 77L26 77L24 85L49 85Z",
+      "#131047", 2, "#5b5e8b"
+    ],
+    [
+      // Wing
+      "M28 71L15 69Q16 53 31 46Z",
+      "#b82782", 2, "#eb29a4"
+    ],
+    [
+      // Body
+      "M49 13Q33 17 30 35L25 73L28 76Q30 79 49 79Z",
+      "#dadde2", 2, "#dadde2"
+    ],
+    [
+      // Window
+      "C",
+      50, 50, 14, "#6772dc", 3, "#100e1b",
+      "noflip"
+    ],
+    [
+      // Purple Cover
+      "M27 58L36 67L49 58L49 81L21 80Z",
+      "#b82782", 2, "#eb29a4"
+    ],
   ],
-  [
-    // Thruster 1
-    "M49 77L26 77L24 85L49 85Z",
-    "#131047", 2, "#5b5e8b"
+  cat : [
+    [ // ear1
+      "M37 15Q36 11 27 10Q22 19 29 26Z",
+      "#e7ad3f", 2, "#e7ad3f",
+      // TODO: Flipside with different colors "#ede9ea", 2, "#ede9ea"
+    ],
+    [ // ear2
+      "M34 18Q33 14 29 14Q26 18 31 25Z",
+      "#d66ead", 2, "#d66ead"
+    ],
+    [ // head
+      "M50 10Q28 15 24 37A4 6 0 0 0 24 52Q34 59 50 58Z",
+      "#eeeaeb", 2, "#eeeaeb"
+    ],
+    [ // band
+      "M50 10Q28 16 24 37Q47 33 57 14Z",
+      "#ecae41", 2, "#ecae41"
+    ],
+    [ // eye
+      "M42 34Q38 20 31 34",
+      "#733621", 2, false
+    ],
+    [ // nose
+      "M50 38Q40 41 50 44",
+      "#dc7ab7", 2, "#dc7ab7"
+    ],
+    [ // mouth
+      "M50 47Q45 47 42 45Q40 54 50 55",
+      "#c52c5a", 2, "#c52c5a"
+    ]
   ],
-  [
-    // Wing
-    "M28 71L15 69Q16 53 31 46Z",
-    "#b82782", 2, "#eb29a4"
+  dog: [
+    [
+      //ear1
+      "M30 18L26 13Q28 9 25 7L15 5Q9 6 10 10Q10 13 16 13L16 10L28 21",
+      "#d9b06e", 2, "#d9b06e",
+      "noflip"
+    ],
+    [
+      //ear2
+      "M66 17L69 13Q67 9 70 5L75 4Q81 4 87 9Q91 15 85 16Q78 15 74 10L67 21",
+      "#d9b06e", 2, "#d9b06e",
+      "noflip"
+    ],
+    [
+      //head
+      "M50 10Q28 13 20 24Q15 34 17 47Q12 53 14 59Q20 66 30 68Q41 70 50 69",
+      "#d9b06e", 2, "#d9b06e"
+    ],
+    [
+      //eyebrow
+      "M35 21L41 24Q43 27 39 27L33 23Q32 21 35 21",
+      "#441e01", 2, "#441e01"
+    ],
+    [
+      //mouth
+      "M50 57Q44 57 38 52",
+      "#441e01", 2, "#441e01"
+    ],
+    [
+      // nose
+      "C",
+      50, 47, 4, "#441e01", 2, "#441e01",
+      "noflip"
+    ],
+    [
+      // eyeBack
+      "C",
+      34, 37, 9, "#f3f0ea", 1, "#f3f0ea"
+    ],
+    [
+      // Eyeball
+      "C",
+      36, 39,5, "#211b24", 2, "#211b24"
+    ]
   ],
-  [
-    // Body
-    "M49 13Q33 17 30 35L25 73L28 76Q30 79 49 79Z",
-    "#dadde2", 2, "#dadde2"
+  suit: [
+    [
+      "M50 50L34 52Q23 56 20 65L50 65",
+      "#9c96c9", 2, "#dfe4ec",
+    ]
   ],
-  [
-    // Window
-    "C",
-    50, 50, 14, "#6772dc", 3, "#100e1b",
-    "noflip"
-  ],
-  [
-    // Purple Cover
-    "M27 58L36 67L49 58L49 81L21 80Z",
-    "#b82782", 2, "#eb29a4"
-  ],
-]
-
-const buddyShape = [
-  [ // ear1
-    "M37 15Q36 11 27 10Q22 19 29 26Z",
-    "#e7ad3f", 2, "#e7ad3f",
-    // TODO: Flipside with different colors "#ede9ea", 2, "#ede9ea"
-  ],
-  [ // ear2
-    "M34 18Q33 14 29 14Q26 18 31 25Z",
-    "#d66ead", 2, "#d66ead"
-  ],
-  [ // head
-    "M50 10Q28 15 24 37A4 6 0 0 0 24 52Q34 59 50 58Z",
-    "#eeeaeb", 2, "#eeeaeb"
-  ],
-  [ // band
-    "M50 10Q28 16 24 37Q47 33 57 14Z",
-    "#ecae41", 2, "#ecae41"
-  ],
-  [ // eye
-    "M42 34Q38 20 31 34",
-    "#733621", 2, false
-  ],
-  [ // nose
-    "M50 38Q40 41 50 44",
-    "#dc7ab7", 2, "#dc7ab7"
-  ],
-  [ // mouth
-    "M50 47Q45 47 42 45Q40 54 50 55",
-    "#c52c5a", 2, "#c52c5a"
-  ]
-];
-
-const suit = [
-  [
-    "M50 50L34 52Q23 56 20 65L50 65",
-    "#9c96c9", 2, "#dfe4ec",
-  ]
-]
-
-const dog = [
-  [
-    //ear1
-    "M30 18L26 13Q28 9 25 7L15 5Q9 6 10 10Q10 13 16 13L16 10L28 21",
-    "#d9b06e", 2, "#d9b06e",
-    "noflip"
-  ],
-  [
-    //ear2
-    "M66 17L69 13Q67 9 70 5L75 4Q81 4 87 9Q91 15 85 16Q78 15 74 10L67 21",
-    "#d9b06e", 2, "#d9b06e",
-    "noflip"
-  ],
-  [
-    //head
-    "M50 10Q28 13 20 24Q15 34 17 47Q12 53 14 59Q20 66 30 68Q41 70 50 69",
-    "#d9b06e", 2, "#d9b06e"
-  ],
-  [
-    //eyebrow
-    "M35 21L41 24Q43 27 39 27L33 23Q32 21 35 21",
-    "#441e01", 2, "#441e01"
-  ],
-  [
-    //mouth
-    "M50 57Q44 57 38 52",
-    "#441e01", 2, "#441e01"
-  ],
-  [
-    // nose
-    "C",
-    50, 47, 4, "#441e01", 2, "#441e01",
-    "noflip"
-  ],
-  [
-    // eyeBack
-    "C",
-    34, 37, 9, "#f3f0ea", 1, "#f3f0ea"
-  ],
-  [
-    // Eyeball
-    "C",
-    36, 39,5, "#211b24", 2, "#211b24"
-  ]
-]
-
-const cities = [
-  [
+  city: [
     [
       "M79 84L79 45L72 45L72 47L68 47L68 32L63 32L63 41L57 41L57 45L53 45L53 28A2 3 0 0 0 46 28L46 37L41 37L41 42L33 42A5 8 0 0 0 23 42L19 42L19 85",
       "#0d1852", 2, "#0d1852"
     ]
   ]
-];
-
+}
 
 class Ship extends Mob {
   specialRender(c) {
-    Renderer.renderShapes(c, shipShape, this.x, this.y, this.scale, this.rotation, 50, 50);
-    Renderer.renderShapes(c, buddyShape, this.x, this.y, this.scale * 0.3, this.rotation, 50, 30);
+    Renderer.renderShapes(c, SHAPES.ship, this.x, this.y, this.scale, this.rotation, 50, 50);
+    Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, this.rotation, 50, 30);
 
   }
   u(d) {
@@ -832,24 +851,31 @@ class Ship extends Mob {
       gameOver();
     }
   }
-  landOnCity (c) {
-    if (!this.visitedPlanets[c.name]) {
-      if (c.songFragmentIndex >= 0) {
-        this.songFragments[c.songFragmentIndex] = 'yes';
-        this.visitedPlanets[c.name] = "yes";
+  landOnCity (p, c) {
+    const trigger = triggers[p.name + "-" + c.name]
+    if (trigger) {
+      delete triggers[this.name + "-" + c.name];
+      for (let i = 0; i < trigger.sequence.length; i++) {
+        showConversation (SHAPES[trigger.sequence[i][0]], trigger.sequence[i][1]);
+      }
+      if (trigger.giveInstrument != undefined) {
+        this.songFragments[trigger.giveInstrument] = 'yes';
+        let allFragments = true;
+        for (let i = 0; i < FRAGMENTS.length; i++) {
+          if (!this.songFragments[i]) {
+            allFragments = false;
+            break;
+          }
+        }
+        if (allFragments) {
+          victory();
+        }
+      }
+      if (trigger.next) {
+        const nextTrigger = trigger.next;
+        triggers[nextTrigger.planet + "-" + nextTrigger.city] = nextTrigger;
       }
     }
-    let allFragments = true;
-    for (let i = 0; i < FRAGMENTS.length; i++) {
-      if (!this.songFragments[i]) {
-        allFragments = false;
-        break;
-      }
-    }
-    if (allFragments) {
-      victory();
-    }
-    showConversation("Welcome to " + c.name +". Can I help you with anything?")
   }
   collide(m) {
     if (m.isPlanet) {
@@ -866,7 +892,7 @@ class Ship extends Mob {
 
           const city = m.nearbyCity(this);
           if (city) {
-            this.landOnCity(city);
+            this.landOnCity(m, city);
           }
         } else {
           // Bounce!
@@ -878,8 +904,9 @@ class Ship extends Mob {
 }
 
 let conversationText = "Test";
-function showConversation(text) {
+function showConversation(app, text) {
   gState = 10;
+  conversationApp = app;
   conversationText = text;
 }
 
@@ -1008,7 +1035,7 @@ class City extends Mob {
   }
 
   specialRender(c) {
-    Renderer.renderShapes(c, cities[0], this.x, this.y, this.scale, this.rotation, 50, 50, false);
+    Renderer.renderShapes(c, SHAPES.city, this.x, this.y, this.scale, this.rotation, 50, 50, false);
   }
 
 }
@@ -1161,7 +1188,7 @@ function createPlanet (x, y, size, name, songFragmentIndex) {
   t.color2 = getRandomColor();
   t.scale = size;
   t.hits = 'p';
-  t.addCity(Math.PI / 4, cities[0], "Arkadia", songFragmentIndex);
+  t.addCity(Math.PI / 4, SHAPES.city, "Arkadia", songFragmentIndex);
   return t;
 }
 function startGame() {
