@@ -913,62 +913,6 @@ class Rocket extends GO {
   }
 }
 
-class Enemy extends Mob {
-  constructor(hp, app, lists, reactionTime) {
-    super(app, lists);
-    this.hp = hp;
-    this.reactionTime = reactionTime;
-  }
-
-  nearestPlayer() {
-    return players.length && players.sort((a,b)=>dist(a,this)-dist(b,this))[0];
-  }
-
-  react() {
-    if (this.dead)
-      return;
-    if (this.fireAtPlayer) {
-      this.fire();
-    }
-    timers.push([()=>this.react(), this.reactionTime/1000]);
-  }
-
-  fire() {
-    var p = this.nearestPlayer();
-    if (!p) {
-      return;
-    }
-    playSound(1);
-    var b = new Mob('bullet', [layers[1]]);
-    b.x = this.x;
-    b.y = this.y;
-    var angle = Math.atan2((p.y - this.y), (p.x - this.x));
-    var speed = rand.range(250, 300);
-    b.dx = Math.cos(angle) * speed;
-    b.dy = Math.sin(angle) * speed;
-    b.size = 5;
-    b.hits = 'p';
-    b.kob = true;
-    b.kot = true; // TODO: Kill anywhere outside screen
-    b.scale = 1;
-  }
-
-  collide(m) {
-    this.hp--;
-    this.blink = true;
-    setTimeout(() => this.blink = false, 50);
-    if (this.hp <= 0) {
-      m.player.destroyed(this);
-      super.collide(m);
-    }
-    playSound(0);
-    var e = new Explosion(20);
-    e.x = m.x;
-    e.y = m.y;
-    sfx.push(e);
-    m.destroy();
-  }
-}
 
 class Star extends GO {
   destroy(killType) {
@@ -1162,20 +1106,6 @@ function getPlanetName() {
   return planetNames.pop();
 }
 
-// Enemy Waves
-var wave = 1;
-var waveArray = [];
-function updateWaveArray() {
-  waveArray = [];
-  var ss = '0000000'+(Math.floor(wave / 10)+1);
-  ss = ss.substr(ss.length - 2)
-  for (var i = 0, len = ss.length; i < len; i += 1) {
-    waveArray.push(+ss.charAt(i));
-  }
-}
-
-updateWaveArray();
-
 function getRandomColor() {
   var letters = '0123456789ABCDEF';
   var color = '#';
@@ -1184,35 +1114,6 @@ function getRandomColor() {
   }
   return color;
 }
-
-function addEnemy(){
-  var type = rands.range(0, 10);
-  var diff = Math.floor(wave/10)+1;
-  //diff = wave + 1; // Test
-  switch (type) {
-    case 0: // Formation
-      ef.vrow('d',rands.b(),rands.range(100,W-100),diff*2,diff);
-      break;
-    case 1: // Cruiser
-      ef.hrow('d',rands.b(),rands.range(100,H-100),diff*2,diff);
-      break;
-    case 2:
-      ef.vertical('c',rands.b(),rands.range(100,W-100),diff);
-      break;
-    case 3:
-    case 4:
-    case 5:
-      ef.horizontal('c',rands.b(),rands.range(100,H-100),diff)
-      break;
-    case 6: // Formation
-    case 7: // 
-    case 8: // 
-    case 9: // 
-      ef.f('d',rands.range(2,diff+2),W/2,rands.range(400,600),diff);
-      break;
-  }
-}
-
 
 typed(13, () => {
   if (gState == 0) {
@@ -1279,8 +1180,5 @@ function restart() {
   enemies = [];
   players = [];
   timers = [];
-  wave = 1;
-  waveArray = [];
-  updateWaveArray();
   startGame();
 }
