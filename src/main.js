@@ -525,15 +525,14 @@ function renderUI(c) {
     c.font = font(48);
     c.textAlign="center"; 
     c.fillStyle= "#cf3436";
-    c.fillText("SPACE SONG",W/2,50);
+    c.fillText("Distanced Friends",W/2,50);
     c.font = font(20);
     c.fillStyle= "#ea0a8e";
     c.fillText("INSTRUCTIONS",W/2,90);
     c.fillStyle= "#ffffff";
     c.fillText("Use Arrow Keys to move",W/2,130);
     c.fillText("Enter to change waypoint",W/2,170);
-    c.fillText("Make your way to the planets",W/2,210);
-    c.fillText("to find the six fragments of the song.",W/2,230);
+    c.fillText("Find your long lost friends",W/2,210);
     c.font = font(32);
     c.fillStyle= "#ea0a8e";
     c.fillText("Press Enter to start",W/2,290);
