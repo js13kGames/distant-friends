@@ -122,7 +122,8 @@ function typed(keyCode, callback){
 }
 
 const Renderer = {
-  renderShapes(c, shapes, x, y, scale, rotation, pivotX, pivotY, fixedToCamera) {
+  // Skew alters the X scale
+  renderShapes(c, shapes, x, y, scale, skew, rotation, pivotX, pivotY, fixedToCamera) {
     shapes.forEach(sh => {
       if (sh[0] == "C") {
         this.renderCircle(c, sh[3], sh[4], sh[5], sh[6], sh [1] * scale + x, sh[2]  * scale + y, scale, pivotX, pivotY, false, fixedToCamera);
@@ -130,14 +131,14 @@ const Renderer = {
           this.renderCircle(c, sh[3], sh[4], sh[5], sh[6], -sh [1] * scale + x, sh[2]  * scale + y, scale, pivotX, pivotY, true, fixedToCamera);
         }
       } else {
-        this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, rotation, pivotX, pivotY, false, fixedToCamera);
+        this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, skew, rotation, pivotX, pivotY, false, fixedToCamera);
         if (!sh[4]) {
-          this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, rotation, pivotX, pivotY, true, fixedToCamera);
+          this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, 1 + (1 - skew), rotation, pivotX, pivotY, true, fixedToCamera);
         }
       }
     });
   },
-  renderPath(c, path, strokeStyle, lineWidth, fillStyle, x, y, scale, rotation, pivotX, pivotY, flip, fixedToCamera) {
+  renderPath(c, path, strokeStyle, lineWidth, fillStyle, x, y, scale, skew, rotation, pivotX, pivotY, flip, fixedToCamera) {
     c.strokeStyle = strokeStyle;
     c.lineWidth = lineWidth;
     c.fillStyle = fillStyle;
@@ -145,7 +146,8 @@ const Renderer = {
       x = cameraX(x);
       y = cameraY(y);
     }
-    pivotX = pivotX * scale;
+    let scaleX = scale / skew;
+    pivotX = pivotX * scaleX;
     pivotY = pivotY * scale;
     const transPivotX = flip ? x + pivotX : x - pivotX;
     c.translate(transPivotX, y - pivotY);
@@ -153,7 +155,7 @@ const Renderer = {
     c.translate(rotaPivotX, pivotY);
     c.rotate(rotation + Math.PI / 2);
     c.translate(-rotaPivotX, -pivotY);
-    c.scale(scale * (flip ? -1 : 1), scale);
+    c.scale(scaleX * (flip ? -1 : 1), scale);
     const p2d = new Path2D(path);
     c.stroke(p2d);
     if (fillStyle)
@@ -182,81 +184,7 @@ const Renderer = {
     c.stroke();
     c.fill();
     c.setTransform(1, 0, 0, 1, 0, 0);
-  },
-  /*
-  render(c,ins,x,y,s,over,flip,scalex, rotation, fixedToCamera) {
-    var sx = s
-    if (scalex)
-      sx = s * scalex;
-    var xFlip = flip ? -1 : 1;
-    c.fillStyle = over != undefined ? over : ins[0];
-    var i = 1;
-    drawlLine = false;
-    c.globalAlpha = 1;
-    if (!fixedToCamera) {
-      x = cameraX(x);
-      y = cameraY(y);
-    }
-    c.translate(x, y);
-    c.rotate(rotation + Math.PI / 2);
-    c.translate(-x, -y);
-    while(i < ins.length + 2) {
-      let co = ins[i++];
-      switch (co) {
-        case 'c':
-          c.beginPath();
-          c.arc(x,y,ins[i++]*s,0,Math.PI*2,true);
-          c.fill();
-          drawlLine = false;
-          break;
-        case 'p':
-          c.strokeStyle = c.fillStyle;
-          c.beginPath();
-          c.moveTo(ins[i++]*sx*xFlip+x, ins[i++]*s+y);
-          co = ins[i++];
-          drawlLine = true;
-          break;
-        case 'f':
-          c.fill();
-          drawlLine = false;
-          break;
-        case 's':
-          c.stroke();
-          drawlLine = false;
-          break;
-        case 'a':
-          c.globalAlpha = ins[i++];
-          break;
-        case 'o':
-          c.fillStyle = over != undefined ? over : ins[i++];
-          break;
-        case 'v':
-          c.save();
-          c.beginPath();
-          c.translate(x+ins[i++]*sx*xFlip, y+ins[i++]*s);
-          c.scale(1, ins[i++]);
-          c.arc(0, 0, ins[i++]*s, 0, 2 * Math.PI, false);
-          c.restore(); // restore to original state
-          break;
-        case 'vh':
-          c.save();
-          c.beginPath();
-          c.translate(x+ins[i++]*s*xFlip, y+ins[i++]*s);
-          c.scale(1, ins[i++]);
-          c.arc(0, 0, ins[i++]*s, ins[i++], ins[i++], false);
-          c.restore();
-          break;
-        case 'm':
-          co = ins[i++];
-          drawlLine = true;
-          break;
-      }
-      if (drawlLine) {
-        c.lineTo(co*sx*xFlip+x, ins[i++]*s+y);
-      }
-    };
-    c.setTransform(1, 0, 0, 1, 0, 0);
-  }*/
+  }
 }
 
 // Mob classes
@@ -362,7 +290,7 @@ function renderMob(m, flip) {
     turnScale = 1 - Math.abs(m.turnScale);
   } 
   if (!m.specialRender) {
-    Renderer.renderShapes(ctx, m.app, m.x, m.y, m.scale, m.rotation, 50, 50);
+    Renderer.renderShapes(ctx, m.app, m.x, m.y, m.scale, 1, m.rotation, 50, 50);
   }
 }
 var timers = [];
@@ -521,7 +449,7 @@ function renderUI(c) {
     }
 
     const angle = Math.atan2(p1.y - currentWaypoint.y, p1.x - currentWaypoint.x) + Math.PI;
-    Renderer.renderShapes(c, SHAPES.triangle, W / 2, H - 60, 1, angle, 50, 50, true);
+    Renderer.renderShapes(c, SHAPES.triangle, W / 2, H - 60, 1, 1, angle, 50, 50, true);
     c.textAlign="center"; 
     c.fillText(soundFragmentsTxt, W / 2, 20);
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
@@ -545,8 +473,8 @@ function renderUI(c) {
     c.globalAlpha = 0.5;
     c.fillRect(0, H - 180, W, 125);
     c.globalAlpha = 1;
-    Renderer.renderShapes(c, SHAPES.suit, 150, H - 130, 2, -Math.PI / 2, 50, 30, true);
-    Renderer.renderShapes(c, conversationApp, 150, H - 160, 2, -Math.PI / 2, 50, 30, true);
+    Renderer.renderShapes(c, SHAPES.suit, 150, H - 130, 2, 1, -Math.PI / 2, 50, 30, true);
+    Renderer.renderShapes(c, conversationApp, 150, H - 160, 2, 1, -Math.PI / 2, 50, 30, true);
     c.font = font(24);
     c.fillStyle= "#FFF";
     c.textAlign="left"; 
@@ -687,10 +615,13 @@ const SHAPES = {
   ]
 }
 
+const maxTurnScale = 0.2;
+const turnScaleSpeed = 0.015;
+
 class Ship extends GO {
   specialRender(c) {
-    Renderer.renderShapes(c, SHAPES.ship, this.x, this.y, this.scale, this.rotation, 50, 50);
-    Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, this.rotation, 50, 30);
+    Renderer.renderShapes(c, SHAPES.ship, this.x, this.y, this.scale, 1 + this.turnScale, this.rotation, 50, 50);
+    Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, 1, this.rotation, 50, 30);
   }
   u(d) {
     super.u(d);
@@ -736,16 +667,16 @@ class Ship extends GO {
     }
     if (isDown(this.keys[2])){ // Left
       this.flipped = true;
-      this.turnScale -= 0.02;
-      if (this.turnScale < -0.5) {
-        this.turnScale = -0.5;
+      this.turnScale -= turnScaleSpeed;
+      if (this.turnScale < -maxTurnScale) {
+        this.turnScale = -maxTurnScale;
       }
       this.rotation -= rotSpeed;
     } else if (isDown(this.keys[3])){ // Right
       this.flipped = true;
-      this.turnScale += 0.02;
-      if (this.turnScale > 0.5) {
-        this.turnScale = 0.5;
+      this.turnScale += turnScaleSpeed;
+      if (this.turnScale > maxTurnScale) {
+        this.turnScale = maxTurnScale;
       }
       this.rotation += rotSpeed;
     }
