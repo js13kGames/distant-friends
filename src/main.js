@@ -71,8 +71,8 @@ var rand = {
   range: function(min, max) {
     return this.int(max - min) + min;
   },
-  b() {
-    return this.range(0,100)<50;
+  b(p = 50) {
+    return this.range(0,100)<p;
   }
 };
 
@@ -472,11 +472,18 @@ function renderUI(c) {
 
     const angle = Math.atan2(p1.y - currentWaypoint.y, p1.x - currentWaypoint.x) + Math.PI;
     Renderer.renderShapes(c, SHAPES.triangle, W / 2, H - 60, 1, 1, angle, 50, 50, true);
+    c.fillStyle= "#ffffff";
     c.textAlign="center"; 
     c.fillText(soundFragmentsTxt, W / 2, 20);
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
     c.fillText("[Enter] to change", W / 2, H - 5);
     c.textAlign="left"; 
+    // DEBUG
+    c.fillText("Cruising: " + p1.isCruising(), 50, 50);
+    c.fillText("Near Planet: " + p1.nearPlanet(), 50, 70);
+    c.fillText("DV: " + p1.dv, 50, 90);
+    c.fillText("Asteroids: " + asteroids, 50, 110);
+
     if (p1.won) {
       c.font = font(24);
       c.textAlign="center"; 
@@ -508,11 +515,12 @@ var camera = {x : 0, y : 0};
 const rotSpeed = Math.PI / 90;
 
 const WH = '#ffffff';
+const GREY = '#888';
 
 const SHAPES = {
-  star1: [["C", 0, 0, 1, WH, 0, WH]],
-  star2: [["C", 0, 0, 2, WH, 0, WH]],
-  star3: [["C", 0, 0, 3, WH, 0, WH]],
+  star1: [["C", 50, 50, 1, WH, 0, WH]],
+  star2: [["C", 50, 50, 2, WH, 0, WH]],
+  star3: [["C", 50, 50, 3, WH, 0, WH]],
   triangle: [["M24 59L50 13L73 56L44 49Z", "#131047", 2, "#5b5e8b","noflip"]],
   ship: [
     [
@@ -641,6 +649,12 @@ const maxTurnScale = 0.2;
 const turnScaleSpeed = 0.015;
 
 class Ship extends GO {
+  isCruising () {
+    return !this.nearPlanet() && this.dv > 250;
+  }
+  nearPlanet () {
+    return planets.find(p => rdist(p, this) < (ASTEROID_SPACE + p.size));
+  }
   specialRender(c) {
     Renderer.renderShapes(c, SHAPES.ship, this.x, this.y, this.scale, 1 + this.turnScale, this.rotation, 50, 50);
     Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, 1, this.rotation, 50, 30);
@@ -768,6 +782,8 @@ class Ship extends GO {
           }
         }
       }
+    } else if (m.isAsteroid) {
+      this.dv = 500 * -Math.sign(this.dv);
     }
   }
 }
@@ -845,6 +861,44 @@ class City extends GO {
   constructor(app, lists, name) {
     super(app, lists);
     this.name = name;
+  }
+}
+
+class Asteroid extends GO {
+  constructor (x, y, size) {
+    super('asteroid', [layers[2]]);
+    this.isAsteroid = true;
+    this.x = x; this.y = y;
+    this.size = size;
+    this.scale = size;
+    this.hits = 'p';
+    this.deathInterval = setInterval(() => {
+      if (rdist(this, p1) > ASTEROID_SPACE) {
+        asteroids--;
+        clearInterval(this.deathInterval);
+        this.destroy();
+      }
+    }, 1000)
+    const blurbCount = rand.range(10, 20);
+    this.blurbs = [];
+    this.blurbs[0] = [0, 0, this.scale];
+    for (let i = 1; i < blurbCount; i++) {
+      const blurbSize = this.scale * rand.range(4, 7) / 10;
+      const dist = rand.range(this.scale - blurbSize, this.scale);
+      const angle = rand.range(0, 2 * Math.PI);
+      this.blurbs[i] = [Math.cos(angle) * dist, Math.sin(angle) * dist, blurbSize];
+    }
+  }
+  specialRender(c) {
+    c.globalAlpha = 1;
+    const thex = cameraX(this.x);
+    const they = cameraY(this.y);
+    c.fillStyle = GREY;
+    for (let i = 0; i < this.blurbs.length; i++) {
+      c.beginPath();
+      c.arc(thex + this.blurbs[i][0],they + this.blurbs[i][1], this.blurbs[i][2], 0, Math.PI*2, true);
+      c.fill();
+    }
   }
 }
 
@@ -1061,4 +1115,30 @@ function restart() {
   players = [];
   timers = [];
   startGame();
+}
+
+setInterval (() => {
+  if (gState != 2) return;
+  if (p1.isCruising() && rand.b(30))
+    asteroidField(p1.rotation);
+}, 2000);
+
+
+let asteroids = 0;
+const ASTEROID_ANGLE_RANGE = 60;
+const ASTEROID_START = 700;
+const ASTEROID_RING_WIDTH = 100;
+const ASTEROID_RINGS = 5;
+const ASTEROID_SPACE = ASTEROID_START + ASTEROID_RING_WIDTH * ASTEROID_RINGS;
+
+function asteroidField(direction) {
+  for (let j = 0; j < ASTEROID_RINGS; j++)
+    for (let i = 0; i < 10; i++) {
+      const distance = ASTEROID_START + rand.range(-40, 40) + ASTEROID_RING_WIDTH * j;
+      const aDirection = direction + rand.range(-ASTEROID_ANGLE_RANGE, ASTEROID_ANGLE_RANGE) * (Math.PI / 180);
+      const x = p1.x + distance * Math.cos(aDirection);
+      const y = p1.y + distance * Math.sin(aDirection);
+      new Asteroid(x, y, rand.range(20, 40));
+      asteroids++;
+    }
 }
