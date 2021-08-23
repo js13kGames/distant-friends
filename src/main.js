@@ -515,6 +515,13 @@ const FRIENDS = [
         planet: 'Ninua',
         city: 'Arkadia',
         sequence: [
+          [ 'cat', "Kori left Ninua ages ago, he went to Arkadia, in Apos."]
+        ]
+      },
+      {
+        planet: 'Apos',
+        city: 'Arkadia',
+        sequence: [
           [ 'dog', "Hey pal! it's so great to see you again, I missed you!"]
         ],
         giveInstrument: 1
