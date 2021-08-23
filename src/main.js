@@ -392,12 +392,17 @@ const PLANETS = [
       ['Kamera', 0.3, 'town']
     ]
   ],
+  [
+    'Oldogg', -8000, 9200, 1300, [
+      ['Geckoria', 0.1, 'capital'],
+      ['Karnalgg', 1.8, 'town']
+    ]
+  ],
 ]
 
 const FRIENDS = [
   {
     name: 'Kori',
-    memories: ["I wonder how he's doing... we stopped talking because we disagreed about the best food"],
     findSequence: [
       {
         planet: 'Ninua',
@@ -413,6 +418,26 @@ const FRIENDS = [
           [ 'dog', "Hey pal! it's so great to see you again, I missed you!"]
         ],
         giveInstrument: 1
+      }
+    ]
+  },
+  {
+    name: 'Ponchi',
+    findSequence: [
+      {
+        planet: 'Ninua',
+        city: 'Veyros',
+        sequence: [
+          [ 'cat', "Ah, Ponchi left for Oldogg to fulfill his dreams."]
+        ]
+      },
+      {
+        planet: 'Oldogg',
+        city: 'Karnalgg',
+        sequence: [
+          [ 'dog', "Oh my god, you are still alive! come join me and play!"]
+        ],
+        giveInstrument: 2
       }
     ]
   }
