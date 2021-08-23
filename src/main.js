@@ -818,12 +818,22 @@ class Rocket extends GO {
 
 
 class Star extends GO {
+  constructor (size) {
+    super('coolStar', [layers[0]]);
+    this.size = size;
+    this.rotation = rand.range(0, Math.PI * 2);
+    this.scale = size / 5;
+    this.kot = true;
+    this.kob = true;
+    this.kol = true;
+    this.kor = true;
+  }
   destroy(killType) {
     const kob = this.y > camera.y + H / 2 + this.size;
     super.destroy();
     // Create a new Star
     var size = rand.range(1, 3);
-    var t = new Star('coolStar', [layers[0]]);
+    var t = new Star(size);
     
     switch (killType) {
       case 'kob':
@@ -843,13 +853,6 @@ class Star extends GO {
         t.y = rand.range(p1.y - H/2, p1.y + H/2);
         break;
     }
-    t.size = size;
-    t.kot = true;
-    t.kob = true;
-    t.kol = true;
-    t.kor = true;
-    t.rotation = rand.range(0, Math.PI * 2);
-    t.scale = size / 5;
   }
 }
 
@@ -1078,16 +1081,9 @@ typed(13, () => {
 
 function stars50(){
   for (var i = 0; i < 50; i++) {
-    var size = rand.range(1, 3);
-    var t = new Star('star'+size, [layers[0]]);
+    var t = new Star(rand.range(1, 3));
     t.x = rand.range(p1.x - W / 2, p1.x + W / 2);
     t.y = rand.range(p1.y - H / 2, p1.y + H / 2);
-    t.size = size;
-    t.kob = true;
-    t.kot = true;
-    t.kol = true;
-    t.kor = true;
-    t.scale = 1;
   }
 }
 
