@@ -591,97 +591,6 @@ function renderUI(c) {
 var camera = {x : 0, y : 0};
 const rotSpeed = Math.PI / 90;
 
-var ef = { // Enemy Factory
-  i(){
-    this.defs={
-      d: {ap:'mine',hp:10,sp:300,sc:10,scale:5,size:15}, // Crasher coming down in formation
-      c: {ap:'enemyFighter',hp:1,sp:100,sc:50,fp:true,size:15,scale:4}, // Cruises the screen shooting at player
-      p: {ap:'platform',hp:1,sp:20,sc:0,size:80,scale:25,t:[[2,-1],[2,1]],transparent:true}, // Turret platform
-      t: {ap:'e1',hp:5,sp:0,sc:20,fp:true,size:15}, // Turret
-    }
-  },
-  b(id,x,y,dx,dy,lv=1){
-    var d = this.defs[id];
-    const groups = [layers[d.t?1:2]];
-    if (!d.transparent) {
-      groups.push(enemies);
-    }
-    var hp = d.hp + d.hp * (lv / 2);
-    var e = new Enemy(hp,d.ap,groups);
-    e.x = x;
-    e.y = y;
-    e.dy = dy;
-    e.dx = dx;
-    e.score = d.sc;
-    e.reactionTime = d.rt || 10000;
-    e.reactionTime -= lv * 2000;
-    if (e.reactionTime < 1000) {
-      e.reactionTime = 1000;
-    }
-    e.fireAtPlayer = d.fp;
-    e.size = d.size;
-    if (!d.transparent) {
-      e.hits = 'p'; // Player
-    }
-    var s = e.scale = d.scale || 1;
-    if (d.t) { // Mounted turrets
-      d.t.forEach(t => {
-        e.ch.push(this.b('t',x+t[0]*s,y+t[1]*s,dx,dy));
-        e.ch.push(this.b('t',x+t[0]*-s,y+t[1]*s,dx,dy));
-      });
-    }
-    e.react();
-
-    this.kob = dy > 0;
-    this.kot = dy < 0;
-    this.kol = dx < 0;
-    this.kor = dx > 0;
-    return e;
-  },
-  horizontal(id,l,y,lv) {
-    var d = this.defs[id];
-    var x = l?(W+d.size):-d.size;
-    var e = this.b(id,x,y,d.sp*(l?-1:1),0,lv);
-    e.kor = !l;
-    e.kol = l;
-  },
-  vertical(id,top,x,lv) {
-    var d = this.defs[id];
-    this.b(id,x,top?-100:H+100,0,top?d.sp:-d.sp,lv)
-  },
-  f(id,n,x,w,lv) { // Horizontal Formation
-    var d = this.defs[id];
-    var ix=x-w/2;
-    var is=w/(n-1);
-    for (var i = 0; i < n; i++) {
-      this.b(id,ix+i*is,-100,0,d.sp,lv)
-    }
-  },
-  hrow(id,left,y,n,lv) {
-    var d = this.defs[id];
-    var is = d.size + 20;
-    var ix= -n*is - 100;
-    if (left) {
-      ix = W + 100;
-    }
-    for (var i = 0; i < n; i++) {
-      this.b(id,ix+i*is,y,d.sp*(left?-1:1),0,lv)
-    }
-  },
-  vrow(id,top,x,n,lv) {
-    var d = this.defs[id];
-    var is = -(d.size + 20);
-    var iy= n*is - 100;
-    if (!top) {
-      iy = H + 100;
-      is *= -1;
-    }
-    for (var i = 0; i < n; i++) {
-      this.b(id,x,iy+i*is,0,d.sp*(top?1:-1),lv)
-    }
-  }
-}
-ef.i();
 
 const shipShape = [
   [
@@ -1362,35 +1271,6 @@ function addEnemy(){
   }
 }
 
-function newWave(){
-  // Check at least one player alive
-  if (!players.filter(p=>!p.dead).length) {
-    return;
-  }
-  addEnemy();
-  addEnemy();
-  if (rands.range(0,100) < 20) {
-    ef.vertical('p',rands.b(),rands.range(100,W-100),Math.floor(wave/10)+1);
-  }
-  if (wave % 20 === 1) {
-    var t = new Planet('planet', [layers[0]]);
-    t.x = rands.range(100, W - 100);
-    t.y = -100;
-    t.dy = 10;
-    t.size = rands.range(2,10);
-    var angle = seeded() * (2 * Math.PI);
-    t.gax = Math.cos(angle) * t.size;
-    t.gay = Math.sin(angle) * t.size;
-    console.log(angle, t.size, t.gax, t.gay)
-    t.color1 = getRandomColor();
-    t.color2 = getRandomColor();
-    t.kob = true;
-    t.scale = 1;
-  }
-  wave++;
-  updateWaveArray();
-  timers.push([()=>newWave(), 3]);
-}
 
 typed(13, () => {
   if (gState == 0) {
