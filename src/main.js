@@ -372,6 +372,28 @@ const font = (s) => s + 'px Courier New';
 
 const FRAGMENTS = ['🎹','🎻','🎷','🎸','🎺','🥁'];
 
+const PLANETS = [
+  [
+    'Ninua', 0, 0, 2000, [
+      ['Arkadia', 0.25, 'capital'],
+      ['Veyros', 1.25, 'industrial'],
+      ['Sprot', 1.1, 'town']
+    ]
+  ],
+  [
+    'Poria', 0, -3400, 200, [
+      ['Kamera', 0.3, 'town']
+    ]
+  ],
+  [
+    'Apos', -10000, 0, 1000, [
+      ['Vernya', 0.1, 'capital'],
+      ['Koroko', 1.8, 'town'],
+      ['Kamera', 0.3, 'town']
+    ]
+  ],
+]
+
 const FRIENDS = [
   {
     name: 'Kori',
@@ -381,12 +403,12 @@ const FRIENDS = [
         planet: 'Ninua',
         city: 'Arkadia',
         sequence: [
-          [ 'cat', "Kori left Ninua ages ago, he went to Arkadia, in Apos."]
+          [ 'cat', "Kori left Ninua ages ago, he went to Koroko, in Apos."]
         ]
       },
       {
         planet: 'Apos',
-        city: 'Arkadia',
+        city: 'Koroko',
         sequence: [
           [ 'dog', "Hey pal! it's so great to see you again, I missed you!"]
         ],
@@ -838,13 +860,12 @@ class Planet extends GO {
     c.arc(thex,they,this.size,0,Math.PI*2,true);
     c.fill();
   }
-  addCity (rotation, app, name, songFragmentIndex) {
+  addCity (rotation, app, name) {
     const c = new City(app, [layers[0]], name);
     c.x = this.x + this.size * Math.cos(rotation);
     c.y = this.y + this.size * Math.sin(rotation);
     c.scale = 2;
     c.rotation = rotation;
-    c.songFragmentIndex = songFragmentIndex;
     this.cities.push(c);
   }
   nearbyCity (p) {
@@ -895,21 +916,23 @@ var p1;
 let currentWaypoint, currentWaypointIndex;
 let planets;
 
-function createPlanet (x, y, size, name, songFragmentIndex) {
+function createPlanet (planetData) {
   var t = new Planet();
-  t.name = name;
+  t.name = planetData[0];
   t.isPlanet = true;
-  t.x = x;
-  t.y = y;
-  t.size = size;
+  t.x = planetData[1];
+  t.y = planetData[2];
+  t.size = planetData[3];
   var angle = seeded() * (2 * Math.PI);
   t.gax = Math.cos(angle) * t.size;
   t.gay = Math.sin(angle) * t.size;
   t.color1 = getRandomColor();
   t.color2 = getRandomColor();
-  t.scale = size;
+  t.scale = planetData[3];
   t.hits = 'p';
-  t.addCity(Math.PI / 4, 'city', "Arkadia", songFragmentIndex);
+  planetData[4].forEach(cd => {
+    t.addCity(Math.PI * cd[1], 'city', cd[0]);
+  });
   return t;
 }
 function startGame() {
@@ -940,7 +963,7 @@ function startGame() {
         }
         break;
       }
-      planets.push(createPlanet(planetPosition.x, planetPosition.y, rand.range(1000, 3500), getPlanetName(), i));
+      planets = PLANETS.map(PD => createPlanet(PD));
     }
   }
   currentWaypoint = planets[0];
@@ -956,12 +979,6 @@ function startGame() {
   camera.y = p1.y;
   stars50();
 
-}
-
-const planetNames = ['Mercuria', 'Afrodin', 'Gaia', 'Heracle', 'Zyus', 'Sarton', 'Apos', 'Ninua'];
-
-function getPlanetName() {
-  return planetNames.pop();
 }
 
 function getRandomColor() {
