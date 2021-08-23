@@ -518,9 +518,7 @@ const WH = '#ffffff';
 const GREY = '#888';
 
 const SHAPES = {
-  star1: [["C", 50, 50, 1, WH, 0, WH]],
-  star2: [["C", 50, 50, 2, WH, 0, WH]],
-  star3: [["C", 50, 50, 3, WH, 0, WH]],
+  coolStar: [["M44 41Q49 14 56 41Q85 30 65 49Q77 73 55 59Q32 74 45 52Q18 50 44 41", "#131047", 2, "#5b5e8b","noflip"]],
   triangle: [["M24 59L50 13L73 56L44 49Z", "#131047", 2, "#5b5e8b","noflip"]],
   ship: [
     [
@@ -825,7 +823,7 @@ class Star extends GO {
     super.destroy();
     // Create a new Star
     var size = rand.range(1, 3);
-    var t = new Star('star'+size, [layers[0]]);
+    var t = new Star('coolStar', [layers[0]]);
     
     switch (killType) {
       case 'kob':
@@ -850,7 +848,8 @@ class Star extends GO {
     t.kob = true;
     t.kol = true;
     t.kor = true;
-    t.scale = 1;
+    t.rotation = rand.range(0, Math.PI * 2);
+    t.scale = size / 5;
   }
 }
 
