@@ -256,7 +256,7 @@ const Renderer = {
     };
     c.setTransform(1, 0, 0, 1, 0, 0);
   }
-}   
+}
 
 // Mob classes
 
@@ -802,6 +802,15 @@ const dog = [
   ]
 ]
 
+const cities = [
+  [
+    [
+      "M79 84L79 45L72 45L72 47L68 47L68 32L63 32L63 41L57 41L57 45L53 45L53 28A2 3 0 0 0 46 28L46 37L41 37L41 42L33 42A5 8 0 0 0 23 42L19 42L19 85",
+      "#0d1852", 2, "#0d1852"
+    ]
+  ]
+];
+
 
 class Ship extends Mob {
   specialRender(c) {
@@ -914,6 +923,25 @@ class Ship extends Mob {
       gameOver();
     }
   }
+  landOnCity (c) {
+    if (!this.visitedPlanets[c.name]) {
+      if (c.songFragmentIndex >= 0) {
+        this.songFragments[c.songFragmentIndex] = 'yes';
+        this.visitedPlanets[c.name] = "yes";
+      }
+    }
+    let allFragments = true;
+    for (let i = 0; i < FRAGMENTS.length; i++) {
+      if (!this.songFragments[i]) {
+        allFragments = false;
+        break;
+      }
+    }
+    if (allFragments) {
+      victory();
+    }
+    showConversation("Welcome to " + c.name +". Can I help you with anything?")
+  }
   collide(m) {
     if (m.isPlanet) {
       if (this.landed) {
@@ -927,21 +955,10 @@ class Ship extends Mob {
           this.x = m.x + Math.cos(angle) * (m.size + this.size + 1);
           this.y = m.y + Math.sin(angle) * (m.size + this.size + 1);
 
-          if (!this.visitedPlanets[m.name]) {
-            this.songFragments[m.songFragmentIndex] = 'yes';
-            this.visitedPlanets[m.name] = "yes";
+          const city = m.nearbyCity(this);
+          if (city) {
+            this.landOnCity(city);
           }
-          let allFragments = true;
-          for (let i = 0; i < FRAGMENTS.length; i++) {
-            if (!this.songFragments[i]) {
-              allFragments = false;
-              break;
-            }
-          }
-          if (allFragments) {
-            victory();
-          }
-          showConversation("Welcome to " + m.name +". Can I help you with anything?")
         } else {
           // Bounce!
           this.dv = -500;
@@ -1075,7 +1092,23 @@ class Star extends BGObject {
 function cameraX(x) { return x - camera.x + W / 2}
 function cameraY(y) { return y - camera.y + H / 2}
 
+class City extends Mob {
+  constructor(app, lists, name) {
+    super(app, lists);
+    this.name = name;
+  }
+
+  specialRender(c) {
+    Renderer.renderShapes(c, cities[0], this.x, this.y, this.scale, this.rotation, 50, 50, false);
+  }
+
+}
+
 class Planet extends Mob {
+  constructor () {
+    super(null, [layers[2]]);
+    this.cities = [];
+  }
   specialRender(c) {
     c.globalAlpha = 1;
     const thex = cameraX(this.x);
@@ -1088,9 +1121,17 @@ class Planet extends Mob {
     c.arc(thex,they,this.size,0,Math.PI*2,true);
     c.fill();
   }
-
-  collide(m) {
-    console.log(m,'collided');
+  addCity (rotation, app, name, songFragmentIndex) {
+    const c = new City(app, [layers[0]], name);
+    c.x = this.x + this.size * Math.cos(rotation);
+    c.y = this.y + this.size * Math.sin(rotation);
+    c.scale = 2;
+    c.rotation = rotation;
+    c.songFragmentIndex = songFragmentIndex;
+    this.cities.push(c);
+  }
+  nearbyCity (p) {
+    return this.cities.find (c => rdist(c, p) < 100);
   }
 }
 
@@ -1198,7 +1239,7 @@ let currentWaypoint, currentWaypointIndex;
 let planets;
 
 function createPlanet (x, y, size, name, songFragmentIndex) {
-  var t = new Planet('planet', [layers[2]]);
+  var t = new Planet();
   t.name = name;
   t.isPlanet = true;
   t.x = x;
@@ -1211,7 +1252,7 @@ function createPlanet (x, y, size, name, songFragmentIndex) {
   t.color2 = getRandomColor();
   t.scale = size;
   t.hits = 'p';
-  t.songFragmentIndex = songFragmentIndex;
+  t.addCity(Math.PI / 4, cities[0], "Arkadia", songFragmentIndex);
   return t;
 }
 function startGame() {
