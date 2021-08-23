@@ -888,8 +888,9 @@ class Asteroid extends GO {
       const blurbSize = this.scale * rand.range(4, 7) / 10;
       const dist = rand.range(this.scale - blurbSize, this.scale);
       const angle = rand.range(0, 2 * Math.PI);
-      this.blurbs[i] = [Math.cos(angle) * dist, Math.sin(angle) * dist, blurbSize];
+      this.blurbs[i] = [angle, dist, blurbSize];
     }
+    this.rotSpeed = Math.PI / rand.range(700, 1200) * (rand.b() ? 1 : -1);
   }
   specialRender(c) {
     c.globalAlpha = 1;
@@ -898,9 +899,15 @@ class Asteroid extends GO {
     c.fillStyle = GREY;
     for (let i = 0; i < this.blurbs.length; i++) {
       c.beginPath();
-      c.arc(thex + this.blurbs[i][0],they + this.blurbs[i][1], this.blurbs[i][2], 0, Math.PI*2, true);
+      const angle = this.blurbs[i][0];
+      const dist = this.blurbs[i][1];
+      c.arc(thex + Math.cos(angle + this.rotation) * dist,they + Math.sin(angle + this.rotation) * dist, this.blurbs[i][2], 0, Math.PI*2, true);
       c.fill();
     }
+  }
+
+  u() {
+    this.rotation += this.rotSpeed;
   }
 }
 
