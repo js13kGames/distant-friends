@@ -425,39 +425,6 @@ raf(function(d) {
   renderUI(ctx);
 });
 
-const lcdmap = [
-  [1,1,1,0,1,1,1],
-  [0,0,1,0,0,1,0],
-  [1,0,1,1,1,0,1],
-  [1,0,1,1,0,1,1],
-  [0,1,1,1,0,1,0],
-  [1,1,0,1,0,1,1],
-  [1,1,0,1,1,1,1],
-  [1,0,1,0,0,1,0],
-  [1,1,1,1,1,1,1],
-  [1,1,1,1,0,1,1],
-]
-
-var NS = 3;
-// Score renderer
-function renderScore(c, x, y, score) {
-  score.forEach((d, i) => renderDigit(c, x + i * (NS * 12), y, d));
-}
-
-function renderDigit(c, x, y, digit) {
-  const x6 = 6 * NS + NS;
-  const x3 = 3 * NS + NS;
-  const f = Renderer.render.bind(Renderer);
-  const l = lcdmap[digit];
-  f(c, l[0]?a.n3:a.n2, x, y - x6, NS);
-  f(c, l[1]?a.n1:a.n0, x - x3, y - x3, NS);
-  f(c, l[2]?a.n1:a.n0, x + x3, y - x3, NS);
-  f(c, l[3]?a.n3:a.n2, x, y, NS);
-  f(c, l[4]?a.n1:a.n0, x - x3, y + x3, NS);
-  f(c, l[5]?a.n1:a.n0, x + x3, y + x3, NS);
-  f(c, l[6]?a.n3:a.n2, x, y + x6, NS); 
-}
-
 // THE GAME!
 let W = canvas.width;
 let H = canvas.height;
@@ -744,12 +711,6 @@ class Ship extends GO {
     if (this.dv > 2000) {
       this.dv = 2000; // Temporary
     }
-
-    this.fuel -= this.av * d * 0.003;
-    if (this.fuel < 0) {
-      this.fuel = 0;
-    }
-    this.updateScoreArray();
     camera.x = this.x;
     camera.y = this.y;
   }
@@ -765,9 +726,6 @@ class Ship extends GO {
     } else if (!this.landed && isDown(this.keys[1])){ // Reduce Thrust
       this.av = -200;
     } else {
-      this.av = 0;
-    }
-    if (this.fuel <= 0) {
       this.av = 0;
     }
     if (this.av > 1000) { // max thrust
@@ -803,32 +761,6 @@ class Ship extends GO {
     setTimeout(() => this.fireBlocked = false, 100);
     new Rocket(this.x + rand.range(-20, 20), this.y + rand.range(-20, 20), this.rotation);
     playSound(2);
-  }
-  destroyed(m) {
-    playSound(3);
-    this.score += m.score;
-    this.updateScoreArray();
-  }
-  updateScoreArray() {
-    this.scoreArray = [];
-    var ss = '0000000'+Math.abs(this.av);
-    ss = ss.substr(ss.length - 5)
-    for (var i = 0, len = ss.length; i < len; i += 1) {
-      this.scoreArray.push(+ss.charAt(i));
-    }
-  }
-  destroy() {
-    if (this.energy > 0) {
-      this.energy--;
-      playSound(0);
-      return;
-    }
-    playSound(3);
-    super.destroy();
-    this.dead = true;
-    if (!players.filter(p=>!p.dead).length) {
-      gameOver();
-    }
   }
   landOnCity (p, c) {
     const trigger = triggers[p.name + "-" + c.name]
@@ -1057,14 +989,10 @@ function startGame() {
     p.x = x;
     p.y = H - 20;
     p.size = 8;
-    p.score = 0;
-    p.updateScoreArray();
     p.scale = 2;
-    p.fuel = 10000;
     p.keys=k;
     p.rotation = -Math.PI / 2;
     p.songFragments = {};
-    p.visitedPlanets = {};
     return p;
   }
 
