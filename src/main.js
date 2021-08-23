@@ -123,28 +123,31 @@ function typed(keyCode, callback){
 
 const Renderer = {
   // Skew alters the X scale
-  renderShapes(c, shapes, x, y, scale, skew, rotation, pivotX, pivotY, fixedToCamera) {
+  renderShapes(c, shapes, x, y, scale, skew, rotation, pivotX, pivotY, camera, fixedToCamera) {
+    if (!camera) {
+      camera = mainCamera;
+    }
     shapes.forEach(sh => {
       if (sh[0] == "C") {
-        this.renderCircle(c, sh[3], sh[4], sh[5], sh[6], sh [1] * scale + x, sh[2]  * scale + y, scale, pivotX, pivotY, false, fixedToCamera);
+        this.renderCircle(c, sh[3], sh[4], sh[5], sh[6], sh [1] * scale + x, sh[2]  * scale + y, scale, pivotX, pivotY, false, camera, fixedToCamera);
         if (!sh[7]) {
-          this.renderCircle(c, sh[3], sh[4], sh[5], sh[6], -sh [1] * scale + x, sh[2]  * scale + y, scale, pivotX, pivotY, true, fixedToCamera);
+          this.renderCircle(c, sh[3], sh[4], sh[5], sh[6], -sh [1] * scale + x, sh[2]  * scale + y, scale, pivotX, pivotY, true, camera, fixedToCamera);
         }
       } else {
-        this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, skew, rotation, pivotX, pivotY, false, fixedToCamera);
+        this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, skew, rotation, pivotX, pivotY, false, camera, fixedToCamera);
         if (!sh[4]) {
-          this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, 1 + (1 - skew), rotation, pivotX, pivotY, true, fixedToCamera);
+          this.renderPath(c, sh[0], sh[1], sh[2], sh[3], x, y, scale, 1 + (1 - skew), rotation, pivotX, pivotY, true, camera, fixedToCamera);
         }
       }
     });
   },
-  renderPath(c, path, strokeStyle, lineWidth, fillStyle, x, y, scale, skew, rotation, pivotX, pivotY, flip, fixedToCamera) {
+  renderPath(c, path, strokeStyle, lineWidth, fillStyle, x, y, scale, skew, rotation, pivotX, pivotY, flip, camera, fixedToCamera) {
     c.strokeStyle = strokeStyle;
     c.lineWidth = lineWidth;
     c.fillStyle = fillStyle;
     if (!fixedToCamera) {
-      x = cameraX(x);
-      y = cameraY(y);
+      x = cameraX(camera, x);
+      y = cameraY(camera, y);
     }
     let scaleX = scale / skew;
     pivotX = pivotX * scaleX;
@@ -162,13 +165,13 @@ const Renderer = {
       c.fill(p2d);
     c.setTransform(1, 0, 0, 1, 0, 0);
   },
-  renderCircle(c, radius, strokeStyle, lineWidth, fillStyle, x, y, scale, pivotX, pivotY, flip, fixedToCamera) {
+  renderCircle(c, radius, strokeStyle, lineWidth, fillStyle, x, y, scale, pivotX, pivotY, flip, camera, fixedToCamera) {
     c.strokeStyle = strokeStyle;
     c.lineWidth = lineWidth;
     c.fillStyle = fillStyle;
     if (!fixedToCamera) {
-      x = cameraX(x);
-      y = cameraY(y);
+      x = cameraX(camera, x);
+      y = cameraY(camera, y);
     }
     pivotX = pivotX * scale;
     pivotY = pivotY * scale;
@@ -204,10 +207,10 @@ class GO {
   // update
   u(d) {
     this.dv += this.av * d;
-    const dx = Math.cos(this.rotation) * this.dv;
-    const dy = Math.sin(this.rotation) * this.dv;
-    this.x += dx * d;
-    this.y += dy * d;
+    this._dx = Math.cos(this.rotation) * this.dv;
+    this._dy = Math.sin(this.rotation) * this.dv;
+    this.x += this._dx * d;
+    this.y += this._dy * d;
   }
 
   destroy() {
@@ -290,7 +293,7 @@ function renderMob(m, flip) {
     turnScale = 1 - Math.abs(m.turnScale);
   } 
   if (!m.specialRender) {
-    Renderer.renderShapes(ctx, m.app, m.x, m.y, m.scale, 1, m.rotation, 50, 50);
+    Renderer.renderShapes(ctx, m.app, m.x, m.y, m.scale, 1, m.rotation, 50, 50, m.camera);
   }
 }
 var timers = [];
@@ -322,13 +325,13 @@ raf(function(d) {
     //m.hits && (m.hits === 'p' ? !player.dead && collide(player, m) : enemies.forEach(e => collide(e, m)));
     m.hits && targets.forEach(e => collide(e, m));
     let killType;
-    if (m.kob && m.y > camera.y + H / 2 + m.size) {
+    if (m.kob && m.y > starCamera.y + H / 2 + m.size) {
       killType = 'kob';
-    } else if (m.kot && m.y < camera.y - H / 2 - m.size) {
+    } else if (m.kot && m.y < starCamera.y - H / 2 - m.size) {
       killType = 'kot';
-    } else if (m.kor && m.x > camera.x + W / 2 + m.size) {
+    } else if (m.kor && m.x > starCamera.x + W / 2 + m.size) {
       killType = 'kor';
-    } else if (m.kol && m.x < camera.x - W / 2 - m.size) {
+    } else if (m.kol && m.x < starCamera.x - W / 2 - m.size) {
       killType = 'kol';
     }
     if(killType) {
@@ -496,7 +499,7 @@ function renderUI(c) {
     }
 
     const angle = Math.atan2(p1.y - currentWaypoint.y, p1.x - currentWaypoint.x) + Math.PI;
-    Renderer.renderShapes(c, SHAPES.triangle, W / 2, H - 60, 1, 1, angle, 50, 50, true);
+    Renderer.renderShapes(c, SHAPES.triangle, W / 2, H - 60, 1, 1, angle, 50, 50, undefined, true);
     c.fillStyle= "#ffffff";
     c.textAlign="center"; 
     c.fillText(soundFragmentsTxt, W / 2, 20);
@@ -527,8 +530,8 @@ function renderUI(c) {
     c.globalAlpha = 0.5;
     c.fillRect(0, H - 180, W, 125);
     c.globalAlpha = 1;
-    Renderer.renderShapes(c, SHAPES.suit, 150, H - 130, 2, 1, -Math.PI / 2, 50, 30, true);
-    Renderer.renderShapes(c, conversationApp, 150, H - 160, 2, 1, -Math.PI / 2, 50, 30, true);
+    Renderer.renderShapes(c, SHAPES.suit, 150, H - 130, 2, 1, -Math.PI / 2, 50, 30, undefined, true);
+    Renderer.renderShapes(c, conversationApp, 150, H - 160, 2, 1, -Math.PI / 2, 50, 30, undefined, true);
     c.font = font(24);
     c.fillStyle= "#FFF";
     c.textAlign="left"; 
@@ -536,7 +539,8 @@ function renderUI(c) {
   }
 }
 
-var camera = {x : 0, y : 0};
+var starCamera = {x : 0, y : 0};
+var mainCamera = {x : 0, y : 0};
 const rotSpeed = Math.PI / 90;
 
 const WH = '#ffffff';
@@ -701,8 +705,10 @@ class Ship extends GO {
     if (this.dv > 2000) {
       this.dv = 2000; // Temporary
     }
-    camera.x = this.x;
-    camera.y = this.y;
+    mainCamera.x = this.x;
+    mainCamera.y = this.y;
+    starCamera.x += this._dx * 0.5 * d;
+    starCamera.y += this._dy * 0.5 * d;
   }
   k(){
     if (gState != 2 && gState != 3) {
@@ -852,9 +858,9 @@ class Star extends GO {
     this.kob = true;
     this.kol = true;
     this.kor = true;
+    this.camera = starCamera;
   }
   destroy(killType) {
-    const kob = this.y > camera.y + H / 2 + this.size;
     super.destroy();
     // Create a new Star
     var size = rand.range(1, 3);
@@ -862,27 +868,27 @@ class Star extends GO {
     
     switch (killType) {
       case 'kob':
-        t.x = rand.range(p1.x - W/2, p1.x + W/2);
-        t.y = p1.y - H/2 - size;
+        t.x = rand.range(starCamera.x - W/2, starCamera.x + W/2);
+        t.y = starCamera.y - H/2 - size;
         break;
       case 'kot':
-        t.x = rand.range(p1.x - W/2, p1.x + W/2);
-        t.y = p1.y + H/2 + size;
+        t.x = rand.range(starCamera.x - W/2, starCamera.x + W/2);
+        t.y = starCamera.y + H/2 + size;
         break;
       case 'kol':
-        t.x = p1.x + W/2 - size;
-        t.y = rand.range(p1.y - H/2, p1.y + H/2);
+        t.x = starCamera.x + W/2 - size;
+        t.y = rand.range(starCamera.y - H/2, starCamera.y + H/2);
         break;
       case 'kor':
-        t.x = p1.x - W/2 + size;  
-        t.y = rand.range(p1.y - H/2, p1.y + H/2);
+        t.x = starCamera.x - W/2 + size;  
+        t.y = rand.range(starCamera.y - H/2, starCamera.y + H/2);
         break;
     }
   }
 }
 
-function cameraX(x) { return x - camera.x + W / 2}
-function cameraY(y) { return y - camera.y + H / 2}
+function cameraX(camera, x) { return x - camera.x + W / 2}
+function cameraY(camera, y) { return y - camera.y + H / 2}
 
 class City extends GO {
   constructor(app, lists, name) {
@@ -919,8 +925,8 @@ class Asteroid extends GO {
   }
   specialRender(c) {
     c.globalAlpha = 1;
-    const thex = cameraX(this.x);
-    const they = cameraY(this.y);
+    const thex = cameraX(mainCamera, this.x);
+    const they = cameraY(mainCamera, this.y);
     c.fillStyle = GREY;
     for (let i = 0; i < this.blurbs.length; i++) {
       c.beginPath();
@@ -943,8 +949,8 @@ class Planet extends GO {
   }
   specialRender(c) {
     c.globalAlpha = 1;
-    const thex = cameraX(this.x);
-    const they = cameraY(this.y);
+    const thex = cameraX(mainCamera, this.x);
+    const they = cameraY(mainCamera, this.y);
     var grad=c.createLinearGradient(thex-this.gax,they-this.gay,thex+this.gax,they+this.gay);
     grad.addColorStop(0, this.color1);
     grad.addColorStop(1, this.color2);
@@ -989,7 +995,7 @@ class Explosion {
       var size = this.s0 + segmentProgress * (this.sf-this.s0);
       c.fillStyle = '#eecc00';
       c.beginPath();
-      c.arc(cameraX(this.x), cameraY(this.y),size,0,Math.PI*2,true);
+      c.arc(cameraX(mainCamera, this.x), cameraY(mainCamera, this.y),size,0,Math.PI*2,true);
       c.fill();
     } else {
       // Fading fire
@@ -997,8 +1003,8 @@ class Explosion {
       var size = segmentProgress * this.sf;
       c.fillStyle = '#bb9900';
       c.beginPath();
-      c.arc(cameraX(this.x), cameraY(this.y),this.sf,0,Math.PI*2,true);
-      c.arc(cameraX(this.x), cameraY(this.y),size,0,Math.PI*2,false);
+      c.arc(cameraX(mainCamera, this.x), cameraY(mainCamera, this.y),this.sf,0,Math.PI*2,true);
+      c.arc(cameraX(mainCamera, this.x), cameraY(mainCamera, this.y),size,0,Math.PI*2,false);
       c.fill();
     }
   }
@@ -1068,8 +1074,10 @@ function startGame() {
   p1.x = Math.cos(randomAngle) * randDist + planets[0].x;
   p1.y = Math.sin(randomAngle) * randDist + planets[0].y;
 
-  camera.x = p1.x;
-  camera.y = p1.y;
+  mainCamera.x = p1.x;
+  mainCamera.y = p1.y;
+  starCamera.x = p1.x;
+  starCamera.y = p1.y;
   stars50();
 
 }
@@ -1121,8 +1129,8 @@ function stars50(){
 
 function title(){
   playMusic(0);
-  camera.x = W/2;
-  camera.y = H/2;
+  mainCamera.x = W/2;
+  mainCamera.y = H/2;
   gState = 1;
 }
 
