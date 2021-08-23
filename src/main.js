@@ -183,6 +183,7 @@ const Renderer = {
     c.fill();
     c.setTransform(1, 0, 0, 1, 0, 0);
   },
+  /*
   render(c,ins,x,y,s,over,flip,scalex, rotation, fixedToCamera) {
     var sx = s
     if (scalex)
@@ -255,15 +256,15 @@ const Renderer = {
       }
     };
     c.setTransform(1, 0, 0, 1, 0, 0);
-  }
+  }*/
 }
 
 // Mob classes
 
 var mobDestroyed = false;
-class Mob {
+class GO {
   constructor(app, lists) {
-    this.app = a[app];
+    this.app = SHAPES[app];
     this.dv = this.av = 0;
     this.rotation = 0;
     this.turnScale = 0;
@@ -282,7 +283,6 @@ class Mob {
   }
 
   destroy() {
-    this.app = false;
     this.dead = true;
     mobDestroyed = true;
     //this.lists.forEach(l => l.splice(l.indexOf(this), 1));
@@ -301,36 +301,6 @@ class Mob {
     }
   }
   */
-}
-
-class BGObject {
-  constructor(app, lists) {
-    this.app = a[app];
-    this.turnScale = 0;
-    mobs.push(this);
-    lists.forEach(l => l.push(this));
-    this.lists = lists;
-    this.ch = [];
-  }
-
-  destroy() {
-    this.app = false;
-    this.dead = true;
-    mobDestroyed = true;
-    //this.lists.forEach(l => l.splice(l.indexOf(this), 1));
-    this.ch.forEach(c => c.destroy());
-  }
-
-  collide(m) {
-    this.destroy();
-    m.destroy();
-    for (var i = 0; i < 10; i++) {
-      var e = new Explosion(50);
-      e.x = this.x - (this.size / 2) + rand.range(0, this.size);
-      e.y = this.y - (this.size / 2) + rand.range(0, this.size);
-      sfx.push(e);
-    }
-  }
 }
 
 // RAF
@@ -383,6 +353,7 @@ var players = [];
 var canvas = document.querySelector('canvas');
 var ctx = canvas.getContext('2d');
 function renderMob(m, flip) {
+  if (m.dead) return;
   if (m.specialRender) {
     m.specialRender(ctx);
   }
@@ -391,7 +362,7 @@ function renderMob(m, flip) {
     turnScale = 1 - Math.abs(m.turnScale);
   } 
   if (!m.specialRender) {
-    Renderer.render(ctx,m.app,m.x,m.y,m.scale,m.blink?0:undefined,flip,turnScale,m.rotation);
+    Renderer.renderShapes(ctx, m.app, m.x, m.y, m.scale, m.rotation, 50, 50);
   }
 }
 var timers = [];
@@ -571,8 +542,6 @@ function renderUI(c) {
     c.fillText("Programmed by Slashie",W/2,330);
     c.fillText("Sounds by QuietGecko", W/2,350);
   } else if (gState == 2 || gState == 3 || gState == 10) {
-    //Renderer.render(c,a.scoreBack,250,600,NS*2.5,undefined,true);
-    //renderScore(c, 0, 350, p1.scoreArray)
     c.font = font(16);
     c.textAlign="left"; 
     c.fillStyle= "#ffffff";
@@ -586,8 +555,7 @@ function renderUI(c) {
     }
 
     const angle = Math.atan2(p1.y - currentWaypoint.y, p1.x - currentWaypoint.x) + Math.PI;
-    Renderer.render(c, a.triangle, W / 2, H - 60, 2, undefined, false, undefined, angle, true);
-    Renderer.render(c, a.triangle, W / 2, H - 60, 2, undefined, true, undefined, angle, true);
+    Renderer.renderShapes(c, SHAPES.triangle, W / 2, H - 60, 1, angle, 50, 50, true);
     c.textAlign="center"; 
     c.fillText(soundFragmentsTxt, W / 2, 20);
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
@@ -623,7 +591,13 @@ function renderUI(c) {
 var camera = {x : 0, y : 0};
 const rotSpeed = Math.PI / 90;
 
+const WH = '#ffffff';
+
 const SHAPES = {
+  star1: [["C", 0, 0, 1, WH, 0, WH]],
+  star2: [["C", 0, 0, 2, WH, 0, WH]],
+  star3: [["C", 0, 0, 3, WH, 0, WH]],
+  triangle: [["M24 59L50 13L73 56L44 49Z", "#131047", 2, "#5b5e8b","noflip"]],
   ship: [
     [
       // Thruster 2
@@ -747,11 +721,10 @@ const SHAPES = {
   ]
 }
 
-class Ship extends Mob {
+class Ship extends GO {
   specialRender(c) {
     Renderer.renderShapes(c, SHAPES.ship, this.x, this.y, this.scale, this.rotation, 50, 50);
     Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, this.rotation, 50, 30);
-
   }
   u(d) {
     super.u(d);
@@ -917,9 +890,9 @@ function showConversation(app, text) {
   conversationText = text;
 }
 
-class Rocket extends Mob {
+class Rocket extends GO {
   constructor(x, y, d) {
-    super('missile', [layers[1]]);
+    super('triangle', [layers[1]]);
     this.x = x;
     this.y = y;
     this.rotation = d;
@@ -927,7 +900,7 @@ class Rocket extends Mob {
     this.dv = -50;
     this.size = 5;
     this.hits = 'e'; // Enemy
-    this.scale = 4;
+    this.scale = 0.5;
     setTimeout(()=>this.explode(), rand.range(1100, 1300));
   }
   explode() {
@@ -997,7 +970,7 @@ class Enemy extends Mob {
   }
 }
 
-class Star extends BGObject {
+class Star extends GO {
   destroy(killType) {
     const kob = this.y > camera.y + H / 2 + this.size;
     super.destroy();
@@ -1035,19 +1008,14 @@ class Star extends BGObject {
 function cameraX(x) { return x - camera.x + W / 2}
 function cameraY(y) { return y - camera.y + H / 2}
 
-class City extends Mob {
+class City extends GO {
   constructor(app, lists, name) {
     super(app, lists);
     this.name = name;
   }
-
-  specialRender(c) {
-    Renderer.renderShapes(c, SHAPES.city, this.x, this.y, this.scale, this.rotation, 50, 50, false);
-  }
-
 }
 
-class Planet extends Mob {
+class Planet extends GO {
   constructor () {
     super(null, [layers[2]]);
     this.cities = [];
@@ -1116,66 +1084,6 @@ class Explosion {
   }
 }
 
-const WH = '#ffffff';
-const RD = '#ff0000';
-
-
-const a = { // Appearances
-  /*ship Half ovals
-    'o','#dddddd','vh',0,-6,2.2,2.2,Math.PI/2,Math.PI+Math.PI/2,'f',
-    'o','#000000','vh',0,-6,2,1.5,Math.PI/2,Math.PI+Math.PI/2,'f',
-  ]
-  */
-  ship: [
-    '#eeeeee','p',0,4,-6,4,0,-2,'f',
-    //'#eeeeee','p',-2,2,-4,4,-6,0,-4,-1,-2,-4,0,-4,0,2,'f',
-    /*'o','#0000ff','p',-3,3,-4,4,-6,4,-8,0,-6,-3,-4,-4,-5,-1,'f',
-    'o','#dddddd','v',0,-6,2.2,2.2,'f',
-    'o','#888888','vh',0,1,2.5,2,Math.PI,2*Math.PI,'f',
-    'o','#ff3333','p',0,1,-2.5,1,-2.5,2,-1.5,3,0,3,'f',
-    'o','#000000','v',0,-6,2,1.5,'f',
-    'o','#ff0000','vh',0,-6,2,1.5,0.5,Math.PI-0.5,'f',*/
-  ],
-  triangle: [
-    '#eeeeee','p',0,4,-6,4,0,-2,'f',
-  ],
-  floor: [
-    '#888888','p',0,2,3,2,3,3,1,4,0,4,'f',
-  ],
-  enemyFighter: [
-    '#33aa33','p',3,0,4,0,4,-6,2,-8,2,-6,3,-5,'f',
-    'o','#33ff33','p',2,0,2,-4,4,0,4,2,'f',
-    'o','#888888','v',0,0,1,3,'f',
-    'o','#000033','v',0,0,1,2,'f',
-  ],
-  missile: [
-    '#ff3333','p',0,1,1.5,3.5,0,3.5,'f',
-    'o','#eecc00','p',0,4,0.7,4,0.85,4.5,0,5,'f',
-    'o','#dddddd', 'p', 0,0,0.5,1,0.5,4,0,4,'f',
-  ],
-  star1: [WH,'c',1],
-  star2: [WH,'c',2],
-  star3: [WH,'c',3],
-  planet: ['G1','c', 1],
-  bullet: [RD,'c',4],
-  mine: ['#888888','p',0,-3, 1,-2, 3,-3, 2,-1, 3,0, 2,1, 3,3, 1,2, 0,3, 'f','o','#dd0000','c',1],
-  e1: ['#888888','c',15,'o','#dd0000','c',5],
-  platform: [
-    '#888888','p',0,2,3,2,3,3,1,4,0,4,'f',
-    'o','#888888','p',0,0,1,0,1,-2,0,-2,'f',
-    'o','#bbbbbb','p',0,-3, 2,-3, 3,-2, 3,-1.5, 4,-1.5, 4,-1.3, 3,-1.3, 3,1.3, 4,1.4, 4,1.6, 3,1.6, 3,2, 2,2.5, 2,4, 1.8,4, 1.8,2.5, 1,3, 0,3,
-    0,1,1,1,1,-1,0,-1,'f',
-    'o','#0000dd','v',0.5,-2.5,1,0.2,'f',
-    'o','#0000dd','v',2.5,-1.8,1,0.2,'f',
-    'o','#0000dd','v',2.5,0.8,1,0.2,'f',
-    'o','#0000dd','v',0.5,2.2,1,0.2,'f',
-  ],
-  n0: ['#003300','p',-1,-2,0,-3,1,-2,1,2,0,3,-1,2,'f'], 
-  n1: ['#00ff00','p',-1,-2,0,-3,1,-2,1,2,0,3,-1,2,'f'], // TODO: Optimize, same as n0, different color
-  n2: ['#003300','p',-2,-1,-3,0,-2,1,2,1,3,0,2,-1,'f'],
-  n3: ['#00ff00','p',-2,-1,-3,0,-2,1,2,1,3,0,2,-1,'f'], // TODO: Optimize, same as n2, different color
-  scoreBack: ['#002200','a',0.7,'p',0,0,4,-12,40,-12,40,0,'f']
-}
 
 var p1;
 let currentWaypoint, currentWaypointIndex;
@@ -1195,7 +1103,7 @@ function createPlanet (x, y, size, name, songFragmentIndex) {
   t.color2 = getRandomColor();
   t.scale = size;
   t.hits = 'p';
-  t.addCity(Math.PI / 4, SHAPES.city, "Arkadia", songFragmentIndex);
+  t.addCity(Math.PI / 4, 'city', "Arkadia", songFragmentIndex);
   return t;
 }
 function startGame() {
