@@ -749,18 +749,23 @@ class Ship extends GO {
         if (this.dv <= 0) {  // Landing
           this.landed = true;
           this.dv = 0;
-          const angle = Math.atan2(this.y - m.y, this.x - m.x);
+        } else {
+          // Bounce!
+          this.dv = -500;
+        }
+        let reloc = m.size + this.size + 1;
+        if (!this.landed) {
+          reloc += 20;
+        }
+        const angle = Math.atan2(this.y - m.y, this.x - m.x);
+        this.x = m.x + Math.cos(angle) * reloc;
+        this.y = m.y + Math.sin(angle) * reloc;
+        if (this.landed) {
           this.rotation = angle; // TODO: Tween rotation?
-          this.x = m.x + Math.cos(angle) * (m.size + this.size + 1);
-          this.y = m.y + Math.sin(angle) * (m.size + this.size + 1);
-
           const city = m.nearbyCity(this);
           if (city) {
             this.landOnCity(m, city);
           }
-        } else {
-          // Bounce!
-          this.dv = -500;
         }
       }
     }
