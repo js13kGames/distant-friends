@@ -332,14 +332,16 @@ raf(function(d) {
     //m.hits && (m.hits === 'p' ? !player.dead && collide(player, m) : enemies.forEach(e => collide(e, m)));
     m.hits && targets.forEach(e => collide(e, m));
     let killType;
-    if (m.kob && m.y > starCamera.y + H / 2 + m.size) {
-      killType = 'kob';
-    } else if (m.kot && m.y < starCamera.y - H / 2 - m.size) {
-      killType = 'kot';
-    } else if (m.kor && m.x > starCamera.x + W / 2 + m.size) {
-      killType = 'kor';
-    } else if (m.kol && m.x < starCamera.x - W / 2 - m.size) {
-      killType = 'kol';
+    if (m.koo) {
+      if (m.y > starCamera.y + H / 2 + m.size) {
+        killType = 'kob';
+      } else if (m.y < starCamera.y - H / 2 - m.size) {
+        killType = 'kot';
+      } else if (m.x > starCamera.x + W / 2 + m.size) {
+        killType = 'kor';
+      } else if (m.x < starCamera.x - W / 2 - m.size) {
+        killType = 'kol';
+      }
     }
     if(killType) {
       m.destroy(killType);
@@ -862,10 +864,7 @@ class Star extends GO {
     this.size = size;
     this.rotation = rand.range(0, Math.PI * 2);
     this.scale = size / 5;
-    this.kot = true;
-    this.kob = true;
-    this.kol = true;
-    this.kor = true;
+    this.koo = true;
     this.camera = starCamera;
   }
   destroy(killType) {
