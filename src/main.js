@@ -391,25 +391,25 @@ const PLANETS = [
       ['Arkadia', 0.25, 'capital'],
       ['Veyros', 1.25, 'industrial'],
       ['Sprot', 1.1, 'town']
-    ]
+    ], '#0d1852', '#5b5db8'
   ],
   [
     'Poria', 0, -3400, 200, [
       ['Kamera', 0.3, 'town']
-    ]
+    ], '#0d1852', '#5b5db8'
   ],
   [
     'Apos', -10000, 0, 1000, [
       ['Vernya', 0.1, 'capital'],
       ['Koroko', 1.8, 'town'],
       ['Kamera', 0.3, 'town']
-    ]
+    ], '#0d1852', '#5b5db8'
   ],
   [
     'Oldogg', -8000, 9200, 1300, [
       ['Geckoria', 0.1, 'capital'],
       ['Karnalgg', 1.8, 'town']
-    ]
+    ], '#0d1852', '#5b5db8'
   ],
 ]
 
@@ -1032,8 +1032,8 @@ function createPlanet (planetData) {
   var angle = seeded() * (2 * Math.PI);
   t.gax = Math.cos(angle) * t.size;
   t.gay = Math.sin(angle) * t.size;
-  t.color1 = getRandomColor();
-  t.color2 = getRandomColor();
+  t.color1 = planetData[5];
+  t.color2 = planetData[6];
   t.scale = planetData[3];
   t.hits = 'p';
   planetData[4].forEach(cd => {
