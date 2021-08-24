@@ -52,6 +52,13 @@ function playMusic(i) {
 
 // --- Initialization
 
+const ASTEROID_ANGLE_RANGE = 80;
+const ASTEROID_START = 1000;
+const ASTEROID_RING_WIDTH = 130;
+const ASTEROID_RINGS = 6;
+const ASTEROIDS_PER_RING = 5;
+const ASTEROID_SPACE = ASTEROID_START + ASTEROID_RING_WIDTH * ASTEROID_RINGS;
+
 var gState = 0;
 
 // Generate music...
@@ -356,14 +363,15 @@ raf(function(d) {
   renderUI(ctx);
 });
 
+const min = (a,b) => a > b ? b : a;
 // THE GAME!
 let W = canvas.width;
 let H = canvas.height;
 (function() {
   window.addEventListener('resize', resizeCanvas, false);
   function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = min(window.innerWidth, ASTEROID_START);
+    canvas.height = min(window.innerHeight, ASTEROID_START);
     W = canvas.width;
     H = canvas.height;
   }
@@ -1160,15 +1168,10 @@ setInterval (() => {
 
 
 let asteroids = 0;
-const ASTEROID_ANGLE_RANGE = 60;
-const ASTEROID_START = 700;
-const ASTEROID_RING_WIDTH = 100;
-const ASTEROID_RINGS = 5;
-const ASTEROID_SPACE = ASTEROID_START + ASTEROID_RING_WIDTH * ASTEROID_RINGS;
 
 function asteroidField(direction) {
   for (let j = 0; j < ASTEROID_RINGS; j++)
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < ASTEROIDS_PER_RING; i++) {
       const distance = ASTEROID_START + rand.range(-40, 40) + ASTEROID_RING_WIDTH * j;
       const aDirection = direction + rand.range(-ASTEROID_ANGLE_RANGE, ASTEROID_ANGLE_RANGE) * (Math.PI / 180);
       const x = p1.x + distance * Math.cos(aDirection);
