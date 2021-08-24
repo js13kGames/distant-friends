@@ -517,10 +517,10 @@ function renderUI(c) {
     c.fillText("[Enter] to change", W / 2, H - 5);
     c.textAlign="left"; 
     // DEBUG
-    c.fillText("Cruising: " + p1.isCruising(), 50, 50);
+    /*c.fillText("Cruising: " + p1.isCruising(), 50, 50);
     c.fillText("Near Planet: " + p1.nearPlanet(), 50, 70);
     c.fillText("DV: " + p1.dv, 50, 90);
-    c.fillText("Asteroids: " + asteroids, 50, 110);
+    c.fillText("Asteroids: " + asteroids, 50, 110);*/
 
     if (p1.won) {
       c.font = font(24);
