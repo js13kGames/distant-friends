@@ -372,8 +372,8 @@ let H = canvas.height;
 (function() {
   window.addEventListener('resize', resizeCanvas, false);
   function resizeCanvas() {
-    canvas.width = min(window.innerWidth, ASTEROID_START);
-    canvas.height = min(window.innerHeight, ASTEROID_START);
+    canvas.width = Math.max(Math.min(window.innerWidth, ASTEROID_START), 800);
+    canvas.height = Math.max(Math.min(window.innerHeight, ASTEROID_START), 800);
     W = canvas.width;
     H = canvas.height;
   }
