@@ -1113,8 +1113,8 @@ function startGame() {
   currentWaypointIndex = 0;
 
   p1 = createShip('ship', W / 2, ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space' ]);
-  const randomAngle = rand.range(0, 2*Math.PI);
-  const randDist = rand.range (4000, 5000);
+  const randomAngle = Math.PI/2;
+  const randDist = 3000;
   p1.x = Math.cos(randomAngle) * randDist + planets[0].x;
   p1.y = Math.sin(randomAngle) * randDist + planets[0].y;
 
