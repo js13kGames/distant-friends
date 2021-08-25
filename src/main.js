@@ -771,7 +771,7 @@ class Ship extends GO {
   landOnCity (p, c) {
     const trigger = triggers[p.name + "-" + c.name]
     if (trigger) {
-      delete triggers[this.name + "-" + c.name];
+      delete triggers[p.name + "-" + c.name];
       for (let i = 0; i < trigger.sequence.length; i++) {
         showConversation (SHAPES[trigger.sequence[i][0]], trigger.sequence[i][1]);
       }
