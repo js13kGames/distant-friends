@@ -421,14 +421,27 @@ const FRIENDS = [
         planet: 'Ninua',
         city: 'Arkadia',
         sequence: [
-          [ 'cat', "Kori left Ninua ages ago, he went to Koroko, in Apos."]
+          [ 'cat', "Kori left Arkadia years ago... he said he was tired of the hectic life here."],
+          [ 'cat', "He always wanted to live in the town of Sprot, with some luck you'll find him there!"],
         ]
       },
       {
-        planet: 'Apos',
-        city: 'Koroko',
+        planet: 'Ninua',
+        city: 'Sprot',
         sequence: [
-          [ 'dog', "Hey pal! it's so great to see you again, I missed you!"]
+          [ 'dog', "I heard you are looking for Kori the cat. He used to run the windmill here... until he got tired of it."],
+          [ 'dog', "I recall he spent entire nights looking at Poria,\nthe green moon. If I where you I'd look for him\nthere."],
+        ]
+      },
+      {
+        planet: 'Poria',
+        city: 'Kamera',
+        sequence: [
+          [ 'cat', "Bandi, is it really you? I feel like it's been a lifetime since we last met!"],
+          [ 'cat', "Please, stay at my place tonight! let's play some games and have fun like in the old times."],
+          [ 'cat', "<The other day>"],
+          [ 'cat', "Ah... that was so fun. I recalled the old times, life was simpler then."],
+          [ 'cat', "I hope to see you back sometime... Please take this instrument so you don't forget me!"]
         ],
         giveInstrument: 1
       }
@@ -768,12 +781,12 @@ class Ship extends GO {
     new Rocket(this.x + rand.range(-20, 20), this.y + rand.range(-20, 20), this.rotation);
     playSound(2);
   }
-  landOnCity (p, c) {
+  async landOnCity (p, c) {
     const trigger = triggers[p.name + "-" + c.name]
     if (trigger) {
       delete triggers[p.name + "-" + c.name];
       for (let i = 0; i < trigger.sequence.length; i++) {
-        showConversation (SHAPES[trigger.sequence[i][0]], trigger.sequence[i][1]);
+        await showConversationFragment (SHAPES[trigger.sequence[i][0]], trigger.sequence[i][1]);
       }
       if (trigger.giveInstrument != undefined) {
         this.songFragments[trigger.giveInstrument] = 'yes';
@@ -792,6 +805,7 @@ class Ship extends GO {
         const nextTrigger = trigger.next;
         triggers[nextTrigger.planet + "-" + nextTrigger.city] = nextTrigger;
       }
+      gState = 2;
     }
   }
   collide(m) {
@@ -828,10 +842,14 @@ class Ship extends GO {
 }
 
 let conversationText = "Test";
-function showConversation(app, text) {
+let conversationNext;
+function showConversationFragment(app, text) {
   gState = 10;
   conversationApp = app;
   conversationText = text;
+  return new Promise (resolve => {
+    conversationNext = resolve;
+  });
 }
 
 class Rocket extends GO {
@@ -1121,7 +1139,7 @@ typed(13, () => {
     restart();
     gState = 2;
   } else if (gState == 10) {
-    gState = 2;
+    conversationNext();
   }
 
 });
