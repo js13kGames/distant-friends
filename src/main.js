@@ -558,7 +558,26 @@ function renderUI(c) {
     c.font = font(24);
     c.fillStyle= "#FFF";
     c.textAlign="left"; 
-    c.fillText(conversationText, 250, H - 150);
+    wrapText(conversationText);
+  }
+}
+
+function wrapText(txt) {
+  wi = Math.floor((W - 270) / ctx.measureText('m').width);
+  y = H - 150;
+  words = txt.split(' ');
+  line = '';
+  while (words.length) {
+    w = words.splice(0,1)[0]
+    if (line.length + w.length > wi) {
+      ctx.fillText(line, 250, y);
+      y += 30;
+      line = '';
+    }
+    line += w + ' ';
+    if (!words.length) {
+      ctx.fillText(line, 250, y);
+    }
   }
 }
 
