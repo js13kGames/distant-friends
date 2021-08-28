@@ -827,6 +827,9 @@ class Ship extends GO {
         triggers[nextTrigger.planet + "-" + nextTrigger.city] = nextTrigger;
       }
       gState = 2;
+    } else {
+      await showConversationFragment (SHAPES.cat, 'Nothing interesting here.');
+      gState = 2;
     }
   }
   collide(m) {
