@@ -40,8 +40,33 @@ var prod = !!program.prod;
 gulp.task('default', ['build']);
 gulp.task('build', ['build_source', 'build_index']);
 
-gulp.task('build_source', function() {
-  var bundler = browserify('./src/main', {debug: !prod});
+gulp.task('concat', function() {
+  return gulp.src(
+      [
+        './src/consts.js',
+        './lib/zzfx.js',
+        './lib/zzfxm.js',
+        './src/music.js',
+        './src/sfx.js',
+        './src/rand.js',
+        './src/geo.js',
+        './src/input.js',
+        './src/shapeRenderer.js',
+        './src/go.js',
+        './src/engine.js',
+        './src/gameData.js',
+        './src/ui.js',
+        './src/shapes.js',
+        './src/ship.js',
+        './src/game.js',
+      ]
+    )
+    .pipe(concat('bundle.js'))
+    .pipe(gulp.dest('./tmp/'));
+});
+
+gulp.task('build_source', ['concat'], function() {
+  var bundler = browserify('./tmp/bundle.js', {debug: !prod});
   if (prod) {
     bundler.plugin(require('bundle-collapser/plugin'));
   }
@@ -68,6 +93,7 @@ gulp.task('build_index', function() {
 });
 
 gulp.task('clean', function() {
+  rimraf.sync('tmp');
   rimraf.sync('build');
   rimraf.sync('dist');
 });
@@ -92,7 +118,7 @@ gulp.task('dist', ['build'], function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch('src/**/*.js', ['build_source']);
+  gulp.watch('src/**/*.js', ['build']);
   gulp.watch('src/index.html', ['build_index']);
 });
 
