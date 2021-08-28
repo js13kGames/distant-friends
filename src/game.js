@@ -6,10 +6,11 @@ let currentWaypoint, currentWaypointIndex;
 let planets;
 
 // Load triggers
-FRIENDS.forEach(friend => {
+FRIENDS.forEach((friend,j) => {
   const first = friend.findSequence[0];
   triggers[first.planet + "-" + first.city] = first;
   friend.findSequence.forEach((f, i) => {
+    f.friendIndex = j;
     if (i < friend.findSequence.length - 1) {
       f.next = friend.findSequence[i + 1];
     }

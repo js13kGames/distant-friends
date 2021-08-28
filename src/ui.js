@@ -1,3 +1,6 @@
+friendNames = ['Kori', 'Ponchi', 'Patty'];
+friendHints = ['Creta', 'Cape Santos', 'Los Pinos'];
+
 function wrapText(txt) {
   wi = Math.floor((W - 270) / ctx.measureText('m').width);
   y = H - 150;
@@ -56,6 +59,9 @@ function renderUI(c) {
         soundFragmentsTxt += "❓";
       }
     }
+
+    for (let i = 0; i < 3; i++) 
+      c.fillText(friendNames[i] + ": " + friendHints[i], 30, 30 + i * 20);
 
     const angle = Math.atan2(p1.y - currentWaypoint.y, p1.x - currentWaypoint.x) + Math.PI;
     Renderer.renderShapes(c, SHAPES.triangle, W / 2, H - 60, 1, 1, angle, 50, 50, undefined, true);

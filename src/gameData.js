@@ -54,7 +54,8 @@ const FRIENDS = [
         sequence: [
           "I heard you are looking for Kori the cat. He used to run the windmill here... until he got tired of it.",
           "I recall he spent entire nights looking at Ilaria,\nthe green moon. If I where you I'd look for him\nthere.",
-        ]
+        ],
+        hint: 'Ilaria'
       },
       {
         planet: 'Ilaria',
@@ -82,7 +83,8 @@ const FRIENDS = [
           'I heard you were looking for Ponchi?',
           'His family moved shortly after he finished school',
           'His father got a job at an industrial plant in Arland.'
-        ]
+        ],
+        hint: 'Arland?'
       },
       {
         planet: 'Arland',
@@ -90,7 +92,8 @@ const FRIENDS = [
         person: 'cat',
         sequence: [
           "I'm sorry, I don't recognize this person, but you may want to ask around the nearby towns"
-        ]
+        ],
+        hint: 'Arland mining towns'
       },
       {
         planet: 'Arland',

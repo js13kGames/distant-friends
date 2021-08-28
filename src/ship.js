@@ -106,10 +106,13 @@ class Ship extends GO {
           victory();
         }
       }
+      var hint = '✅';
       if (trigger.next) {
         const nextTrigger = trigger.next;
+        hint = trigger.hint || nextTrigger.planet + ", " + nextTrigger.city;
         triggers[nextTrigger.planet + "-" + nextTrigger.city] = nextTrigger;
       }
+      friendHints[trigger.friendIndex] = hint;
       gState = 2;
     } else {
       await showConversationFragment (SHAPES.cat, 'Nothing interesting here.');
