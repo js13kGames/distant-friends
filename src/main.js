@@ -559,6 +559,8 @@ function renderUI(c) {
     c.fillStyle= "#FFF";
     c.textAlign="left"; 
     wrapText(conversationText);
+    c.textAlign="right"; 
+    c.fillText("[Press Enter]", W - 20, H - 65);
   }
 }
 
