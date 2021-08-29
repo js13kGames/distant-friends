@@ -50,7 +50,7 @@ const FRIENDS = [
       {
         planet: 'Ceres',
         city: 'Arkadia',
-        person: 'cat',
+        person: 'fox',
         sequence: [
           "I heard you are looking for Kori the cat. He used to run the windmill here... until he got tired of it.",
           "I recall he spent entire nights looking at Ilaria,\nthe green moon. If I where you I'd look for him\nthere.",
@@ -78,7 +78,7 @@ const FRIENDS = [
       {
         planet: 'Ceres',
         city: 'Cape Santos',
-        person: 'dog',
+        person: 'fox',
         sequence: [
           'I heard you were looking for Ponchi?',
           'His family moved shortly after he finished school',
@@ -139,7 +139,7 @@ const FRIENDS = [
       {
         planet: 'Calisto',
         city: 'New Havanna',
-        person: 'cat',
+        person: 'fox',
         sequence: [
           "Hello my old friend!",
           "I have fond memories of us at school. This is actually just placeholder text.",
