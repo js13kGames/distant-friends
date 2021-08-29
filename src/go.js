@@ -154,6 +154,7 @@ function createPlanet (planetData) {
   t.x = planetData[1];
   t.y = planetData[2];
   t.size = planetData[3];
+  t.visibleSize = t.size - 72;
   var angle = seeded() * (2 * Math.PI);
   t.gax = Math.cos(angle) * t.size;
   t.gay = Math.sin(angle) * t.size;
@@ -181,13 +182,13 @@ class Planet extends GO {
     grad.addColorStop(1, this.color2);
     c.fillStyle=grad;
     c.beginPath();
-    c.arc(thex,they,this.size,0,Math.PI*2,true);
+    c.arc(thex,they,this.visibleSize,0,Math.PI*2,true);
     c.fill();
   }
   addCity (rotation, app, name) {
     const c = new City(app, [layers[0]], name);
-    c.x = this.x + this.size * Math.cos(rotation);
-    c.y = this.y + this.size * Math.sin(rotation);
+    c.x = this.x + this.visibleSize * Math.cos(rotation);
+    c.y = this.y + this.visibleSize * Math.sin(rotation);
     c.scale = 2;
     c.rotation = rotation;
     this.cities.push(c);
