@@ -82,6 +82,26 @@ class City extends GO {
   }
 }
 
+class CityLabel extends GO {
+  constructor(app, lists, name) {
+    super(app, lists);
+    this.name = name;
+  }
+
+  specialRender(c) {
+    c.save();
+    const thex = cameraX(mainCamera, this.x);
+    const they = cameraY(mainCamera, this.y);
+    c.translate(thex, they);
+    c.rotate(this.rotation + Math.PI / 2);
+    c.font = font(24);
+    c.textAlign="center"; 
+    c.fillStyle= "#00ff00";
+    c.fillText(this.name, 0, 30);
+    c.restore();
+  }
+}
+
 class Asteroid extends GO {
   constructor (x, y, size) {
     super('asteroid', [layers[2]]);
@@ -171,6 +191,10 @@ class Planet extends GO {
     c.scale = 2;
     c.rotation = rotation;
     this.cities.push(c);
+    const label = new CityLabel(app, [layers[2]], name);
+    label.x = c.x;
+    label.y = c.y;
+    label.rotation = c.rotation;
   }
   nearbyCity (p) {
     return this.cities.find (c => rdist(c, p) < 100);
