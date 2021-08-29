@@ -104,10 +104,10 @@ class CityLabel extends GO {
 
 class Asteroid extends GO {
   constructor (x, y, size) {
-    super('asteroid', [layers[2]]);
+    super('asteroid1', [layers[2]]);
     this.isAsteroid = true;
     this.x = x; this.y = y;
-    this.size = size;
+    this.size = size * 20;
     this.scale = size;
     this.hits = 'p';
     this.deathInterval = setInterval(() => {
@@ -117,31 +117,9 @@ class Asteroid extends GO {
         this.destroy();
       }
     }, 1000)
-    const blurbCount = rand.range(10, 20);
-    this.blurbs = [];
-    this.blurbs[0] = [0, 0, this.scale];
-    for (let i = 1; i < blurbCount; i++) {
-      const blurbSize = this.scale * rand.range(4, 7) / 10;
-      const dist = rand.range(this.scale - blurbSize, this.scale);
-      const angle = rand.range(0, 2 * Math.PI);
-      this.blurbs[i] = [angle, dist, blurbSize];
-    }
     this.rotSpeed = Math.PI / rand.range(700, 1200) * (rand.b() ? 1 : -1);
   }
-  specialRender(c) {
-    c.globalAlpha = 1;
-    const thex = cameraX(mainCamera, this.x);
-    const they = cameraY(mainCamera, this.y);
-    c.fillStyle = GREY;
-    for (let i = 0; i < this.blurbs.length; i++) {
-      c.beginPath();
-      const angle = this.blurbs[i][0];
-      const dist = this.blurbs[i][1];
-      c.arc(thex + Math.cos(angle + this.rotation) * dist,they + Math.sin(angle + this.rotation) * dist, this.blurbs[i][2], 0, Math.PI*2, true);
-      c.fill();
-    }
-  }
-
+ 
   u() {
     this.rotation += this.rotSpeed;
   }

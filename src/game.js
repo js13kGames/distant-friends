@@ -143,7 +143,7 @@ function asteroidField(direction) {
       const aDirection = direction + rand.range(-ASTEROID_ANGLE_RANGE, ASTEROID_ANGLE_RANGE) * (Math.PI / 180);
       const x = p1.x + distance * Math.cos(aDirection);
       const y = p1.y + distance * Math.sin(aDirection);
-      new Asteroid(x, y, rand.range(20, 40));
+      new Asteroid(x, y, rand.range(1, 3));
       asteroids++;
     }
 }
