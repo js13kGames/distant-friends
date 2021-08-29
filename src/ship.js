@@ -108,7 +108,7 @@ class Ship extends GO {
     if (trigger) {
       delete triggers[p.name + "-" + c.name];
       for (let i = 0; i < trigger.sequence.length; i++) {
-        await showConversationFragment (SHAPES[trigger.person], trigger.sequence[i]);
+        await showConversationFragment (makeAnimal(trigger.person), trigger.sequence[i]);
       }
       if (trigger.giveInstrument != undefined) {
         this.songFragments[trigger.giveInstrument] = 'yes';
@@ -132,7 +132,7 @@ class Ship extends GO {
       friendHints[trigger.friendIndex] = hint;
       gState = 2;
     } else {
-      await showConversationFragment (SHAPES.cat, 'Nothing interesting here.');
+      await showConversationFragment (makeAnimal('cat'), 'Nothing interesting here.');
       gState = 2;
     }
   }

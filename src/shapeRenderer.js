@@ -13,6 +13,8 @@ const Renderer = {
       if (!camera) {
         camera = mainCamera;
       }
+      c.lineCap = "round"; // TODO: Check how this affects performance?
+
       shapes.forEach(sh => {
         if (sh[0] == "C") {
           this.renderCircle(c, sh[3], sh[4], sh[5], sh[6], sh [1] * scale + x, sh[2]  * scale + y, scale, pivotX, pivotY, false, camera, fixedToCamera);

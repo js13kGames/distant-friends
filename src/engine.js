@@ -59,7 +59,7 @@ function renderMob(m, flip) {
     turnScale = 1 - Math.abs(m.turnScale);
   } 
   if (!m.specialRender) {
-    Renderer.renderShapes(ctx, m.app, m.x, m.y, m.scale, 1, m.rotation, 50, 50, m.camera);
+    Renderer.renderShapes(ctx, m.app, m.x, m.y, m.scale, 1, m.rotation, 49, 49, m.camera);
   }
 }
 var timers = [];
