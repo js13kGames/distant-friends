@@ -20,6 +20,7 @@ function wrapText(txt) {
   }
 }
 
+// let lastDelta = -1; // FPS
 function renderUI(c) {
   if (gState == 0) {
     c.font = font(18);
@@ -63,6 +64,16 @@ function renderUI(c) {
     for (let i = 0; i < 3; i++) 
       c.fillText(friendNames[i] + ": " + friendHints[i], 30, 30 + i * 20);
 
+    /* FPS
+    if (lastDelta == -1) {
+      lastDelta = Date.now();
+    } else {
+      let now = Date.now();
+      let diff = (now - lastDelta) / 1000;
+      c.fillText("FPS: " + Math.floor(1/diff), 30, H - 30);
+      lastDelta = now;
+    }
+    */
     const angle = Math.atan2(p1.y - currentWaypoint.y, p1.x - currentWaypoint.x) + Math.PI;
     Renderer.renderShapes(c, SHAPES.triangle, W / 2, H - 60, 1, 1, angle, 50, 50, undefined, true);
     c.fillStyle= "#ffffff";
