@@ -238,3 +238,28 @@ class Explosion {
     }
   }
 }
+
+class RocketParticle extends GO {
+  constructor (x, y) {
+    super(null, [layers[1]]);
+    this.x = x; this.y = y;
+    this.radius = rand.range(15, 20);
+    this.alpha = 1;
+    setTimeout(() => {
+      this.destroy();
+    }, rand.range(300, 600));
+  }
+
+  u(d) {
+    this.radius -= d * 8;
+    this.alpha -= d * 2;
+  }
+
+  specialRender(c) {
+    if (this.radius <=0 || this.alpha <= 0) return;
+    const theAlpha = c.globalAlpha;
+    c.globalAlpha = this.alpha;
+    Renderer.renderCircle(c, this.radius, "#ffe203", 1, "#ffe203", this.x, this.y, 1, 0, 0, false, mainCamera);
+    c.globalAlpha = theAlpha;
+  }
+}

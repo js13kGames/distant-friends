@@ -11,11 +11,28 @@ class Ship extends GO {
     return planets.find(p => rdist(p, this) < (ASTEROID_SPACE + p.size));
   }
   specialRender(c) {
+    if (this.blastRadius > 0) {
+      const noozleX = this.x - Math.cos(this.rotation) * 75;
+      const noozleY = this.y - Math.sin(this.rotation) * 75;
+      Renderer.renderCircle(c, Math.max(1, this.blastRadius + rand.range(-5, 5)), "#ffe203", rand.range(0.5, 2), "#ffe203", noozleX, noozleY, 1, 0, 0, false, mainCamera);
+    }
     Renderer.renderShapes(c, SHAPES.ship, this.x, this.y, this.scale, 1 + this.turnScale, this.rotation, 50, 50);
     Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, 1, this.rotation, 50, 30);
   }
   u(d) {
-    super.u(d);
+    super.u(d);    
+    if (Math.abs(this.av > 0)) {
+      this.blastRadius += d * 80; 
+      this.blastRadius = Math.min(30, this.blastRadius);
+      if (this.blastRadius > 20) {
+        const noozleX = this.x + Math.cos(this.rotation) * -70;
+        const noozleY = this.y + Math.sin(this.rotation) * -70;
+        new RocketParticle(noozleX - this._dx * 4 * d, noozleY - this._dy * 4 * d);
+      }
+    } else {
+      this.blastRadius -= d * 40;
+      this.blastRadius = Math.max(0, this.blastRadius);
+    }
     // Damp
     var D = 2 * d;
     if (this.dv !== 0) {

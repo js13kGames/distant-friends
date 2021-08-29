@@ -31,6 +31,7 @@ function startGame() {
     p.keys=k;
     p.rotation = -Math.PI / 2;
     p.songFragments = {};
+    p.blastRadius = 0;
     return p;
   }
 
