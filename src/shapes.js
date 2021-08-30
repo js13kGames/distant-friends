@@ -10,6 +10,11 @@ const SHAPES = {
     ["M49 30L42 38L42 29L48 30","black", 2, "red", "noflip"],
     ["M57 58L42 69L57 69Z","black", 2, "red", "noflip"]
   ],
+  mineral: [
+    ["C",
+    50, 50, 14, "#e700dd", 3, "#9a007e",
+    "noflip"]
+  ],
   ship: [
     [
       // Thruster 2

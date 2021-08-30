@@ -64,6 +64,7 @@ function renderUI(c) {
     for (let i = 0; i < 3; i++) 
       c.fillText(friendNames[i] + ": " + friendHints[i], 30, 30 + i * 20);
 
+    c.fillText("Selenium: " + minerals, 30, 120);
     /* FPS
     if (lastDelta == -1) {
       lastDelta = Date.now();

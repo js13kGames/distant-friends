@@ -128,6 +128,7 @@ class Asteroid extends GO {
   collide(r) {
     this.hp--;
     if (this.hp == 0) {
+      new Mineral(this.x, this.y);
       this.destroy();
     }
     r.explode();
@@ -249,5 +250,16 @@ class RocketParticle extends GO {
     c.globalAlpha = this.alpha;
     Renderer.renderCircle(c, this.radius, "#ffe203", 1, "#ffe203", this.x, this.y, 1, 0, 0, false, mainCamera);
     c.globalAlpha = theAlpha;
+  }
+}
+
+class Mineral extends GO {
+  constructor (x, y) {
+    super('mineral', [layers[1]]);
+    this.x = x; this.y = y;
+    this.isMineral = true;
+    this.hits = 'p';
+    this.scale = 1;
+    this.size = 40;
   }
 }

@@ -3,6 +3,7 @@ const rotSpeed = Math.PI / 90;
 const maxTurnScale = 0.2;
 const turnScaleSpeed = 0.015;
 let rl = false;
+let minerals = 0;
 
 class Ship extends GO {
   isCruising () {
@@ -174,6 +175,9 @@ class Ship extends GO {
       }
     } else if (m.isAsteroid) {
       this.dv = 500 * -Math.sign(this.dv);
+    } else if (m.isMineral) {
+      m.destroy();
+      minerals ++;
     }
   }
 }
