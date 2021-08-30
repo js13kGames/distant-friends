@@ -21,7 +21,7 @@ NPCs.forEach(npc => triggers[npc[0] + "-" + npc[1]] = { person: npc[2], sequence
 
 function startGame() {
   function createShip(a,x,k){
-    var p = new Ship(a, [players, layers[2]]);
+    var p = new Ship(a, [layers[2]]);
     p.energy = 0;
     p.dv = 480;
     p.x = x;
@@ -123,8 +123,7 @@ function restart() {
   seeded = LCG(13312);
   layers = [[],[],[]];
   mobs = [];
-  enemies = [];
-  players = [];
+  rocks = [];
   timers = [];
   startGame();
 }

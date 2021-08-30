@@ -104,12 +104,13 @@ class CityLabel extends GO {
 
 class Asteroid extends GO {
   constructor (x, y, size) {
-    super('asteroid1', [layers[2]]);
+    super('asteroid1', [rocks, layers[2]]);
     this.isAsteroid = true;
     this.x = x; this.y = y;
     this.size = size * 20;
     this.scale = size;
     this.hits = 'p';
+    this.hp = size * 4;
     this.deathInterval = setInterval(() => {
       if (rdist(this, p1) > ASTEROID_SPACE) {
         asteroids--;
@@ -122,6 +123,14 @@ class Asteroid extends GO {
  
   u() {
     this.rotation += this.rotSpeed;
+  }
+
+  collide(r) {
+    this.hp--;
+    if (this.hp == 0) {
+      this.destroy();
+    }
+    r.explode();
   }
 }
 

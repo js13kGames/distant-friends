@@ -1,6 +1,15 @@
 const SHAPES = {
   coolStar: [["M44 41Q49 14 56 41Q85 30 65 49Q77 73 55 59Q32 74 45 52Q18 50 44 41", "#131047", 2, "#5b5e8b","noflip"]],
   triangle: [["M24 59L50 13L73 56L44 49Z", "#131047", 2, "#5b5e8b","noflip"]],
+  rocket: [
+    ["M42 30L42 69L57 69L54 30", "black", 2, "white", "noflip"],
+    ["M44 69L45 96L48 96L46 68", "black", 2, "brown", "noflip"],
+    ["M54 69Q50 72 53 76Q60 76 58 81Q55 83 57 85", "black", 2, "none", "noflip"],
+    ["M54 38L42 49L42 58L56 49Z", "black", 2, "red", "noflip"],
+    ["M49 15L36 30L59 30Z", "black", 2, "red", "noflip"],
+    ["M49 30L42 38L42 29L48 30","black", 2, "red", "noflip"],
+    ["M57 58L42 69L57 69Z","black", 2, "red", "noflip"]
+  ],
   ship: [
     [
       // Thruster 2

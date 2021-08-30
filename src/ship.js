@@ -2,6 +2,7 @@ const rotSpeed = Math.PI / 90;
 
 const maxTurnScale = 0.2;
 const turnScaleSpeed = 0.015;
+let rl = false;
 
 class Ship extends GO {
   isCruising () {
@@ -99,8 +100,16 @@ class Ship extends GO {
       return;
     }
     this.fireBlocked = true;
-    setTimeout(() => this.fireBlocked = false, 100);
-    new Rocket(this.x + rand.range(-20, 20), this.y + rand.range(-20, 20), this.rotation);
+    setTimeout(() => this.fireBlocked = false, 300);
+    const offset = (rl ? 1 : -1) * 50;
+    rl = !rl;
+    let noozleX = this.x + Math.sin(this.rotation) * offset;
+    let noozleY = this.y - Math.cos(this.rotation) * offset;
+    noozleX = noozleX + Math.cos(this.rotation) * 15;
+    noozleY = noozleY + Math.sin(this.rotation) * 15;
+
+    this.dv -= 10;
+    new Rocket(noozleX, noozleY, this.rotation + (rl ? -1 : 1) * (Math.PI / 30));
     playSound(2);
   }
   async landOnCity (p, c) {
@@ -182,20 +191,23 @@ function showConversationFragment(app, text) {
 
 class Rocket extends GO {
   constructor(x, y, d) {
-    super('triangle', [layers[1]]);
+    super('rocket', [layers[2]]);
     this.x = x;
     this.y = y;
     this.rotation = d;
-    this.av = 300;
-    this.dv = -50;
-    this.size = 5;
-    this.hits = 'e'; // Enemy
-    this.scale = 0.5;
-    setTimeout(()=>this.explode(), rand.range(1100, 1300));
+    setTimeout(()=>{
+      this.av = 800;
+    }, rand.range(400, 500));
+    this.dv = -100;
+    this.size = 40;
+    this.hits = 'a'; // Asteroid
+    this.scale = 1;
+    setTimeout(()=>this.explode(), rand.range(3100, 3300));
   }
   explode() {
+    if (this.dead) return;
     playSound(0);
-    var e = new Explosion(20);
+    var e = new Explosion(40);
     e.x = this.x;
     e.y = this.y;
     sfx.push(e);
