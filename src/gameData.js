@@ -10,22 +10,22 @@ const PLANETS = [
     ], '#0d1852', '#5b5db8'
   ],
   [
-    'Ilaria', 0, -2300, 200, [
+    'Ilaria', 4000, 4000, 400, [
       ['Ilaria', 0.25, 'capital'],
     ], '#0d1852', '#5b5db8'
   ],
   [
-    'Juno', 0, -3400, 1000, [
+    'Juno', -10000, 13600, 800,[
       ['Havanna', 0.3, 'town']
     ], '#0d1852', '#5b5db8'
   ],
   [
-    'Calisto', -10000, 0, 1000, [
+    'Calisto', -1500, 32000, 1000, [
       ['New Havanna', 0.1, 'capital'],
     ], '#0d1852', '#5b5db8'
   ],
   [
-    'Arland', -8000, 9200, 1300, [
+    'Arland', 17500, 8800, 1300, [
       ['New Athenia', 0.1, 'industrial'],
       ['Moria', 0.3, 'town'],
       ['Andoban', 0.5, 'town'],
