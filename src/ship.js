@@ -4,6 +4,7 @@ const maxTurnScale = 0.2;
 const turnScaleSpeed = 0.015;
 let rl = false;
 let minerals = 0;
+let thrsfx = 0;
 
 class Ship extends GO {
   isCruising () {
@@ -30,6 +31,8 @@ class Ship extends GO {
         const noozleX = this.x + Math.cos(this.rotation) * -70;
         const noozleY = this.y + Math.sin(this.rotation) * -70;
         new RocketParticle(noozleX - this._dx * 4 * d, noozleY - this._dy * 4 * d);
+      } else {
+        thrsfx += d * this.av;
       }
     } else {
       this.blastRadius -= d * 40;
@@ -64,11 +67,19 @@ class Ship extends GO {
     }
     var PY = 20;
     if (isDown(this.keys[0])){ // Increase Thrust
+      if (this.av == 0 || thrsfx > 10) {
+        playSound(0);
+        thrsfx = 0;
+      }
       this.av += PY; // TODO: Affect acceleration indirectly
       this.landed = false;
+      
     } else if (!this.landed && isDown(this.keys[1])){ // Reduce Thrust
       this.av = -200;
     } else {
+      if (this.av > 0) {
+        playSound(1);
+      }
       this.av = 0;
     }
     if (this.av > 1000) { // max thrust
@@ -111,7 +122,7 @@ class Ship extends GO {
 
     this.dv -= 10;
     new Rocket(noozleX, noozleY, this.rotation + (rl ? -1 : 1) * (Math.PI / 30));
-    playSound(2);
+    playSound(4);
   }
   async landOnCity (p, c) {
     const trigger = triggers[p.name + "-" + c.name]
@@ -121,6 +132,7 @@ class Ship extends GO {
         await showConversationFragment (makeAnimal(trigger.person), trigger.sequence[i]);
       }
       if (trigger.giveInstrument != undefined) {
+        playSound(6);
         this.songFragments[trigger.giveInstrument] = 'yes';
         let allFragments = true;
         for (let i = 0; i < FRAGMENTS.length; i++) {
@@ -154,6 +166,7 @@ class Ship extends GO {
         if (this.dv <= 0) {  // Landing
           this.landed = true;
           this.dv = 0;
+          playSound(2);
         } else {
           // Bounce!
           this.dv = -500;
@@ -185,6 +198,7 @@ class Ship extends GO {
 let conversationText = "Test";
 let conversationNext;
 function showConversationFragment(app, text) {
+  playSound(5);
   gState = 10;
   conversationApp = app;
   conversationText = text;
@@ -210,7 +224,7 @@ class Rocket extends GO {
   }
   explode() {
     if (this.dead) return;
-    playSound(0);
+    playSound(3);
     var e = new Explosion(40);
     e.x = this.x;
     e.y = this.y;
