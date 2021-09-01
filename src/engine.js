@@ -1,14 +1,27 @@
 const font = (s) => s + 'px Courier New';
 
-var canvas = document.querySelector('canvas');
 let W = canvas.width;
 let H = canvas.height;
+let canvasScale;
 
 (function() {
   window.addEventListener('resize', resizeCanvas, false);
   function resizeCanvas() {
-    canvas.width = Math.max(Math.min(window.innerWidth, ASTEROID_START), 800);
-    canvas.height = Math.max(Math.min(window.innerHeight, ASTEROID_START), 800);
+    ih = window.innerHeight;
+    iw = window.innerWidth;
+    if (ih > iw) {
+      // Portrait
+      rat = iw / ih;
+      ih = Math.max(Math.min(ih, ASTEROID_START), 800);
+      iw = ih * rat;
+    } else {
+      rat = ih / iw;
+      iw = Math.max(Math.min(iw, ASTEROID_START), 1200);
+      ih = iw * rat;  
+    }
+    canvasScale = ih / canvas.scrollHeight;
+    canvas.width = iw;
+    canvas.height = ih;
     W = canvas.width;
     H = canvas.height;
   }

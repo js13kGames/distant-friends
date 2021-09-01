@@ -25,9 +25,9 @@ function renderUI(c) {
   if (gState == 0) {
     c.font = font(18);
     c.fillStyle= "#00ff00";
-    c.fillText("Loading Music...",10,50);
+    c.fillText("Loading...",10,50);
     if (musicLoaded) {
-      c.fillText("Music Loaded, Press Enter to start",10,70);
+      c.fillText("Tap or Enter to start",10,70);
     }
   } else if (gState == 1) {
     c.font = font(48);
@@ -43,7 +43,7 @@ function renderUI(c) {
     c.fillText("Find your long lost friends",W/2,210);
     c.font = font(32);
     c.fillStyle= "#ea0a8e";
-    c.fillText("Press Enter to start",W/2,290);
+    c.fillText("Tap or Enter to start",W/2,290);
     c.fillStyle= "#ffffff";
     c.font = font(18);
     c.fillText("Programmed by Slashie",W/2,330);
@@ -83,6 +83,19 @@ function renderUI(c) {
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
     c.fillText("[Enter] to change", W / 2, H - 5);
     c.textAlign="left"; 
+    if (gState != 10) {
+      low = H - 200;
+      c.lineWidth = 3;
+      c.strokeStyle = '#5b5e8b';
+      c.beginPath();
+      c.moveTo(W/3, 0);
+      c.lineTo(W/3, H);
+      c.moveTo(0, low);
+      c.lineTo(W, low);
+      c.moveTo(W*2/3, 0);
+      c.lineTo(W*2/3, H);
+      c.stroke();
+    }
     // DEBUG
     /*c.fillText("Cruising: " + p1.isCruising(), 50, 50);
     c.fillText("Near Planet: " + p1.nearPlanet(), 50, 70);
