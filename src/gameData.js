@@ -52,9 +52,11 @@ const FRIENDS = [
         city: 'Arkadia',
         person: 'fox',
         sequence: [
-          "I heard you are looking for Kori the cat. He used to run the windmill here... until he got tired of it.",
-          "I recall he spent entire nights looking at Ilaria,\nthe green moon. If I where you I'd look for him\nthere.",
+          "I heard you are looking for Kori the cat. He used to mine the nearby Selenium fields... until he got tired of it.",
+          "I'm almost out of Selenium. If you bring me 30 orbs I'll tell you where I think he went."
         ],
+        quest: 'getSel',
+        reward: ["Kori spent entire nights looking at Ilaria,\nthe green moon. If I where you I'd look for him\nthere."],
         hint: 'Ilaria'
       },
       {

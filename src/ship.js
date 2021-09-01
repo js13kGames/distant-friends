@@ -6,6 +6,16 @@ let rl = false;
 let minerals = 0;
 let thrsfx = 0;
 
+questCompleted = (type) => {
+  if (type == 'getSel') {
+    if (minerals > 30) {
+      minerals -= 30;
+      return true;
+    }
+  }
+  return false;
+}
+
 class Ship extends GO {
   isCruising () {
     return !this.nearPlanet() && this.dv > 250;
@@ -127,31 +137,39 @@ class Ship extends GO {
   async landOnCity (p, c) {
     const trigger = triggers[p.name + "-" + c.name]
     if (trigger) {
-      delete triggers[p.name + "-" + c.name];
-      for (let i = 0; i < trigger.sequence.length; i++) {
-        await showConversationFragment (makeAnimal(trigger.person), trigger.sequence[i]);
+      var completed = trigger.quest && questCompleted(trigger.quest);
+      if (!trigger.quest || !completed) {
+        for (let i = 0; i < trigger.sequence.length; i++) {
+          await showConversationFragment (makeAnimal(trigger.person), trigger.sequence[i]);
+        }
       }
-      if (trigger.giveInstrument != undefined) {
-        playSound(6);
-        this.songFragments[trigger.giveInstrument] = 'yes';
-        let allFragments = true;
-        for (let i = 0; i < FRAGMENTS.length; i++) {
-          if (!this.songFragments[i]) {
-            allFragments = false;
-            break;
+      if (!trigger.quest || completed) {
+        delete triggers[p.name + "-" + c.name];
+        if (trigger.reward) for (let i = 0; i < trigger.reward.length; i++) {
+          await showConversationFragment (makeAnimal(trigger.person), trigger.reward[i]);
+        }
+        if (trigger.giveInstrument != undefined) {
+          playSound(6);
+          this.songFragments[trigger.giveInstrument] = 'yes';
+          let allFragments = true;
+          for (let i = 0; i < FRAGMENTS.length; i++) {
+            if (!this.songFragments[i]) {
+              allFragments = false;
+              break;
+            }
+          }
+          if (allFragments) {
+            victory();
           }
         }
-        if (allFragments) {
-          victory();
+        var hint = '✅';
+        if (trigger.next) {
+          const nextTrigger = trigger.next;
+          hint = trigger.hint || nextTrigger.planet + ", " + nextTrigger.city;
+          triggers[nextTrigger.planet + "-" + nextTrigger.city] = nextTrigger;
         }
-      }
-      var hint = '✅';
-      if (trigger.next) {
-        const nextTrigger = trigger.next;
-        hint = trigger.hint || nextTrigger.planet + ", " + nextTrigger.city;
-        triggers[nextTrigger.planet + "-" + nextTrigger.city] = nextTrigger;
-      }
-      friendHints[trigger.friendIndex] = hint;
+        friendHints[trigger.friendIndex] = hint;
+      }      
       gState = 2;
     } else {
       await showConversationFragment (makeAnimal('cat'), 'Nothing interesting here.');
