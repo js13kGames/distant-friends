@@ -7,22 +7,22 @@ const PLANETS = [
       ['Los Pinos', 1.25, 'industrial'],
       ['Creta', 1.1, 'town'],
       ['Arkadia', 3, 'town']
-    ], '#0d1852', '#5b5db8'
+    ], '#3C4258', '#8CB1DE'
   ],
   [
     'Ilaria', 4000, 4000, 400, [
       ['Ilaria', 0.25, 'capital'],
-    ], '#0d1852', '#5b5db8'
+    ], '#8CB1DE', '#3B5D38'
   ],
   [
     'Juno', -10000, 13600, 800,[
       ['Havanna', 0.3, 'town']
-    ], '#0d1852', '#5b5db8'
+    ], '#B5A7A7', '#CECCD1'
   ],
   [
     'Calisto', -1500, 32000, 1000, [
       ['New Havanna', 0.1, 'capital'],
-    ], '#0d1852', '#5b5db8'
+    ], '#65868B', '#BBE1E4'
   ],
   [
     'Arland', 17500, 8800, 1300, [
@@ -30,7 +30,7 @@ const PLANETS = [
       ['Moria', 0.3, 'town'],
       ['Andoban', 0.5, 'town'],
       ['Yandor', 0.7, 'town']
-    ], '#0d1852', '#5b5db8'
+    ], '#C3A171', '#C5AB6E'
   ],
 ]
 
