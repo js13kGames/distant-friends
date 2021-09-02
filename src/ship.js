@@ -5,6 +5,7 @@ const turnScaleSpeed = 0.015;
 let rl = false;
 let minerals = 0;
 let thrsfx = 0;
+let raceTime, podReached;
 
 questCompleted = (type) => {
   if (type == 'getSel') {
@@ -12,9 +13,29 @@ questCompleted = (type) => {
       minerals -= 30;
       return true;
     }
+  } else if (type == 'race') {
+    if (podReached && raceTime > 0) {
+      raceTime = 0;
+      return true;
+    }
+    raceTime = 0;
   }
   return false;
 }
+
+restartQuest = (type) => {
+  if (type == 'race') {
+    raceTime = 60;
+    currentWaypoint = junoPod;
+    junoPod.reset();
+  }
+}
+
+setInterval(() => {
+  if (raceTime > 0) {
+    raceTime--;
+  }
+}, 1000);
 
 class Ship extends GO {
   isCruising () {
@@ -143,6 +164,10 @@ class Ship extends GO {
       if (!trigger.quest || !completed) {
         for (let i = 0; i < trigger.sequence.length; i++) {
           await showConversationFragment (makeAnimal(trigger.person), trigger.sequence[i]);
+        }
+        if (trigger.quest) {
+          restartQuest(trigger.quest);
+          friendHints[trigger.friendIndex] = trigger.questHint;
         }
       }
       if (!trigger.quest || completed) {

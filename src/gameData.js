@@ -82,9 +82,16 @@ const FRIENDS = [
         city: 'Cape Santos',
         person: 'fox',
         sequence: [
-          'I heard you were looking for Ponchi?',
-          'His family moved shortly after he finished school',
-          'His father got a job at an industrial plant in Arland.'
+          "I'm so bored here... my life feels empty.",
+          "I'll let you know about Ponchi... if you become a Space Ace!",
+          "Just reach the Nemesis pod near Juno and come back here in less than a minute!"
+        ],
+        quest: 'race',
+        questHint: 'Become a Space Ace',
+        reward: [
+          'Amazing, I feel alive again!',
+          "Ponchi's father got a job at an industrial plant in Arland",
+          'I bet they are still living there. Good luck!'
         ],
         hint: 'Arland?'
       },

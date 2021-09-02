@@ -277,3 +277,17 @@ class Mineral extends GO {
     this.destroy();
   }
 }
+
+class Pod extends GO {
+  collide () {
+    podReached = true;
+    currentWaypoint = planets.find(p=>p.name=='Ceres');
+    this.rotSpeed = 5;
+  }
+  reset () {
+    this.rotSpeed = 0;
+  }
+  u(d) {
+    this.rotation += this.rotSpeed * d;
+  }
+}
