@@ -1,4 +1,4 @@
-const rotSpeed = Math.PI / 90;
+const rotSpeed = 3;
 
 const maxTurnScale = 0.2;
 const turnScaleSpeed = 0.015;
@@ -48,6 +48,7 @@ class Ship extends GO {
       this.blastRadius -= d * 40;
       this.blastRadius = Math.max(0, this.blastRadius);
     }
+    this.rotation += this.r * rotSpeed * d;
     // Damp
     var D = 2 * d;
     if (this.dv !== 0) {
@@ -98,20 +99,21 @@ class Ship extends GO {
     if (this.landed) {
       return;
     }
+    this.r = 0;
     if (isDown(this.keys[2])){ // Left
       this.flipped = true;
       this.turnScale -= turnScaleSpeed;
       if (this.turnScale < -maxTurnScale) {
         this.turnScale = -maxTurnScale;
       }
-      this.rotation -= rotSpeed;
+      this.r = -1;
     } else if (isDown(this.keys[3])){ // Right
       this.flipped = true;
       this.turnScale += turnScaleSpeed;
       if (this.turnScale > maxTurnScale) {
         this.turnScale = maxTurnScale;
       }
-      this.rotation += rotSpeed;
+      this.r = 1;
     }
     if (isDown(this.keys[4])) { // Space
       this.fire();
