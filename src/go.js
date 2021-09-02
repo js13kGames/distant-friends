@@ -105,11 +105,11 @@ class Asteroid extends GO {
         this.destroy();
       }
     }, 1000)
-    this.rotSpeed = Math.PI / rand.range(700, 1200) * (rand.b() ? 1 : -1);
+    this.rotSpeed = rand.range(0.5, 1) * (rand.b() ? 1 : -1);
   }
  
-  u() {
-    this.rotation += this.rotSpeed;
+  u(d) {
+    this.rotation += this.rotSpeed * d;
   }
 
   collide(p) {
