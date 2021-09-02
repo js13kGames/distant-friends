@@ -84,8 +84,12 @@ class Ship extends GO {
       this.turnScale -= 0.01;
     }
     // BOundaries
-    if (this.dv > 2000) {
-      this.dv = 2000; // Temporary
+    if (this.boost) {
+      this.boost -= d;
+      if (this.boost <=0) this.boost =0;
+      this.dv += 1500 * d;
+    } else if (this.dv > 2000) {
+      this.dv = 2000;
     }
     mainCamera.x = this.x;
     mainCamera.y = this.y;

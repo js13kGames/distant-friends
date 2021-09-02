@@ -258,7 +258,8 @@ class RocketParticle extends GO {
     if (this.radius <=0 || this.alpha <= 0) return;
     const theAlpha = c.globalAlpha;
     c.globalAlpha = this.alpha;
-    Renderer.renderCircle(c, this.radius, "#ffe203", 1, "#ffe203", this.x, this.y, 1, 0, 0, false, mainCamera);
+    var color = p1.boost ? "#5555ff" : "#ffe203";
+    Renderer.renderCircle(c, this.radius, color, 1, color, this.x, this.y, 1, 0, 0, false, mainCamera);
     c.globalAlpha = theAlpha;
   }
 }
@@ -289,5 +290,19 @@ class Pod extends GO {
   }
   u(d) {
     this.rotation += this.rotSpeed * d;
+  }
+}
+
+class Booster extends GO {
+  constructor (x, y) {
+    super('rocket', [layers[1]]);
+    this.x = x; this.y = y;
+    this.hits = 'p';
+    this.scale = 1;
+    this.size = 40;
+  }
+
+  collide () {
+    p1.boost = 5; this.destroy();
   }
 }

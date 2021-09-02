@@ -41,6 +41,7 @@ function startGame() {
     junoPod.name = 'Juno Pod';
     junoPod.x = -11800; junoPod.y = 13600; junoPod.size = 30; junoPod.hits = 'p'; junoPod.scale = 1; junoPod.rotSpeed = 0;
     planets.push(junoPod);
+    new Booster(500, 3000);
   }
   currentWaypoint = planets[0];
   currentWaypointIndex = 0;
