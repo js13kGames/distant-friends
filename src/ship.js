@@ -176,41 +176,6 @@ class Ship extends GO {
       gState = 2;
     }
   }
-  collide(m) {
-    if (m.isPlanet) {
-      if (this.landed) {
-        // Ignore collision (This is unlikely to happen due to the re-placement on landing)
-      } else {
-        if (this.dv <= 0) {  // Landing
-          this.landed = true;
-          this.dv = 0;
-          playSound(2);
-        } else {
-          // Bounce!
-          this.dv = -500;
-        }
-        let reloc = m.size + this.size + 1;
-        if (!this.landed) {
-          reloc += 20;
-        }
-        const angle = Math.atan2(this.y - m.y, this.x - m.x);
-        this.x = m.x + Math.cos(angle) * reloc;
-        this.y = m.y + Math.sin(angle) * reloc;
-        if (this.landed) {
-          this.rotation = angle; // TODO: Tween rotation?
-          const city = m.nearbyCity(this);
-          if (city) {
-            this.landOnCity(m, city);
-          }
-        }
-      }
-    } else if (m.isAsteroid) {
-      this.dv = 500 * -Math.sign(this.dv);
-    } else if (m.isMineral) {
-      m.destroy();
-      minerals ++;
-    }
-  }
 }
 
 let conversationText = "Test";
@@ -248,5 +213,13 @@ class Rocket extends GO {
     e.y = this.y;
     sfx.push(e);
     this.destroy();
+  }
+  collide (r) {
+    r.hp--;
+    if (r.hp == 0) {
+      new Mineral(r.x, r.y);
+      r.destroy();
+    }
+    this.explode();
   }
 }

@@ -24,19 +24,6 @@ class GO {
     //this.lists.forEach(l => l.splice(l.indexOf(this), 1));
     this.ch.forEach(c => c.destroy());
   }
-
-  /*
-  collide(m) {
-    this.destroy();
-    m.destroy();
-    for (var i = 0; i < 10; i++) {
-      var e = new Explosion(50);
-      e.x = this.x - (this.size / 2) + rand.range(0, this.size);
-      e.y = this.y - (this.size / 2) + rand.range(0, this.size);
-      sfx.push(e);
-    }
-  }
-  */
 }
 
 class Star extends GO {
@@ -125,13 +112,8 @@ class Asteroid extends GO {
     this.rotation += this.rotSpeed;
   }
 
-  collide(r) {
-    this.hp--;
-    if (this.hp == 0) {
-      new Mineral(this.x, this.y);
-      this.destroy();
-    }
-    r.explode();
+  collide(p) {
+    p.dv = 500 * -Math.sign(p.dv);
   }
 }
 
@@ -187,6 +169,34 @@ class Planet extends GO {
   }
   nearbyCity (p) {
     return this.cities.find (c => rdist(c, p) < 100);
+  }
+  collide (p) {
+    if (p.landed) {
+      // Ignore collision (This is unlikely to happen due to the re-placement on landing)
+    } else {
+      if (p.dv <= 0) {  // Landing
+        p.landed = true;
+        p.dv = 0;
+        playSound(2);
+      } else {
+        // Bounce!
+        p.dv = -500;
+      }
+      let reloc = this.size + p.size + 1;
+      if (!p.landed) {
+        reloc += 20;
+      }
+      const angle = Math.atan2(p.y - this.y, p.x - this.x);
+      p.x = this.x + Math.cos(angle) * reloc;
+      p.y = this.y + Math.sin(angle) * reloc;
+      if (p.landed) {
+        p.rotation = angle; // TODO: Tween rotation?
+        const city = this.nearbyCity(p);
+        if (city) {
+          p.landOnCity(this, city);
+        }
+      }
+    }
   }
 }
 
@@ -261,5 +271,9 @@ class Mineral extends GO {
     this.hits = 'p';
     this.scale = 1;
     this.size = 40;
+  }
+  collide() {
+    minerals++;
+    this.destroy();
   }
 }

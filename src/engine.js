@@ -99,7 +99,7 @@ raf(function(d) {
       ctx.arc(m.x,m.y,m.size,0,Math.PI*2,true);
       ctx.stroke();
     }*/
-    m.hits && (m.hits === 'p' ? collide(p1, m) : rocks.length && rocks.forEach(a => collide(a, m))); // Assume the mob hits the asteroids if it doesn't hit the player (i.e. a rocket)
+    m.hits && (m.hits === 'p' ? collide(m, p1) : rocks.length && rocks.forEach(a => collide(m, a))); // Assume the mob hits the asteroids if it doesn't hit the player (i.e. a rocket)
     let killType;
     if (m.koo) {
       if (m.y > starCamera.y + H / 2 + m.size) {
