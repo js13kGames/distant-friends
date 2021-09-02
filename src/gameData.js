@@ -56,6 +56,7 @@ const FRIENDS = [
           "I'm almost out of Selenium. If you bring me 30 orbs I'll tell you where I think he went."
         ],
         quest: 'getSel',
+        questHint: 'Bring 30 selenium orbs to Arkadia',
         reward: ["Kori spent entire nights looking at Ilaria,\nthe green moon. If I where you I'd look for him\nthere."],
         hint: 'Ilaria'
       },
