@@ -275,6 +275,7 @@ class Pod extends GO {
     podReached = true;
     currentWaypoint = planets.find(p=>p.name=='Ceres');
     this.rotSpeed = 5;
+    playSound(6);
   }
   reset () {
     podReached = false;
@@ -297,6 +298,7 @@ class Booster extends GO {
 
   collide () {
     p1.boost = 5;
+    playSound(4);
   }
 
   u(d) {
