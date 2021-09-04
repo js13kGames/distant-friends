@@ -94,7 +94,7 @@ class Asteroid extends GO {
     super('asteroid1', [rocks, layers[2]]);
     this.isAsteroid = true;
     this.x = x; this.y = y;
-    this.size = size * 20;
+    this.size = size * 30;
     this.scale = size;
     this.hits = 'p';
     this.hp = size * 4;
@@ -293,7 +293,7 @@ class Booster extends GO {
     this.x = x; this.y = y;
     this.hits = 'p';
     this.scale = 1;
-    this.size = 40;
+    this.size = 60;
   }
 
   collide () {
