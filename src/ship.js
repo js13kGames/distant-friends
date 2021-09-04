@@ -73,7 +73,7 @@ class Ship extends GO {
     // Affect acceleration based on player input and stuff
     switch (this.cmd) {
       case 'n':
-        if (this.av > 0) {
+        if (this.av > 0 && !this.boost) {
           playSound(1);
         }
         this.av = 0;
