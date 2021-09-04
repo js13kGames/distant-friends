@@ -114,6 +114,7 @@ class Asteroid extends GO {
 
   collide(p) {
     p.dv = 500 * -Math.sign(p.dv);
+    p.av = 0;
   }
 }
 
@@ -181,6 +182,7 @@ class Planet extends GO {
       } else {
         // Bounce!
         p.dv = -500;
+        p.av = 0;
       }
       let reloc = this.size + p.size + 1;
       if (!p.landed) {
