@@ -277,6 +277,7 @@ class Pod extends GO {
     this.rotSpeed = 5;
   }
   reset () {
+    podReached = false;
     this.rotSpeed = 0;
   }
   u(d) {
