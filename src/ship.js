@@ -54,7 +54,31 @@ class Ship extends GO {
     Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, 1, this.rotation, 50, 30);
   }
   u(d) {
-    super.u(d);    
+    // Affect acceleration based on player input and stuff
+    switch (this.cmd) {
+      case 'n':
+        if (this.av > 0) {
+          playSound(1);
+        }
+        this.av = 0;
+        break;
+      case 't':
+        var PY = 2000;
+        if (this.av == 0 || thrsfx > 10) {
+          playSound(0);
+          thrsfx = 0;
+        }
+        this.av += PY * d;
+        this.landed = false;
+        if (this.av > 1000) { // max thrust
+          this.av = 1000;
+        }
+        break;
+      case 'b':
+        this.av -= 200 * d;
+        break;
+    }
+    super.u(d);
     if (Math.abs(this.av > 0)) {
       this.blastRadius += d * 80; 
       this.blastRadius = Math.min(30, this.blastRadius);
@@ -98,28 +122,15 @@ class Ship extends GO {
   }
   k(){
     if (gState != 2 && gState != 3) {
-      this.av = 0;
+      this.cmd = 'n';
       return;
     }
-    var PY = 20;
     if (isDown(this.keys[0])){ // Increase Thrust
-      if (this.av == 0 || thrsfx > 10) {
-        playSound(0);
-        thrsfx = 0;
-      }
-      this.av += PY; // TODO: Affect acceleration indirectly
-      this.landed = false;
-      
+      this.cmd = 't';
     } else if (!this.landed && isDown(this.keys[1])){ // Reduce Thrust
-      this.av = -200;
+      this.cmd = 'b';
     } else {
-      if (this.av > 0) {
-        playSound(1);
-      }
-      this.av = 0;
-    }
-    if (this.av > 1000) { // max thrust
-      this.av = 1000;
+      this.cmd = 'n';
     }
     if (this.landed) {
       return;
