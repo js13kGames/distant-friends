@@ -41,7 +41,7 @@ flameColor = () => p1.boost ? "#5555ff" : "#ffe203";
 
 class Ship extends GO {
   isCruising () {
-    return !this.nearPlanet() && this.dv > 250;
+    return !raceTime && !this.nearPlanet() && this.dv > 250;
   }
   nearPlanet () {
     return planets.find(p => rdist(p, this) < (ASTEROID_SPACE + p.size));
