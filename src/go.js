@@ -113,8 +113,7 @@ class Asteroid extends GO {
   }
 
   collide(p) {
-    p.dv = 500 * -Math.sign(p.dv);
-    p.av = 0;
+    p.crash(this);
   }
 }
 
@@ -178,19 +177,12 @@ class Planet extends GO {
       if (p.dv <= 0) {  // Landing
         p.landed = true;
         p.dv = 0;
+        p.r = 0;
         playSound(2);
+        p.touch(this);
       } else {
-        // Bounce!
-        p.dv = -500;
-        p.av = 0;
+        p.crash(this);
       }
-      let reloc = this.size + p.size + 1;
-      if (!p.landed) {
-        reloc += 20;
-      }
-      const angle = Math.atan2(p.y - this.y, p.x - this.x);
-      p.x = this.x + Math.cos(angle) * reloc;
-      p.y = this.y + Math.sin(angle) * reloc;
       if (p.landed) {
         p.rotation = angle; // TODO: Tween rotation?
         const city = this.nearbyCity(p);

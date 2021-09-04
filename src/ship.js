@@ -53,7 +53,20 @@ class Ship extends GO {
     Renderer.renderShapes(c, SHAPES.ship, this.x, this.y, this.scale, 1 + this.turnScale, this.rotation, 50, 50);
     Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, 1, this.rotation, 50, 30);
   }
+  crash(go) {
+    this.touch(go);
+    this.boost = 0;
+    this.dv = 500 * -Math.sign(this.dv)
+    this.av = 0;
+  }
+  touch(go) { // Place the shp in the surface of the go
+    let reloc = this.size + go.size + 1;
+    const angle = Math.atan2(this.y - go.y, this.x - go.x);
+    this.x = go.x + Math.cos(angle) * reloc;
+    this.y = go.y + Math.sin(angle) * reloc;
+  }
   u(d) {
+    super.u(d);
     // Affect acceleration based on player input and stuff
     switch (this.cmd) {
       case 'n':
@@ -78,7 +91,12 @@ class Ship extends GO {
         this.av -= 200 * d;
         break;
     }
-    super.u(d);
+    if (this.boost) {
+      this.boost -= d;
+      if (this.boost <=0) this.boost =0;
+      this.av += 1;
+      this.dv += 1500 * d;
+    }
     if (Math.abs(this.av > 0)) {
       this.blastRadius += d * 80; 
       this.blastRadius = Math.min(30, this.blastRadius);
@@ -108,11 +126,7 @@ class Ship extends GO {
       this.turnScale -= 0.01;
     }
     // BOundaries
-    if (this.boost) {
-      this.boost -= d;
-      if (this.boost <=0) this.boost =0;
-      this.dv += 1500 * d;
-    } else if (this.dv > 2000) {
+    if (!this.boost && this.dv > 2000) {
       this.dv = 2000;
     }
     mainCamera.x = this.x;
