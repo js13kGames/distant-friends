@@ -179,16 +179,13 @@ class Planet extends GO {
         p.dv = 0;
         p.r = 0;
         playSound(2);
-        p.touch(this);
-      } else {
-        p.crash(this);
-      }
-      if (p.landed) {
-        p.rotation = angle; // TODO: Tween rotation?
+        p.rotation = p.touch(this); // TODO: Tween rotation?
         const city = this.nearbyCity(p);
         if (city) {
           p.landOnCity(this, city);
         }
+      } else {
+        p.crash(this);
       }
     }
   }

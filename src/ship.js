@@ -66,6 +66,7 @@ class Ship extends GO {
     const angle = Math.atan2(this.y - go.y, this.x - go.x);
     this.x = go.x + Math.cos(angle) * reloc;
     this.y = go.y + Math.sin(angle) * reloc;
+    return angle;
   }
   u(d) {
     super.u(d);
