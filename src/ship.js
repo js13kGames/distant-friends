@@ -37,6 +37,8 @@ setInterval(() => {
   }
 }, 1000);
 
+flameColor = () => p1.boost ? "#5555ff" : "#ffe203";
+
 class Ship extends GO {
   isCruising () {
     return !this.nearPlanet() && this.dv > 250;
@@ -48,7 +50,7 @@ class Ship extends GO {
     if (this.blastRadius > 0) {
       const noozleX = this.x - Math.cos(this.rotation) * 75;
       const noozleY = this.y - Math.sin(this.rotation) * 75;
-      Renderer.renderCircle(c, Math.max(1, this.blastRadius + rand.range(-5, 5)), "#ffe203", rand.range(0.5, 2), "#ffe203", noozleX, noozleY, 1, 0, 0, false, mainCamera);
+      Renderer.renderCircle(c, Math.max(1, this.blastRadius + rand.range(-5, 5)), flameColor(), rand.range(0.5, 2), flameColor(), noozleX, noozleY, 1, 0, 0, false, mainCamera);
     }
     Renderer.renderShapes(c, SHAPES.ship, this.x, this.y, this.scale, 1 + this.turnScale, this.rotation, 50, 50);
     Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, 1, this.rotation, 50, 30);

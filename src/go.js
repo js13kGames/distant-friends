@@ -252,7 +252,7 @@ class RocketParticle extends GO {
     if (this.radius <=0 || this.alpha <= 0) return;
     const theAlpha = c.globalAlpha;
     c.globalAlpha = this.alpha;
-    var color = p1.boost ? "#5555ff" : "#ffe203";
+    var color = flameColor();
     Renderer.renderCircle(c, this.radius, color, 1, color, this.x, this.y, 1, 0, 0, false, mainCamera);
     c.globalAlpha = theAlpha;
   }
