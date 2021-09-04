@@ -59,6 +59,7 @@ gulp.task('concat', function() {
         './src/shapes.js',
         './src/animals.js',
         './src/ship.js',
+        './src/procgen.js',
         './src/game.js',
       ]
     )
