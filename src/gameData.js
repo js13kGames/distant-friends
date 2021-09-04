@@ -85,7 +85,7 @@ const FRIENDS = [
         sequence: [
           "I'm so bored here... my life feels empty.",
           "I'll let you know about Ponchi... if you complete the Kestrel Run!",
-          "Reach the pod near Juno and come back here in less than a minute...",
+          "Reach the pinwheel near Juno and come back here in less than a minute...",
           "Go now!"
         ],
         quest: 'race',

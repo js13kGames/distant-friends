@@ -1,6 +1,9 @@
 const SHAPES = {
   coolStar: [["M44 41Q49 14 56 41Q85 30 65 49Q77 73 55 59Q32 74 45 52Q18 50 44 41", "#131047", 2, "#5b5e8b","noflip"]],
   triangle: [["M24 59L50 13L73 56L44 49Z", "#131047", 2, "#5b5e8b","noflip"]],
+  booster: [["M50 26Q43 51 17 50Q44 59 50 83Q52 56 77 49Q52 51 50 26Z", "white", 2, "white","noflip"]],
+  pinwheel: [["M42 41L42 9L64 23L56 41L82 41L75 60L56 54L56 80L33 72L43 53L19 53L24 34L42 41L12 8L42 9M56 41L81 10L82 41M56 54L80 80L55 80M19 53L19 78L43 53L56 41M42 41L55 53"
+    ,"black", 2, "red","noflip"]],
   rocket: [
     ["M42 30L42 69L57 69L54 30", "black", 2, "white", "noflip"],
     ["M44 69L45 96L48 96L46 68", "black", 2, "brown", "noflip"],

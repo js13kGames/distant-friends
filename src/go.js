@@ -286,14 +286,19 @@ class Pod extends GO {
 
 class Booster extends GO {
   constructor (x, y) {
-    super('rocket', [layers[1]]);
+    super('booster', [layers[1]]);
     this.x = x; this.y = y;
     this.hits = 'p';
     this.scale = 1;
     this.size = 60;
+    this.rotSpeed = 3;
   }
 
   collide () {
     p1.boost = 5;
+  }
+
+  u(d) {
+    this.rotation += this.rotSpeed * d;
   }
 }
