@@ -90,7 +90,7 @@ class CityLabel extends GO {
 }
 
 class Asteroid extends GO {
-  constructor (x, y, size) {
+  constructor (x, y, size, strong) {
     super('asteroid1', [rocks, layers[2]]);
     this.isAsteroid = true;
     this.x = x; this.y = y;
@@ -98,7 +98,7 @@ class Asteroid extends GO {
     this.scale = size;
     this.hits = 'p';
     this.hp = size * 4;
-    this.deathInterval = setInterval(() => {
+    if (!strong) this.deathInterval = setInterval(() => {
       if (rdist(this, p1) > ASTEROID_SPACE) {
         asteroids--;
         clearInterval(this.deathInterval);
