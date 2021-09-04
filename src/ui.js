@@ -66,7 +66,7 @@ function renderUI(c) {
 
     c.fillText("Selenium: " + minerals, 30, 120);
     if (raceTime > 0) {
-      c.fillText("Parsec Run: " + raceTime, 30, 140);
+      c.fillText("Kestrel Run: " + raceTime, 30, 140);
     }
     /* FPS
     if (lastDelta == -1) {

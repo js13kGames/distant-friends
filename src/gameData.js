@@ -84,11 +84,12 @@ const FRIENDS = [
         person: 'fox',
         sequence: [
           "I'm so bored here... my life feels empty.",
-          "I'll let you know about Ponchi... if you become a Space Ace!",
-          "Just reach the Nemesis pod near Juno and come back here in less than a minute!"
+          "I'll let you know about Ponchi... if you complete the Kestrel Run!",
+          "Reach the pod near Juno and come back here in less than a minute...",
+          "Go now!"
         ],
         quest: 'race',
-        questHint: 'Become a Space Ace',
+        questHint: 'Complete the Kestrel Run',
         reward: [
           'Amazing, I feel alive again!',
           "Ponchi's father got a job at an industrial plant in Arland",
