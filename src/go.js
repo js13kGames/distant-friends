@@ -303,6 +303,6 @@ class Booster extends GO {
   }
 
   collide () {
-    p1.boost = 5; this.destroy();
+    p1.boost = 5;
   }
 }
