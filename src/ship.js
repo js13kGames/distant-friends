@@ -57,10 +57,10 @@ class Ship extends GO {
     Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, 1, this.rotation, 50, 30);
   }
   crash(go) {
+    let ndv = 500 * -Math.sign(this.dv);
     this.touch(go);
     this.boost = 0;
-    this.dv = 500 * -Math.sign(this.dv)
-    this.av = 0;
+    this.dv = ndv;
     this.gear = 1;
   }
   touch(go) { // Place the shp in the surface of the go
@@ -68,6 +68,8 @@ class Ship extends GO {
     const angle = Math.atan2(this.y - go.y, this.x - go.x);
     this.x = go.x + Math.cos(angle) * reloc;
     this.y = go.y + Math.sin(angle) * reloc;
+    this.av = 0;
+    this.dv = 0;
     return angle;
   }
   u(d) {
