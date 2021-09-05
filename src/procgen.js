@@ -4,7 +4,6 @@ function gen () {
   junoPod = new Pod('pinwheel', [layers[1]]);
   junoPod.name = 'Juno Pinwheel';
   junoPod.x = -11800; junoPod.y = 13600; junoPod.size = 30; junoPod.hits = 'p'; junoPod.scale = 1; junoPod.rotSpeed = 0;
-  planets.push(junoPod);
 
   // Race track between Ceres and Juno
   raceTrack(planets[0], planets[2], 1);

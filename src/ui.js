@@ -1,5 +1,6 @@
 friendNames = ['Kori', 'Ponchi', 'Patty'];
 friendHints = ['Creta', 'Cape Santos', 'Los Pinos'];
+friendWaypoints = [];
 
 function wrapText(txt) {
   wi = Math.floor((W - 270) / ctx.measureText('m').width);
@@ -53,7 +54,7 @@ function renderUI(c) {
     c.textAlign="left"; 
     c.fillStyle= "#ffffff";
     for (let i = 0; i < 3; i++) 
-      c.fillText(friendNames[i] + ": " + friendHints[i], 30, 30 + i * 20);
+      c.fillText((i == currentWaypointIndex?'> ':' ') +friendNames[i] + ": " + friendHints[i], 30, 30 + i * 20);
 
 
     c.fillText("Selenium: " + minerals, 30, 120);

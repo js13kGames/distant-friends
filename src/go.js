@@ -274,7 +274,7 @@ class Mineral extends GO {
 class Pod extends GO {
   collide () {
     podReached = true;
-    currentWaypoint = planets.find(p=>p.name=='Ceres');
+    friendWaypoints[1] = currentWaypoint = planets.find(p=>p.name=='Ceres');
     this.rotSpeed = 5;
     playSound(6);
   }

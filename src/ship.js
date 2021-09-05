@@ -26,7 +26,8 @@ questCompleted = (type) => {
 restartQuest = (type) => {
   if (type == 'race') {
     raceTime = 60;
-    currentWaypoint = junoPod;
+    currentWaypoint = friendWaypoints[1] = junoPod;
+    currentWaypointIndex = 1;
     junoPod.reset();
   }
 }
@@ -218,6 +219,7 @@ class Ship extends GO {
           const nextTrigger = trigger.next;
           hint = trigger.hint || nextTrigger.planet + ", " + nextTrigger.city;
           triggers[nextTrigger.planet + "-" + nextTrigger.city] = nextTrigger;
+          friendWaypoints[trigger.friendIndex] = planets.find(p=>p.name==nextTrigger.planet);
         } else {
           playSound(6);
           count = 0;
@@ -227,7 +229,7 @@ class Ship extends GO {
           }
         }
         friendHints[trigger.friendIndex] = hint;
-      }      
+      }
       gState = 2;
     } else {
       await showConversationFragment (makeAnimal('cat'), 'Nothing interesting here.');

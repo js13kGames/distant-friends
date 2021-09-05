@@ -5,20 +5,6 @@ var p1;
 let currentWaypoint, currentWaypointIndex, startTime, completeTime;
 let planets;
 
-// Load triggers
-FRIENDS.forEach((friend,j) => {
-  const first = friend.findSequence[0];
-  triggers[first.planet + "-" + first.city] = first;
-  friend.findSequence.forEach((f, i) => {
-    f.friendIndex = j;
-    if (i < friend.findSequence.length - 1) {
-      f.next = friend.findSequence[i + 1];
-    }
-  })
-})
-
-NPCs.forEach(npc => triggers[npc[0] + "-" + npc[1]] = { person: npc[2], sequence: [npc[3]]});
-
 function startGame() {
   function createShip(a,x,k){
     var p = new Ship(a, [layers[2]]);
@@ -36,7 +22,22 @@ function startGame() {
 
   gen();
 
-  currentWaypoint = planets[0];
+  // Load triggers
+  FRIENDS.forEach((friend,j) => {
+    const first = friend.findSequence[0];
+    triggers[first.planet + "-" + first.city] = first;
+    friendWaypoints[j] = planets.find(p=>p.name==first.planet);
+    friend.findSequence.forEach((f, i) => {
+      f.friendIndex = j;
+      if (i < friend.findSequence.length - 1) {
+        f.next = friend.findSequence[i + 1];
+      }
+    })
+  })
+
+  NPCs.forEach(npc => triggers[npc[0] + "-" + npc[1]] = { person: npc[2], sequence: [npc[3]]});
+
+  currentWaypoint = friendWaypoints[0];
   currentWaypointIndex = 0;
 
   p1 = createShip('ship', W / 2, ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space' ]);
@@ -68,10 +69,10 @@ typed(13, () => {
     gState = 2;
   } else if (gState == 2) {
     currentWaypointIndex++;
-    if (currentWaypointIndex >= planets.length) {
+    if (currentWaypointIndex >= friendWaypoints.length) {
       currentWaypointIndex = 0;
     }
-    currentWaypoint = planets[currentWaypointIndex];
+    currentWaypoint = friendWaypoints[currentWaypointIndex];
   } else if (gState == 3) {
     restart();
     gState = 2;
