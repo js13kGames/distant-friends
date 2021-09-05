@@ -74,18 +74,7 @@ function renderMob(m, flip) {
     Renderer.renderShapes(ctx, m.app, m.x, m.y, m.scale, 1, m.rotation, 49, 49, m.camera);
   }
 }
-var timers = [];
 raf(function(d) {
-  if (timers.length) {
-    timers.forEach(t => {
-      t[1] -= d;
-      if (t[1] < 0) {
-        t[0]();
-        t.d = true;
-      }
-    })
-    timers = timers.filter(f => !f.d);
-  }
   ctx.fillStyle = '#05063c';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   layers.forEach(l => l.forEach(m => {

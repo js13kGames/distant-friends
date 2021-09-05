@@ -113,7 +113,6 @@ function restart() {
   layers = [[],[],[]];
   mobs = [];
   rocks = [];
-  timers = [];
   startGame();
 }
 
