@@ -56,8 +56,8 @@ function renderUI(c,d) {
     for (let i = 0; i < 3; i++) 
       c.fillText((i == currentWaypointIndex?'> ':' ') +friendNames[i] + ": " + friendHints[i], 30, 30 + i * 20);
 
-
-    c.fillText("Selenium: " + minerals, 30, 120);
+    if (minerals)
+      c.fillText("Selenium: " + minerals, 30, 120);
     if (raceTime > 0) {
       c.fillText("Kestrel Run: " + raceTime, 30, 140);
     }
@@ -112,13 +112,6 @@ function renderUI(c,d) {
 
 
   } 
-  if (gState == 3) {
-    c.font = font(32);
-    c.textAlign="center"; 
-    c.fillStyle= "#00ff00";
-    c.fillText("GAME OVER",W/2,100);
-    c.fillText("Press Enter to restart",W/2,150);
-  }
   if (gState == 10) {
     c.fillStyle = "#000";
     c.globalAlpha = 0.5;

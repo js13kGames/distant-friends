@@ -84,9 +84,6 @@ typed(13, () => {
       currentWaypointIndex = 0;
     }
     currentWaypoint = friendWaypoints[currentWaypointIndex];
-  } else if (gState == 3) {
-    restart();
-    gState = 2;
   } else if (gState == 10) {
     conversationNext();
   }
@@ -118,14 +115,6 @@ function gameOver() {
 function victory() {
   p1.won = true;
   completeTime = Math.floor((Date.now() - startTime) / 10)/100;
-}
-
-function restart() {
-  seeded = LCG(13312);
-  layers = [[],[],[]];
-  mobs = [];
-  rocks = [];
-  startGame();
 }
 
 setInterval (() => {
