@@ -2,7 +2,7 @@
 let asteroids = 0;
 const triggers = {};
 var p1;
-let currentWaypoint, currentWaypointIndex;
+let currentWaypoint, currentWaypointIndex, startTime, completeTime;
 let planets;
 
 // Load triggers
@@ -50,7 +50,7 @@ function startGame() {
   starCamera.x = p1.x;
   starCamera.y = p1.y;
   stars50();
-
+  startTime = Date.now();
 }
 
 typed(13, () => {
@@ -102,6 +102,7 @@ function gameOver() {
 
 function victory() {
   p1.won = true;
+  completeTime = Math.floor((Date.now() - startTime) / 10)/100;
 }
 
 function restart() {

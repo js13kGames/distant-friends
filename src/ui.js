@@ -55,10 +55,18 @@ function renderUI(c) {
     for (let i = 0; i < 3; i++) 
       c.fillText(friendNames[i] + ": " + friendHints[i], 30, 30 + i * 20);
 
+
     c.fillText("Selenium: " + minerals, 30, 120);
     if (raceTime > 0) {
       c.fillText("Kestrel Run: " + raceTime, 30, 140);
     }
+
+    // Stats
+    if (p1.won) {
+      c.textAlign="right"; 
+      c.fillText("Game Completed: " + completeTime,W - 30, 30);
+    }
+
     /* FPS
     if (lastDelta == -1) {
       lastDelta = Date.now();
@@ -95,11 +103,7 @@ function renderUI(c) {
     c.fillText("DV: " + p1.dv, 50, 90);
     c.fillText("Asteroids: " + asteroids, 50, 110);*/
 
-    if (p1.won) {
-      c.font = font(24);
-      c.textAlign="center"; 
-      c.fillText("Congrats, the song is now complete!",W/2, 40);
-    }
+
   } 
   if (gState == 3) {
     c.font = font(32);
