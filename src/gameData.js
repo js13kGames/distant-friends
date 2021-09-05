@@ -51,10 +51,10 @@ const FRIENDS = [
         person: 'fox',
         sequence: [
           "I heard you are looking for Kori the cat. He used to mine the nearby Selenium fields... until he got tired of it.",
-          "I'm almost out of Selenium. If you bring me 30 orbs I'll tell you where I think he went."
+          "I'm almost out of Selenium. If you bring me 10 orbs I'll tell you where I think he went."
         ],
         quest: 'getSel',
-        questHint: 'Bring 30 selenium orbs to Arkadia',
+        questHint: 'Bring 10 selenium orbs to Arkadia',
         reward: ["Kori spent entire nights looking at Ilaria,\nthe green moon. If I where you I'd look for him\nthere."],
         hint: 'Ilaria'
       },

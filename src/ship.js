@@ -9,8 +9,8 @@ let raceTime, podReached;
 
 questCompleted = (type) => {
   if (type == 'getSel') {
-    if (minerals > 30) {
-      minerals -= 30;
+    if (minerals > 10) {
+      minerals -= 10;
       return true;
     }
   } else if (type == 'race') {
