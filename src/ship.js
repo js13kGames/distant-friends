@@ -207,25 +207,18 @@ class Ship extends GO {
         if (trigger.reward) for (let i = 0; i < trigger.reward.length; i++) {
           await showConversationFragment (makeAnimal(trigger.person), trigger.reward[i]);
         }
-        if (trigger.giveInstrument != undefined) {
-          playSound(6);
-          this.songFragments[trigger.giveInstrument] = 'yes';
-          let allFragments = true;
-          for (let i = 0; i < FRAGMENTS.length; i++) {
-            if (!this.songFragments[i]) {
-              allFragments = false;
-              break;
-            }
-          }
-          if (allFragments) {
-            victory();
-          }
-        }
         var hint = '✅';
         if (trigger.next) {
           const nextTrigger = trigger.next;
           hint = trigger.hint || nextTrigger.planet + ", " + nextTrigger.city;
           triggers[nextTrigger.planet + "-" + nextTrigger.city] = nextTrigger;
+        } else {
+          playSound(6);
+          count = 0;
+          friendHints.forEach(h => { if (h == hint) count++})
+          if (count == 2) {
+            victory();
+          }
         }
         friendHints[trigger.friendIndex] = hint;
       }      

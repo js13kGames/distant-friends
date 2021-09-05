@@ -52,15 +52,6 @@ function renderUI(c) {
     c.font = font(16);
     c.textAlign="left"; 
     c.fillStyle= "#ffffff";
-    let soundFragmentsTxt = '';
-    for (let i = 0; i < 6; i++) {
-      if (p1.songFragments[i]) {
-        soundFragmentsTxt += FRAGMENTS[i];
-      } else {
-        soundFragmentsTxt += "❓";
-      }
-    }
-
     for (let i = 0; i < 3; i++) 
       c.fillText(friendNames[i] + ": " + friendHints[i], 30, 30 + i * 20);
 
@@ -82,7 +73,6 @@ function renderUI(c) {
     Renderer.renderShapes(c, SHAPES.triangle, W / 2, H - 60, 1, 1, angle, 50, 50, undefined, true);
     c.fillStyle= "#ffffff";
     c.textAlign="center"; 
-    c.fillText(soundFragmentsTxt, W / 2, 20);
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
     c.fillText("[Enter] to change", W / 2, H - 5);
     c.textAlign="left"; 

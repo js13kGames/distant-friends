@@ -1,5 +1,3 @@
-const FRAGMENTS = ['🎹','🎻','🎷','🎸','🎺','🥁'];
-
 const PLANETS = [
   [
     'Ceres', 0, 0, 2000, [
@@ -69,9 +67,8 @@ const FRIENDS = [
           "Please, stay at my place tonight! let's play some games and have fun like in the old times.",
           "<The other day>",
           "Ah... that was so fun. I recalled the old times, life was simpler then.",
-          "I hope to see you back sometime... Please take this instrument so you don't forget me!"
-        ],
-        giveInstrument: 1
+          "I hope to see you back sometime... don't forget me!"
+        ]
       }
     ]
   },
@@ -119,8 +116,7 @@ const FRIENDS = [
           'All we have now are the memories of the good times.',
           'Here, please take this, so you never forget him.',
           '<Received Kori\'s drum>',
-        ],
-        giveInstrument: 2
+        ]
       }
     ]
   },
@@ -155,8 +151,7 @@ const FRIENDS = [
           "Hello my old friend!",
           "I have fond memories of us at school. This is actually just placeholder text.",
           "I hope you can replace it with someting awesome becase text is expensive in JS13k"
-        ],
-        giveInstrument: 3
+        ]
       }
     ]
   }
