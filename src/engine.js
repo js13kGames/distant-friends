@@ -120,5 +120,5 @@ raf(function(d) {
     s.update(d);
     s.render(ctx);
   });
-  renderUI(ctx);
+  renderUI(ctx, d);
 });

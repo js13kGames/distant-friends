@@ -22,7 +22,7 @@ function wrapText(txt) {
 }
 
 // let lastDelta = -1; // FPS
-function renderUI(c) {
+function renderUI(c,d) {
   if (gState == 0) {
     c.font = font(18);
     c.fillStyle= "#00ff00";
@@ -78,10 +78,16 @@ function renderUI(c) {
       lastDelta = now;
     }
     */
+    c.textAlign="center"; 
+
+    if (curCtxTime > 0) {
+      curCtxTime -= d;
+      c.fillText(curCtxHint, W / 2, H / 2 - 150);
+    }
+
     const angle = Math.atan2(p1.y - currentWaypoint.y, p1.x - currentWaypoint.x) + Math.PI;
     Renderer.renderShapes(c, SHAPES.triangle, W / 2, H - 60, 1, 1, angle, 50, 50, undefined, true);
     c.fillStyle= "#ffffff";
-    c.textAlign="center"; 
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
     c.fillText("[Enter] to change", W / 2, H - 5);
     c.textAlign="left"; 
@@ -127,4 +133,10 @@ function renderUI(c) {
     c.textAlign="right"; 
     c.fillText("[Press Enter]", W - 20, H - 65);
   }
+}
+
+let curCtxHint, curCtxTime;
+function contextHint(msg) {
+  curCtxTime = 5;
+  curCtxHint = msg;
 }

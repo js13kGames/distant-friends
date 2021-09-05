@@ -186,6 +186,7 @@ class Planet extends GO {
           p.landOnCity(this, city);
         }
       } else {
+        contextHint("Use the reverse thrusters to land.");
         p.crash(this);
       }
     }

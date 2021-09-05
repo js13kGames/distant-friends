@@ -52,6 +52,17 @@ function startGame() {
   starCamera.y = p1.y;
   stars50();
   startTime = Date.now();
+
+  setTimeout(async () => {
+    await showConversation (makeAnimal('cat'), [
+      "I'm getting close to Ceres, I really want to see my friends again!",
+      "The panel in the top records their last known location",
+      "Using [Enter] I can change the waypoint for the compass at the bottom",
+      "Let's fly into Ceres and land into a city!"
+    ]);
+    contextHint('Land on a city in Ceres');
+    gState = 2;
+  }, 1);
 }
 
 typed(13, () => {

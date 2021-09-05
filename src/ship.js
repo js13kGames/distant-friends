@@ -29,6 +29,7 @@ restartQuest = (type) => {
     currentWaypoint = friendWaypoints[1] = junoPod;
     currentWaypointIndex = 1;
     junoPod.reset();
+    contextHint("Reach the pinwheel and return.");
   }
 }
 
@@ -203,9 +204,7 @@ class Ship extends GO {
     if (trigger) {
       var completed = trigger.quest && questCompleted(trigger.quest);
       if (!trigger.quest || !completed) {
-        for (let i = 0; i < trigger.sequence.length; i++) {
-          await showConversationFragment (makeAnimal(trigger.person), trigger.sequence[i]);
-        }
+        await showConversation (makeAnimal(trigger.person), trigger.sequence);
         if (trigger.quest) {
           restartQuest(trigger.quest);
           friendHints[trigger.friendIndex] = trigger.questHint;
@@ -213,9 +212,8 @@ class Ship extends GO {
       }
       if (!trigger.quest || completed) {
         delete triggers[p.name + "-" + c.name];
-        if (trigger.reward) for (let i = 0; i < trigger.reward.length; i++) {
-          await showConversationFragment (makeAnimal(trigger.person), trigger.reward[i]);
-        }
+        if (trigger.reward)
+          await showConversation (makeAnimal(trigger.person), trigger.reward);
         var hint = '✅';
         if (trigger.next) {
           const nextTrigger = trigger.next;
@@ -250,6 +248,12 @@ function showConversationFragment(app, text) {
   return new Promise (resolve => {
     conversationNext = resolve;
   });
+}
+
+async function showConversation(app, conv) {
+  for (let i = 0; i < conv.length; i++) {
+    await showConversationFragment(app, conv[i]);
+  }
 }
 
 class Rocket extends GO {
