@@ -222,7 +222,7 @@ class Ship extends GO {
           friendWaypoints[trigger.friendIndex] = planets.find(p=>p.name==nextTrigger.planet);
         } else {
           playSound(6);
-          count = 0;
+          let count = 0;
           friendHints.forEach(h => { if (h == hint) count++})
           if (count == 2) {
             victory();
