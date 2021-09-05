@@ -22,7 +22,6 @@ NPCs.forEach(npc => triggers[npc[0] + "-" + npc[1]] = { person: npc[2], sequence
 function startGame() {
   function createShip(a,x,k){
     var p = new Ship(a, [layers[2]]);
-    p.energy = 0;
     p.dv = 480;
     p.x = x;
     p.y = H - 20;
@@ -31,6 +30,7 @@ function startGame() {
     p.keys=k;
     p.rotation = -Math.PI / 2;
     p.blastRadius = 0;
+    p.gear = 1;
     return p;
   }
 
@@ -80,6 +80,9 @@ typed(13, () => {
   }
 
 });
+
+typed('GearDown', () => p1.gear = Math.max(--p1.gear, 0));
+typed('GearUp', () => p1.gear = Math.min(++p1.gear, 2));
 
 function stars50(){
   for (var i = 0; i < 50; i++) {

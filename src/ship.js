@@ -60,6 +60,7 @@ class Ship extends GO {
     this.boost = 0;
     this.dv = 500 * -Math.sign(this.dv)
     this.av = 0;
+    this.gear = 1;
   }
   touch(go) { // Place the shp in the surface of the go
     let reloc = this.size + go.size + 1;
@@ -71,6 +72,11 @@ class Ship extends GO {
   u(d) {
     super.u(d);
     // Affect acceleration based on player input and stuff
+    if (this.gear == 2) {
+      this.cmd = 't';
+    } else if (!this.landed && this.gear == 0) {
+      this.cmd = 'b';
+    }
     switch (this.cmd) {
       case 'n':
         if (this.av > 0 && !this.boost) {

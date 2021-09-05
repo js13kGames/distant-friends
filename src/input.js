@@ -30,18 +30,19 @@ canvas.onclick = e => {
   pk && typedCallbacks[pk] && typedCallbacks[pk]();
 }
 
+// Soft Keys
 sk = e => {
   x = (e.pageX - canvas.offsetLeft) * canvasScale;
   y = (e.pageY - canvas.offsetTop) * canvasScale;
   low = H - 200;
   if (x < W / 3) {
     if (y > low)
-      return 'ArrowUp';
+      return 'GearUp';
     return 'ArrowLeft';
   }
   if (x > W * 2/3) {
     if (y > low)
-      return 'ArrowDown';
+      return 'GearDown';
     return 'ArrowRight';
   }
   if (y > low)

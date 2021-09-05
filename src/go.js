@@ -176,6 +176,7 @@ class Planet extends GO {
     } else {
       if (p.dv <= 0) {  // Landing
         p.landed = true;
+        p.gear = 1;
         p.dv = 0;
         p.r = 0;
         playSound(2);
