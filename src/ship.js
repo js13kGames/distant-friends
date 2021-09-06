@@ -55,7 +55,7 @@ class Ship extends GO {
       Renderer.renderCircle(c, Math.max(1, this.blastRadius + rand.range(-5, 5)), flameColor(), rand.range(0.5, 2), flameColor(), noozleX, noozleY, 1, 0, 0, false, mainCamera);
     }
     Renderer.renderShapes(c, SHAPES.ship, this.x, this.y, this.scale, 1 + this.turnScale, this.rotation, 50, 50);
-    Renderer.renderShapes(c, SHAPES.cat, this.x, this.y, this.scale * 0.3, 1, this.rotation, 50, 30);
+    Renderer.renderShapes(c, SHAPES.gato, this.x, this.y, this.scale * 0.3, 1, this.rotation, 50, 30);
   }
   crash(go) {
     let ndv = 500 * -Math.sign(this.dv);

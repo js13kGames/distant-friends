@@ -54,7 +54,7 @@ function startGame() {
   startTime = Date.now();
 
   setTimeout(async () => {
-    await showConversation (makeAnimal('cat'), [
+    await showConversation (makeAnimal('gato'), [
       "I'm getting close to Ceres, I really want to see my friends again!",
       "The panel in the top records their last known location",
       "Using [Enter] I can change the waypoint for the compass at the bottom",

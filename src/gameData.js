@@ -50,7 +50,7 @@ const FRIENDS = [
         city: 'Arkadia',
         person: 'fox',
         sequence: [
-          "I heard you are looking for Kori the cat. He used to mine the nearby Selenium fields... until he got tired of it.",
+          "I heard you are looking for Kori. He used to mine the nearby Selenium fields... until he got tired of it.",
           "I'm almost out of Selenium. If you bring me 10 orbs I'll tell you where I think he went."
         ],
         quest: 'getSel',
@@ -61,7 +61,7 @@ const FRIENDS = [
       {
         planet: 'Ilaria',
         city: 'Ilaria',
-        person: 'cat',
+        person: 'lizard',
         sequence: [
           "Bandi, is it really you? I feel like it's been a lifetime since we last met!",
           "Please, stay at my place tonight! let's play some games and have fun like in the old times.",
@@ -78,7 +78,7 @@ const FRIENDS = [
       {
         planet: 'Ceres',
         city: 'Cape Santos',
-        person: 'fox',
+        person: 'rabbit',
         sequence: [
           "I'm so bored here... my life feels empty.",
           "I'll let you know about Ponchi... if you complete the Kestrel Run!",

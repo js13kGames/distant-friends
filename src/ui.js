@@ -117,8 +117,7 @@ function renderUI(c,d) {
     c.globalAlpha = 0.5;
     c.fillRect(0, H - 180, W, 125);
     c.globalAlpha = 1;
-    Renderer.renderShapes(c, SHAPES.suit, 150, H - 130, 2, 1, -Math.PI / 2, 50, 30, undefined, true);
-    Renderer.renderShapes(c, conversationApp, 150, H - 120, 3, 1, -Math.PI / 2, 49, 49, undefined, true);
+    Renderer.renderShapes(c, conversationApp, 150, H - 120, 2, 1, -Math.PI / 2, 49, 49, undefined, true);
     c.font = font(24);
     c.fillStyle= "#FFF";
     c.textAlign="left"; 
