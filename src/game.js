@@ -3,7 +3,7 @@ let asteroids = 0;
 const triggers = {};
 var p1;
 let currentWaypoint, currentWaypointIndex, startTime, completeTime;
-let planets;
+let planets,ponds,theFish;
 
 function startGame() {
   function createShip(a,x,k){
@@ -65,7 +65,7 @@ function startGame() {
   }, 1);
 }
 
-typed(13, () => {
+typed('Enter', () => {
   if (gState == 0) {
     if (musicLoaded) {
       // zzfxX - the common audio context
@@ -92,6 +92,7 @@ typed(13, () => {
 
 typed('GearDown', () => p1.gear = Math.max(--p1.gear, 0));
 typed('GearUp', () => p1.gear = Math.min(++p1.gear, 2));
+typed('KeyZ', () => rocketMode = !rocketMode); // Shift
 
 function stars50(){
   for (var i = 0; i < 50; i++) {
@@ -135,3 +136,10 @@ function asteroidField(direction) {
       asteroids++;
     }
 }
+
+setInterval (() => {
+  if (gState != 2 || !hook || theFish) return;
+  const nearbyPond = ponds.find(p => rdist(hook, p) < 500);
+  if (!nearbyPond) return;
+  nearbyPond.spawnFish();
+}, 5000);

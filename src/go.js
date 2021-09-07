@@ -7,7 +7,6 @@ class GO {
     mobs.push(this);
     lists.forEach(l => l.push(this));
     this.lists = lists;
-    this.ch = [];
   }
   // update
   u(d) {
@@ -21,8 +20,6 @@ class GO {
   destroy() {
     this.dead = true;
     mobDestroyed = true;
-    //this.lists.forEach(l => l.splice(l.indexOf(this), 1));
-    this.ch.forEach(c => c.destroy());
   }
 }
 
@@ -305,5 +302,101 @@ class Booster extends GO {
 
   u(d) {
     this.rotation += this.rotSpeed * d;
+  }
+}
+
+class Hook extends GO {
+  constructor () {
+    super('booster', [layers[1]]);
+    this.x = p1.x; this.y = p1.y;
+    this.scale = 1;
+    this.size = 60;
+    this.dv = -800;
+    this.rotation = p1.rotation + Math.PI;
+  }
+
+  pull() {
+    this.rotation = Math.atan2(p1.y - this.y, p1.x - this.x)
+    this.dv = 100;
+    if (theFish) {
+      if (rdist(hook,theFish) < 30) {
+        theFish.hp--;
+        theFish.scale -= 0.05;
+        theFish.rotation = rand.range(0, Math.PI * 2);
+        theFish.dv = rand.range(100, 200);
+        if (theFish.hp < 0) {
+          theFish.catch();
+        }
+        this.dv = 0;
+      } else if (rdist(hook,theFish) < 100) {
+        theFish.rotation = Math.atan2(this.y - theFish.y, this.x - theFish.x) + rand.range(0, Math.PI / 20);
+        theFish.dv = rand.range(100, 200);
+        this.dv = 0;
+      }
+    }
+    if (rdist(p1, this) < 50) {
+      this.destroy();
+      hook = undefined;
+    } 
+  }
+
+  u(d) {
+    super.u(d);
+    // Damp
+    if (this.dv !== 0) {
+      this.dv -= this.dv * 2 * d;
+    }
+
+    if (rdist(p1, this) > 300) {
+      let angle = Math.atan2(this.y - p1.y, this.x - p1.x)
+      this.x = Math.cos(angle) * 300 + p1.x;
+      this.y = Math.sin(angle) * 300 + p1.y;
+    }
+  }
+}
+
+FC = ['#89C3CA', '#C6EC8E', '#FFCB4B', '#E84583', '#FA8072'];
+
+class Lake extends GO {
+  constructor (x, y) {
+    super('lake', [layers[1]]);
+    this.x = x; this.y = y;
+    this.scale = 10;
+  }
+
+  spawnFish() {
+    if (rand.b(20)) {
+      theFish = new Fish(hook.x + rand.range(-200,200), hook.y + rand.range(-200,200), FC[rand.range(0,4)]);
+    }
+  }
+}
+
+class Fish extends GO {
+  constructor (x, y, color) {
+    super(null, [layers[2]]);
+    this.x = x; this.y = y;
+    this.scale = 0.6;
+    this.app = [["M49 17Q34 20 31 39Q31 59 42 70Q41 79 31 85Q40 90 49 88", color, 2, color]];
+    this.ai = setInterval(()=>this.act(), 1000);
+    this.hp = 4;
+    setTimeout(()=>this.destroy(), rand.range(10000, 30000));
+  }
+
+  destroy() {
+    if (this.dead) return;
+    super.destroy();
+    theFish = undefined;
+    clearInterval(this.ai);
+  }
+
+  catch () {
+    this.destroy();
+    fishes++;
+  }
+
+  act() {
+    if (rand.b(70)) return;
+    this.rotation = rand.range(0, Math.PI * 2);
+    this.dv = rand.range(50, 100);
   }
 }

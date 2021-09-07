@@ -3,9 +3,9 @@ const rotSpeed = 3;
 const maxTurnScale = 0.2;
 const turnScaleSpeed = 0.015;
 let rl = false;
-let minerals = 0;
+let minerals, fishes = 0;
 let thrsfx = 0;
-let raceTime, podReached;
+let raceTime, podReached,rocketMode=true,hook;
 
 questCompleted = (type) => {
   if (type == 'getSel') {
@@ -188,15 +188,22 @@ class Ship extends GO {
     }
     this.fireBlocked = true;
     setTimeout(() => this.fireBlocked = false, 300);
-    const offset = (rl ? 1 : -1) * 50;
-    rl = !rl;
-    let noozleX = this.x + Math.sin(this.rotation) * offset;
-    let noozleY = this.y - Math.cos(this.rotation) * offset;
-    noozleX = noozleX + Math.cos(this.rotation) * 15;
-    noozleY = noozleY + Math.sin(this.rotation) * 15;
+    if (rocketMode) {
+      const offset = (rl ? 1 : -1) * 50;
+      rl = !rl;
+      let noozleX = this.x + Math.sin(this.rotation) * offset;
+      let noozleY = this.y - Math.cos(this.rotation) * offset;
+      noozleX = noozleX + Math.cos(this.rotation) * 15;
+      noozleY = noozleY + Math.sin(this.rotation) * 15;
 
-    this.dv -= 10;
-    new Rocket(noozleX, noozleY, this.rotation + (rl ? -1 : 1) * (Math.PI / 30));
+      this.dv -= 10;
+      new Rocket(noozleX, noozleY, this.rotation + (rl ? -1 : 1) * (Math.PI / 30));
+    } else {
+      if (hook)
+        hook.pull();
+      else 
+        hook = new Hook();
+    }
     playSound(4);
   }
   async landOnCity (p, c) {

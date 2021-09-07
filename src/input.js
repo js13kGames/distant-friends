@@ -2,8 +2,8 @@
 var pressed = {};
 var typedCallbacks = {};
 function keyPress(e){
-  if (typedCallbacks[e.which]){
-    typedCallbacks[e.which]();
+  if (typedCallbacks[e.code]){
+    typedCallbacks[e.code]();
   }
 }
 window.onkeydown = e => pressed[e.code] = true;
@@ -24,7 +24,7 @@ var pressedCallbacks = {};
 var canvas = document.querySelector('canvas');
 canvas.onclick = e => {
   if (gState != 2 && gState != 3) {
-    typedCallbacks[13]()
+    typedCallbacks['Enter']()
   }
   pk = sk(e);
   pk && typedCallbacks[pk] && typedCallbacks[pk]();

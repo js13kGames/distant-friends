@@ -75,7 +75,7 @@ function renderMob(m, flip) {
   }
 }
 raf(function(d) {
-  ctx.fillStyle = '#05063c';
+  ctx.fillStyle = '#012247';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   layers.forEach(l => l.forEach(m => {
     m.k && m.k(); // TODO this is only for the ship, put it somewhere
