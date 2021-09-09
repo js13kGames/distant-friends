@@ -63,19 +63,15 @@ function renderUI(c,d) {
     if (raceTime > 0) {
       c.fillText("Kestrel Run: " + raceTime, 30, 160);
     }
+    if (gxTime > 0) {
+      c.fillText("Galaxian Gate: " + gxTime, 30, 180);
+    }
 
     c.textAlign="right"; 
     // Stats
     if (p1.won) {
       c.fillText("Game Completed: " + completeTime,W - 30, 30);
     }
-
-    if (rocketMode) {
-      c.fillText("SkyRocket",W - 30, 30);
-    } else {
-      c.fillText("Fish Rod",W - 30, 30);
-    }
-    c.fillText("[Z] to change",W - 30, 50);
 
     /* FPS
     if (lastDelta == -1) {

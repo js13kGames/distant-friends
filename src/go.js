@@ -315,6 +315,12 @@ class Hook extends GO {
     this.rotation = p1.rotation + Math.PI;
   }
 
+  destroy() {
+    if (this.dead) return;
+    super.destroy();
+    hook = undefined;
+  }
+
   pull() {
     this.rotation = Math.atan2(p1.y - this.y, p1.x - this.x)
     this.dv = 100;
@@ -336,7 +342,6 @@ class Hook extends GO {
     }
     if (rdist(p1, this) < 50) {
       this.destroy();
-      hook = undefined;
     } 
   }
 
@@ -365,8 +370,13 @@ class Lake extends GO {
   }
 
   spawnFish() {
-    if (rand.b(20)) {
+    if (rand.b(40)) {
       theFish = new Fish(hook.x + rand.range(-200,200), hook.y + rand.range(-200,200), FC[rand.range(0,4)]);
+      if (fishes >= 3 && !hasGx) {
+        theFish.gx = true;
+        theFish.scale = 2;
+        theFish.hp = 10;
+      }
     }
   }
 }
@@ -379,7 +389,13 @@ class Fish extends GO {
     this.app = [["M49 17Q34 20 31 39Q31 59 42 70Q41 79 31 85Q40 90 49 88", color, 2, color]];
     this.ai = setInterval(()=>this.act(), 1000);
     this.hp = 4;
-    setTimeout(()=>this.destroy(), rand.range(10000, 30000));
+    setTimeout(()=>this.flee(), rand.range(10000, 30000));
+  }
+
+  flee () {
+    if (this.dead) return;
+    this.destroy();
+    contextHint('The fish dives into deep space');
   }
 
   destroy() {
@@ -392,11 +408,41 @@ class Fish extends GO {
   catch () {
     this.destroy();
     fishes++;
+    if (this.gx) {
+      contextHint('You capture Galaxian!');
+      hasGx = true;
+      gxTime = undefined;
+      fishes = 0;
+      hook.destroy();
+    } else {
+      contextHint('You capture the space fish.');
+    }
   }
 
   act() {
     if (rand.b(70)) return;
     this.rotation = rand.range(0, Math.PI * 2);
     this.dv = rand.range(50, 100);
+  }
+}
+
+class GXPod extends GO {
+  collide () {
+    if (hasGx) return;
+    if (!gxTime) {
+      gxTime = 90;
+      this.rotSpeed = 5;
+      playSound(6);
+    }
+  }
+  reset () {
+    podReached = false;
+    this.rotSpeed = 0;
+  }
+  u(d) {
+    this.rotation += this.rotSpeed * d;
+    if (!gxTime) {
+      this.rotSpeed = 0;
+    }
   }
 }

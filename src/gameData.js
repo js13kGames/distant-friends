@@ -14,7 +14,9 @@ const PLANETS = [
   ],
   [
     'Juno', -10000, 13600, 800,[
-      ['Havanna', 0.3, 'town']
+      ['Havanna', 0.3, 'town'],
+      ['Laandor', 1.3, 'town'],
+      ['Jamaza', 0.5, 'town']
     ], '#B5A7A7', '#CECCD1'
   ],
   [
@@ -137,11 +139,17 @@ const FRIENDS = [
         city: 'Havanna',
         person: 'dog',
         sequence: [
-          'Oh yes, I recall little Patty. She had to flee Juno after the second impact.',
+          'All of my life I\'ve looked for Galaxian...',
+          'I\'ll let you know about Patty if you bring it to me!'
+        ],
+        quest: 'fish',
+        questHint: 'Bring Galaxian to Havanna',
+        reward: [
+          'I recall little Patty. She had to flee Juno after the second impact.',
           'Those were hard times, the entire planet was flooded for years.',
           'The few people that remained here relied heavily on the shipments from Ceres and Arland,',
           'I believe Patty went with the group of settlers bound to Calisto.'
-        ]
+        ],
       } ,
       {
         planet: 'Calisto',
@@ -149,8 +157,8 @@ const FRIENDS = [
         person: 'fox',
         sequence: [
           "Hello my old friend!",
-          "I have fond memories of us at school. This is actually just placeholder text.",
-          "I hope you can replace it with someting awesome becase text is expensive in JS13k"
+          "I have fond memories of us at school.",
+          "Thank you for coming all the way to here. Let's celebrate!"
         ]
       }
     ]
@@ -158,6 +166,8 @@ const FRIENDS = [
 ]
 
 const NPCs = [
-  ['Arland', 'Moria', 'cat', 'Most industrial complexes in this planet can be found around New Athenia.'],
-  ['Arland', 'Yandor', 'dog', 'I can\'t wait to finish school so I start working at New Athenia.']
+  ['Arland', 'Moria', 'dog', 'Most industrial complexes in this planet can be found around New Athenia.'],
+  ['Arland', 'Yandor', 'dog', 'I can\'t wait to finish school so I start working at New Athenia.'],
+  ['Juno', 'Laandor', 'dog', 'The Asterion pinwheel can summon Galaxian.'],
+  ['Juno', 'Jamaza', 'dog', 'Galaxian will surface when 3 spacefish are captured.'],
 ]

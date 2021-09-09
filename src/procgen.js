@@ -4,8 +4,13 @@ function gen () {
   junoPod = new Pod('pinwheel', [layers[1]]);
   junoPod.name = 'Juno Pinwheel';
   junoPod.x = -11800; junoPod.y = 13600; junoPod.size = 30; junoPod.hits = 'p'; junoPod.scale = 1; junoPod.rotSpeed = 0;
+
+  gxPod = new GXPod('pinwheel', [layers[1]]);
+  gxPod.name = 'Galaxian Pinwheel';
+  gxPod.x = planets[2].x; gxPod.y = planets[2].y + 3000; gxPod.size = 30; gxPod.hits = 'p'; gxPod.scale = 1; gxPod.rotSpeed = 0;
+
   ponds = [];
-  ponds.push(new Lake(planets[0].x, planets[0].y + 3500));
+  ponds.push(new Lake(gxPod.x, gxPod.y + 500));
 
   // Race track between Ceres and Juno
   raceTrack(planets[0], planets[2], 1);

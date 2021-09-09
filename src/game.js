@@ -92,7 +92,6 @@ typed('Enter', () => {
 
 typed('GearDown', () => p1.gear = Math.max(--p1.gear, 0));
 typed('GearUp', () => p1.gear = Math.min(++p1.gear, 2));
-typed('KeyZ', () => rocketMode = !rocketMode); // Shift
 
 function stars50(){
   for (var i = 0; i < 50; i++) {

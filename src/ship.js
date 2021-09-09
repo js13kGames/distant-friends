@@ -5,7 +5,7 @@ const turnScaleSpeed = 0.015;
 let rl = false;
 let minerals, fishes = 0;
 let thrsfx = 0;
-let raceTime, podReached,rocketMode=true,hook;
+let raceTime, podReached,hook,gxTime,hasGx;
 
 questCompleted = (type) => {
   if (type == 'getSel') {
@@ -19,6 +19,8 @@ questCompleted = (type) => {
       return true;
     }
     raceTime = 0;
+  } else if (type == 'fish') {
+    return hasGx;
   }
   return false;
 }
@@ -36,6 +38,18 @@ restartQuest = (type) => {
 setInterval(() => {
   if (raceTime > 0) {
     raceTime--;
+  }
+  if (gxTime > 0 && !hasGx) {
+    gxTime--;
+    if (gxTime <= 0) {
+      fishes = 0;
+      gxTime = undefined;
+      if (hook) {
+        hook.destroy();
+      }
+      if (theFish)
+        theFish.flee();
+    }
   }
 }, 1000);
 
@@ -188,7 +202,7 @@ class Ship extends GO {
     }
     this.fireBlocked = true;
     setTimeout(() => this.fireBlocked = false, 300);
-    if (rocketMode) {
+    if (!gxTime) {
       const offset = (rl ? 1 : -1) * 50;
       rl = !rl;
       let noozleX = this.x + Math.sin(this.rotation) * offset;
