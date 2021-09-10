@@ -297,7 +297,7 @@ class Booster extends GO {
 
   collide () {
     p1.boost = 5;
-    playSound(4);
+    playSound(7);
   }
 
   u(d) {

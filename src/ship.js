@@ -104,10 +104,14 @@ class Ship extends GO {
         break;
       case 't':
         var PY = 2000;
-        if (this.av == 0 || thrsfx > 10) {
+        if (this.av == 0) {
+          playSound(8);
+        }
+        if (thrsfx > -1) {
           playSound(0);
           thrsfx = 0;
         }
+        
         this.av += PY * d;
         this.landed = false;
         if (this.av > 1000) { // max thrust
