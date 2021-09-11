@@ -119,7 +119,7 @@ function victory() {
 
 setInterval (() => {
   if (gState != 2) return;
-  if (p1.isCruising() && rand.b(30))
+  if (p1.isCruising() && !hook && rand.b(30))
     asteroidField(p1.rotation);
 }, 2000);
 
