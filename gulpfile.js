@@ -115,7 +115,7 @@ gulp.task('dist', ['build'], function() {
   return gulp.src('build/*')
     .pipe(zip('archive.zip'))
     .pipe(size())
-    .pipe(micro({limit: 13 * 1024}))
+    .pipe(micro({limit: 14 * 1024}))
     .pipe(gulp.dest('dist'));
 });
 
