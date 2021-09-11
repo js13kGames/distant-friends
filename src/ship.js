@@ -3,7 +3,7 @@ const rotSpeed = 3;
 const maxTurnScale = 0.2;
 const turnScaleSpeed = 0.015;
 let rl = false;
-let minerals, fishes = 0;
+let minerals = 0, fishes = 0;
 let thrsfx = 0;
 let raceTime, podReached,hook,gxTime,hasGx;
 
