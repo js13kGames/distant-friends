@@ -37,13 +37,6 @@ function renderUI(c,d) {
     c.fillText("Distanced Friends",W/2,50);
     c.font = font(20);
     c.fillStyle= "#ea0a8e";
-    c.fillText("INSTRUCTIONS",W/2,90);
-    c.fillStyle= "#ffffff";
-    c.fillText("Use Arrow Keys to move",W/2,130);
-    c.fillText("Enter to change waypoint",W/2,170);
-    c.fillText("Find your long lost friends",W/2,210);
-    c.font = font(32);
-    c.fillStyle= "#ea0a8e";
     c.fillText("Tap or Enter to start",W/2,290);
     c.fillStyle= "#ffffff";
     c.font = font(18);
