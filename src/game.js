@@ -2,7 +2,7 @@
 let asteroids = 0;
 const triggers = {};
 var p1;
-let currentWaypoint, currentWaypointIndex, startTime, completeTime;
+let currentWaypoint, cwi, startTime, completeTime;
 let planets,ponds,theFish;
 
 function startGame() {
@@ -26,7 +26,7 @@ function startGame() {
   FRIENDS.forEach((friend,j) => {
     const first = friend.findSequence[0];
     triggers[first.planet + "-" + first.city] = first;
-    friendWaypoints[j] = planets.find(p=>p.name==first.planet);
+    fws[j] = planets.find(p=>p.name==first.planet);
     friend.findSequence.forEach((f, i) => {
       f.friendIndex = j;
       if (i < friend.findSequence.length - 1) {
@@ -37,8 +37,8 @@ function startGame() {
 
   NPCs.forEach(npc => triggers[npc[0] + "-" + npc[1]] = { person: npc[2], sequence: [npc[3]]});
 
-  currentWaypoint = friendWaypoints[0];
-  currentWaypointIndex = 0;
+  currentWaypoint = fws[0];
+  cwi = 0;
 
   p1 = createShip('ship', W / 2, ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space' ]);
   const randomAngle = Math.PI/2;
@@ -79,11 +79,11 @@ typed('Enter', () => {
     startGame();
     gState = 2;
   } else if (gState == 2) {
-    currentWaypointIndex++;
-    if (currentWaypointIndex >= friendWaypoints.length) {
-      currentWaypointIndex = 0;
+    cwi++;
+    if (cwi >= fws.length) {
+      cwi = 0;
     }
-    currentWaypoint = friendWaypoints[currentWaypointIndex];
+    currentWaypoint = fws[cwi];
   } else if (gState == 10) {
     conversationNext();
   }
@@ -106,10 +106,6 @@ function title(){
   mainCamera.x = W/2;
   mainCamera.y = H/2;
   gState = 1;
-}
-
-function gameOver() {
-  gState = 3;
 }
 
 function victory() {

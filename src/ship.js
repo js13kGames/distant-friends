@@ -28,8 +28,8 @@ questCompleted = (type) => {
 restartQuest = (type) => {
   if (type == 'race') {
     raceTime = 60;
-    currentWaypoint = friendWaypoints[1] = junoPod;
-    currentWaypointIndex = 1;
+    currentWaypoint = fws[1] = junoPod;
+    cwi = 1;
     junoPod.reset();
     contextHint("Reach the pinwheel and return.");
   }
@@ -252,7 +252,7 @@ class Ship extends GO {
           const nextTrigger = trigger.next;
           hint = trigger.hint || nextTrigger.planet + ", " + nextTrigger.city;
           triggers[nextTrigger.planet + "-" + nextTrigger.city] = nextTrigger;
-          friendWaypoints[trigger.friendIndex] = planets.find(p=>p.name==nextTrigger.planet);
+          fws[trigger.friendIndex] = planets.find(p=>p.name==nextTrigger.planet);
         } else {
           playSound(6);
           let count = 0;
