@@ -370,13 +370,11 @@ class Lake extends GO {
   }
 
   spawnFish() {
-    if (rand.b(40)) {
-      theFish = new Fish(hook.x + rand.range(-200,200), hook.y + rand.range(-200,200), FC[rand.range(0,4)]);
-      if (fishes >= 3 && !hasGx) {
-        theFish.gx = true;
-        theFish.scale = 2;
-        theFish.hp = 10;
-      }
+    theFish = new Fish(hook.x + rand.range(-200,200), hook.y + rand.range(-200,200), FC[rand.range(0,4)]);
+    if (fishes >= 3 && !hasGx) {
+      theFish.gx = true;
+      theFish.scale = 2;
+      theFish.hp = 10;
     }
   }
 }

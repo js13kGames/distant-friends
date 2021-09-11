@@ -136,9 +136,11 @@ function asteroidField(direction) {
     }
 }
 
-setInterval (() => {
-  if (gState != 2 || !hook || theFish) return;
+function checkFish () {
+  if (gState == 2 && hook && !theFish) {
   const nearbyPond = ponds.find(p => rdist(hook, p) < 500);
-  if (!nearbyPond) return;
-  nearbyPond.spawnFish();
-}, 5000);
+    nearbyPond && nearbyPond.spawnFish();
+  }
+  setTimeout(()=>checkFish(), rand.range(4000, 8000));
+}
+checkFish();
