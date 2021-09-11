@@ -265,7 +265,7 @@ class Ship extends GO {
       }
       gState = 2;
     } else {
-      await showConversationFragment (makeAnimal('cat'), 'Nothing interesting here.');
+      await showConversationFragment (SHAPES.gato, 'Nothing interesting here.');
       gState = 2;
     }
   }
