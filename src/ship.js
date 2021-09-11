@@ -63,6 +63,14 @@ class Ship extends GO {
     return planets.find(p => rdist(p, this) < (ASTEROID_SPACE + p.size));
   }
   specialRender(c) {
+    if (hook) {
+      c.lineWidth = 3;
+      c.strokeStyle = '#fff';
+      c.beginPath();
+      c.moveTo(W/2, H/2);
+      c.lineTo(cameraX(mainCamera, hook.x), cameraY(mainCamera, hook.y));
+      c.stroke();
+    }
     if (this.blastRadius > 0) {
       const noozleX = this.x - Math.cos(this.rotation) * 75;
       const noozleY = this.y - Math.sin(this.rotation) * 75;
