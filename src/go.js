@@ -80,7 +80,7 @@ class CityLabel extends GO {
     c.rotate(this.rotation + Math.PI / 2);
     c.font = font(24);
     c.textAlign="center"; 
-    c.fillStyle= "#00ff00";
+    c.fillStyle= "#fff";
     c.fillText(this.name, 0, 30);
     c.restore();
   }
@@ -153,7 +153,7 @@ class Planet extends GO {
     c.fill();
   }
   addCity (rotation, app, name) {
-    const c = new City(app, [layers[0]], name);
+    const c = new City(app, [layers[1]], name);
     c.x = this.x + this.visibleSize * Math.cos(rotation);
     c.y = this.y + this.visibleSize * Math.sin(rotation);
     c.scale = 2;
