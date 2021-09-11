@@ -168,6 +168,6 @@ const FRIENDS = [
 const NPCs = [
   ['Arland', 'Moria', 'dog', 'Most industrial complexes in this planet can be found around New Athenia.'],
   ['Arland', 'Yandor', 'dog', 'I can\'t wait to finish school so I start working at New Athenia.'],
-  ['Juno', 'Laandor', 'dog', 'The Asterion pinwheel can summon Galaxian.'],
+  ['Juno', 'Laandor', 'dog', 'The Asterion pinwheel can summon Galaxian. It hovers far over Jamaza.'],
   ['Juno', 'Jamaza', 'dog', 'Galaxian will surface when 3 spacefish are captured.'],
 ]
