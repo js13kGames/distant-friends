@@ -262,6 +262,11 @@ class Mineral extends GO {
     this.hits = 'p';
     this.scale = 1;
     this.size = 40;
+    this.dv = rand.range(100, 300);
+    this.rotation = rand.range(0, Math.PI * 2);
+    setTimeout(() => {
+      this.destroy();
+    }, rand.range(3000, 5000));
   }
   collide() {
     minerals++;
