@@ -90,19 +90,28 @@ function renderUI(c,d) {
     c.fillStyle= "#ffffff";
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
     c.fillText(ve()+ " to change", W / 2, H - 5);
-    c.textAlign="left"; 
-    if (mo && gState != 10) {
-      low = H - 200;
-      c.lineWidth = 2;
-      c.strokeStyle = '#5b5e8b';
-      c.beginPath();
-      c.moveTo(W/3, 0);
-      c.lineTo(W/3, H);
-      c.moveTo(0, low);
-      c.lineTo(W, low);
-      c.moveTo(W*2/3, 0);
-      c.lineTo(W*2/3, H);
-      c.stroke();
+    if (gState != 10) {
+      if (mo) {
+        low = H - 200;
+        c.lineWidth = 2;
+        c.strokeStyle = '#5b5e8b';
+        c.beginPath();
+        c.moveTo(W/3, 0);
+        c.lineTo(W/3, H);
+        c.moveTo(0, low);
+        c.lineTo(W, low);
+        c.moveTo(W*2/3, 0);
+        c.lineTo(W*2/3, H);
+        c.stroke();
+        c.fillText("[Turn]", 60, low - 20);
+        c.fillText("[Turn]", W - 60, low - 20);
+        c.fillText("[Fire]", W/2, low - 20);
+        c.fillText("[Forward]", 60, low + 20);
+        c.fillText("[Back]", W - 60, low + 20);
+      } else {
+        c.textAlign="left"; 
+        c.fillText("[Arrows, Spacebar]", 60, H - 30);
+      }
     }
     // DEBUG
     /*c.fillText("Cruising: " + p1.isCruising(), 50, 50);
