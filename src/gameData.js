@@ -108,7 +108,7 @@ const FRIENDS = [
       {
         planet: 'Arland',
         city: 'Andoban',
-        person: 'dog',
+        person: 'rabbit',
         sequence: [
           'Are you the guy from Ceres, looking for my kid Kori?',
           'It saddens me deeply to let you know that he is no longer with us.',
@@ -137,10 +137,10 @@ const FRIENDS = [
       {
         planet: 'Juno',
         city: 'Havanna',
-        person: 'dog',
+        person: 'lizard',
         sequence: [
           'All of my life I\'ve looked for Galaxian...',
-          'I\'ll let you know about Patty if you bring it to me!'
+          'I\'ll let you know about Patty if you bring him to me!'
         ],
         quest: 'fish',
         questHint: 'Bring Galaxian to Havanna',
