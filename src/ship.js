@@ -243,7 +243,7 @@ class Ship extends GO {
           friendHints[trigger.friendIndex] = trigger.questHint;
         }
       }
-      if (trigger.friendsIndex && (!trigger.quest || completed)) {
+      if (trigger.friendIndex && (!trigger.quest || completed)) {
         delete triggers[p.name + "-" + c.name];
         if (trigger.reward)
           await showConversation (makeAnimal(trigger.person), trigger.reward);
