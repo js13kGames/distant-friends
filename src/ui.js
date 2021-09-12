@@ -33,17 +33,16 @@ function renderUI(c,d) {
       c.fillText(ve()+ " to start",10,70);
     }
   } else if (gState == 1) {
-    c.font = font(48);
+    c.font = "64px 'Brush Script MT'";
     c.textAlign="center"; 
     c.fillStyle= "#cf3436";
-    c.fillText("Distanced Friends",W/2,50);
+    c.fillText("Distant Friends",W/2,80);
     c.font = font(20);
-    c.fillStyle= "#ea0a8e";
-    c.fillText(ve()+ " to start",W/2,290);
     c.fillStyle= "#ffffff";
-    c.font = font(18);
-    c.fillText("Programmed by Slashie",W/2,330);
-    c.fillText("Sounds by QuietGecko", W/2,350);
+    
+    c.fillText(ve()+ " to start",W/2,350);
+    c.fillText("by Slashie and QuietGecko", W/2, H - 50);
+    c.fillText("js13k21", W/2,H - 30);
   } else if (gState == 2 || gState == 3 || gState == 10) {
     c.font = font(16);
     c.textAlign="left"; 
