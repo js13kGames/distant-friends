@@ -16,7 +16,7 @@ function startGame() {
     p.keys=k;
     p.rotation = -Math.PI / 2;
     p.blastRadius = 0;
-    p.gear = 1;
+    gear = 1;
     return p;
   }
 
@@ -90,8 +90,8 @@ typed('Enter', () => {
 
 });
 
-typed('GearDown', () => p1.gear = Math.max(--p1.gear, 0));
-typed('GearUp', () => p1.gear = Math.min(++p1.gear, 2));
+typed('GearDown', () => gear = Math.max(--gear, 0));
+typed('GearUp', () => gear = Math.min(++gear, 2));
 
 function stars50(){
   for (var i = 0; i < 50; i++) {

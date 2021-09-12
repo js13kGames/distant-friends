@@ -5,7 +5,7 @@ const turnScaleSpeed = 0.015;
 let rl = false;
 let minerals = 0, fishes = 0;
 let thrsfx = 0;
-let raceTime, podReached,hook,gxTime,hasGx;
+let raceTime, podReached,hook,gxTime,hasGx,gear;
 
 questCompleted = (type) => {
   if (type == 'getSel') {
@@ -84,7 +84,7 @@ class Ship extends GO {
     this.touch(go);
     this.boost = 0;
     this.dv = ndv;
-    this.gear = 1;
+    gear = 1;
   }
   touch(go) { // Place the shp in the surface of the go
     let reloc = this.size + go.size + 1;
@@ -98,9 +98,9 @@ class Ship extends GO {
   u(d) {
     super.u(d);
     // Affect acceleration based on player input and stuff
-    if (this.gear == 2) {
+    if (gear == 2) {
       this.cmd = 't';
-    } else if (!this.landed && this.gear == 0) {
+    } else if (!this.landed && gear == 0) {
       this.cmd = 'b';
     }
     switch (this.cmd) {
