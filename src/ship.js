@@ -253,6 +253,7 @@ class Ship extends GO {
           hint = trigger.hint || nextTrigger.planet + ", " + nextTrigger.city;
           triggers[nextTrigger.planet + "-" + nextTrigger.city] = nextTrigger;
           fws[trigger.friendIndex] = planets.find(p=>p.name==nextTrigger.planet);
+          if (cwi == trigger.friendIndex) currentWaypoint = fws[cwi];
         } else {
           playSound(6);
           let count = 0;
