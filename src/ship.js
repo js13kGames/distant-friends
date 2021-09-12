@@ -27,7 +27,7 @@ questCompleted = (type) => {
 
 restartQuest = (type) => {
   if (type == 'race') {
-    raceTime = 60;
+    raceTime = 80;
     currentWaypoint = fws[1] = junoPod;
     cwi = 1;
     junoPod.reset();
