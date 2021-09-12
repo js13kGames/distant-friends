@@ -2,7 +2,7 @@ const font = (s) => s + 'px Courier New';
 
 let W = canvas.width;
 let H = canvas.height;
-let canvasScale;
+let canvasScale,mo;
 
 (function() {
   window.addEventListener('resize', resizeCanvas, false);
@@ -14,10 +14,12 @@ let canvasScale;
       rat = iw / ih;
       ih = Math.max(Math.min(ih, ASTEROID_START), 800);
       iw = ih * rat;
+      mo = true;
     } else {
       rat = ih / iw;
       iw = Math.max(Math.min(iw, ASTEROID_START), 1200);
-      ih = iw * rat;  
+      ih = iw * rat;
+      mo = false;
     }
     canvasScale = ih / canvas.scrollHeight;
     canvas.width = iw;

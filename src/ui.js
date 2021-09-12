@@ -4,7 +4,7 @@ fws = [];
 
 function wrapText(txt) {
   wi = Math.floor((W - 270) / ctx.measureText('m').width);
-  y = H - 150;
+  y = H - (mo ? 220 : 150);
   words = txt.split(' ');
   line = '';
   while (words.length) {
@@ -89,9 +89,9 @@ function renderUI(c,d) {
     c.fillText("to "+currentWaypoint.name+": " + Math.floor(rdist(p1, currentWaypoint) - currentWaypoint.size), W / 2, H - 20);
     c.fillText("[Enter] to change", W / 2, H - 5);
     c.textAlign="left"; 
-    if (gState != 10) {
+    if (mo && gState != 10) {
       low = H - 200;
-      c.lineWidth = 3;
+      c.lineWidth = 2;
       c.strokeStyle = '#5b5e8b';
       c.beginPath();
       c.moveTo(W/3, 0);
@@ -113,9 +113,9 @@ function renderUI(c,d) {
   if (gState == 10) {
     c.fillStyle = "#000";
     c.globalAlpha = 0.5;
-    c.fillRect(0, H - 180, W, 125);
+    c.fillRect(0, H - (mo ? 250 : 180), W, (mo ? 195 : 125));
     c.globalAlpha = 1;
-    Renderer.renderShapes(c, conversationApp, 150, H - 120, 2, 1, -Math.PI / 2, 49, 49, undefined, true);
+    Renderer.renderShapes(c, conversationApp, 150, H - (mo ? 190 : 120), 2, 1, -Math.PI / 2, 49, 49, undefined, true);
     c.font = font(24);
     c.fillStyle= "#FFF";
     c.textAlign="left"; 
