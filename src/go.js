@@ -270,6 +270,7 @@ class Mineral extends GO {
   }
   collide() {
     minerals++;
+    playSound(10);
     this.destroy();
   }
 }
