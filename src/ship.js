@@ -3,9 +3,8 @@ const rotSpeed = 3;
 const maxTurnScale = 0.2;
 const turnScaleSpeed = 0.015;
 let rl = false;
-let minerals = 0, fishes = 0;
-let thrsfx = 0;
-let raceTime, podReached,hook,gxTime,hasGx,gear;
+let minerals = fishes = thrsfx = 0;
+let raceTime, podReached,hook,gxTime,hasGx,gear,rbeep;
 
 questCompleted = (type) => {
   if (type == 'getSel') {
@@ -109,6 +108,7 @@ class Ship extends GO {
           playSound(1);
         }
         this.av = 0;
+        rbeep=1;
         break;
       case 't':
         var PY = 2000;
@@ -119,7 +119,7 @@ class Ship extends GO {
           playSound(0);
           thrsfx = 0;
         }
-        
+        rbeep=1;
         this.av += PY * d;
         this.landed = false;
         if (this.av > 1000) { // max thrust
@@ -128,6 +128,11 @@ class Ship extends GO {
         break;
       case 'b':
         this.av -= 200 * d;
+        rbeep -= d;
+        if (rbeep < 0) {
+          playSound(9);
+          rbeep = 1;
+        }
         break;
     }
     if (this.boost) {
