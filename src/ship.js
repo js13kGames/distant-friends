@@ -84,6 +84,7 @@ class Ship extends GO {
     this.boost = 0;
     this.dv = ndv;
     gear = 1;
+    playSound(3);
   }
   touch(go) { // Place the shp in the surface of the go
     let reloc = this.size + go.size + 1;
