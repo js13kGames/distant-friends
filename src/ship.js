@@ -8,7 +8,7 @@ let raceTime, podReached,hook,gxTime,hasGx,gear,rbeep;
 
 questCompleted = (type) => {
   if (type == 'getSel') {
-    if (minerals > 10) {
+    if (minerals >= 10) {
       minerals -= 10;
       return true;
     }
