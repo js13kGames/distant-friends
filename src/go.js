@@ -376,6 +376,9 @@ class Lake extends GO {
 
   spawnFish() {
     theFish = new Fish(hook.x + rand.range(-200,200), hook.y + rand.range(-200,200), FC[rand.range(0,4)]);
+    if (fishes == 0) {
+      contextHint("Pull the rod to lure and catch the fish.");
+    }
     if (fishes >= 3 && !hasGx) {
       theFish.gx = true;
       theFish.scale = 2;
@@ -436,6 +439,7 @@ class GXPod extends GO {
       gxTime = 90;
       this.rotSpeed = 5;
       playSound(6);
+      contextHint("Cast the fishing rod into the space cloud.");
     }
   }
   reset () {

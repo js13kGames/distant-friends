@@ -109,7 +109,7 @@ function renderUI(c,d) {
         c.fillText("[Back]", W - 60, low + 20);
       } else {
         c.textAlign="left"; 
-        c.fillText("[Arrows, Spacebar]", 60, H - 30);
+        c.fillText("[Arrow Keys, Spacebar]", 60, H - 30);
       }
     }
     // DEBUG
