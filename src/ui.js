@@ -41,7 +41,7 @@ function renderUI(c,d) {
     c.fillStyle= "#ffffff";
     
     c.fillText(ve()+ " to start",W/2,350);
-    c.fillText("by Slashie and QuietGecko", W/2, H - 50);
+    c.fillText("by Slashie, Mapedorr and QuietGecko", W/2, H - 50);
     c.fillText("js13k21", W/2,H - 30);
   } else if (gState == 2 || gState == 3 || gState == 10) {
     c.font = font(16);
@@ -109,7 +109,7 @@ function renderUI(c,d) {
         c.fillText("[Back]", W - 60, low + 20);
       } else {
         c.textAlign="left"; 
-        c.fillText("[Arrows, Spacebar]", 60, H - 30);
+        c.fillText("[Arrow Keys, Spacebar]", 60, H - 30);
       }
     }
     // DEBUG
