@@ -1,6 +1,6 @@
 # JS13K 2021 - Distant Friends
 
-An entry for js13kgames 2021
+An entry for js13kgames 2021.
 
 It has been a long time since you last saw your friends. You board your rocket and fly back into Ceres... will you be able to gather the gang back together?
 
@@ -9,6 +9,8 @@ Race across the galaxy, become an asteroid miner, and fish legendary creatures f
 Desktop: Use the arrow keys to control the ship, space to fire rockets, and Enter to change waypoint.
 
 Mobile: Tap on the screen areas to control the ship, fire rockets, and change waypoint.
+
+Check the postmortem and devlog https://blog.slashie.net/2021/09/21/distant-friends-js13k-2021/
 
 ## Play online
 * Official Jam page: https://js13kgames.com/entries/distant-friends
