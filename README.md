@@ -1,4 +1,4 @@
-# JS13K 2021 - Distant Friends - Slashie + QuietGecko + Mapedorr
+# JS13K 2021 - Distant Friends
 
 An entry for js13kgames 2021
 
