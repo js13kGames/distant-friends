@@ -121,7 +121,7 @@ function createPlanet (planetData) {
   t.x = planetData[1];
   t.y = planetData[2];
   t.size = planetData[3];
-  t.visibleSize = t.size - 72;
+  t.visibleSize = t.size - 33 * SHIP_SCALE;
   var angle = seeded() * (2 * Math.PI);
   t.gax = Math.cos(angle) * t.size;
   t.gay = Math.sin(angle) * t.size;
@@ -232,7 +232,7 @@ class RocketParticle extends GO {
   constructor (x, y) {
     super(null, [layers[1]]);
     this.x = x; this.y = y;
-    this.radius = rand.range(15, 20);
+    this.radius = rand.range(7, 10) * SHIP_SCALE;
     this.alpha = 1;
     setTimeout(() => {
       this.destroy();

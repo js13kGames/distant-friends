@@ -71,9 +71,10 @@ class Ship extends GO {
       c.stroke();
     }
     if (this.blastRadius > 0) {
-      const noozleX = this.x - Math.cos(this.rotation) * 75;
-      const noozleY = this.y - Math.sin(this.rotation) * 75;
-      Renderer.renderCircle(c, Math.max(1, this.blastRadius + rand.range(-5, 5)), flameColor(), rand.range(0.5, 2), flameColor(), noozleX, noozleY, 1, 0, 0, false, mainCamera);
+      const noozleX = this.x - Math.cos(this.rotation) * 35 * this.scale;
+      const noozleY = this.y - Math.sin(this.rotation) * 35 * this.scale;
+      const blastCircleRadius = Math.max(1, this.blastRadius + rand.range(-5, 5)) * this.scale * 0.5;
+      Renderer.renderCircle(c, blastCircleRadius, flameColor(), rand.range(0.5, 2), flameColor(), noozleX, noozleY, 1, 0, 0, false, mainCamera);
     }
     Renderer.renderShapes(c, SHAPES.ship, this.x, this.y, this.scale, 1 + this.turnScale, this.rotation, 50, 50);
     Renderer.renderShapes(c, SHAPES.gato, this.x, this.y, this.scale * 0.3, 1, this.rotation, 50, 30);
@@ -146,9 +147,12 @@ class Ship extends GO {
       this.blastRadius += d * 80; 
       this.blastRadius = Math.min(30, this.blastRadius);
       if (this.blastRadius > 20) {
-        const noozleX = this.x + Math.cos(this.rotation) * -70;
-        const noozleY = this.y + Math.sin(this.rotation) * -70;
-        new RocketParticle(noozleX - this._dx * 4 * d, noozleY - this._dy * 4 * d);
+        const noozleX = this.x + Math.cos(this.rotation) * -35 * this.scale;
+        const noozleY = this.y + Math.sin(this.rotation) * -35 * this.scale;
+        new RocketParticle(
+          noozleX - this._dx * 2 * d * this.scale,
+          noozleY - this._dy * 2 * d * this.scale
+        );
       } else {
         thrsfx += d * this.av;
       }
@@ -221,15 +225,15 @@ class Ship extends GO {
     this.fireBlocked = true;
     setTimeout(() => this.fireBlocked = false, 300);
     if (!gxTime) {
-      const offset = (rl ? 1 : -1) * 50;
+      const offset = (rl ? 1 : -1) * 25 * SHIP_SCALE;
       rl = !rl;
       let noozleX = this.x + Math.sin(this.rotation) * offset;
       let noozleY = this.y - Math.cos(this.rotation) * offset;
-      noozleX = noozleX + Math.cos(this.rotation) * 15;
-      noozleY = noozleY + Math.sin(this.rotation) * 15;
+      noozleX = noozleX + Math.cos(this.rotation) * 8 * SHIP_SCALE;
+      noozleY = noozleY + Math.sin(this.rotation) * 8 * SHIP_SCALE;
 
       this.dv -= 10;
-      new Rocket(noozleX, noozleY, this.rotation + (rl ? -1 : 1) * (Math.PI / 30));
+      new Rocket(noozleX, noozleY, this.rotation + (rl ? -1 : 1) * (Math.PI / 45 ));
     } else {
       if (hook)
         hook.pull();
@@ -306,9 +310,9 @@ class Rocket extends GO {
       this.av = 800;
     }, rand.range(400, 500));
     this.dv = -100;
-    this.size = 40;
+    this.size = SHIP_SCALE * 20;
     this.hits = 'a'; // Asteroid
-    this.scale = 1;
+    this.scale = SHIP_SCALE / 2;
     setTimeout(()=>this.explode(), rand.range(3100, 3300));
   }
   explode() {

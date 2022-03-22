@@ -1,6 +1,7 @@
 // --- Initialization
 let asteroids = 0;
 const triggers = {};
+const SHIP_SCALE = 1;
 var p1;
 let currentWaypoint, cwi, startTime, completeTime;
 let planets,ponds,theFish;
@@ -12,7 +13,7 @@ function startGame() {
     p.x = x;
     p.y = H - 20;
     p.size = 8;
-    p.scale = 2;
+    p.scale = SHIP_SCALE;
     p.keys=k;
     p.rotation = -Math.PI / 2;
     p.blastRadius = 0;
