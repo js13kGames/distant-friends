@@ -61,7 +61,7 @@ function startGame() {
       ve()+ " to change the waypoint for the compass at the bottom",
       "Let's fly into Ceres and land into a city!"
     ]);
-    contextHint('Land on a city in Ceres');
+    contextHint('Land on a city in Ceres above.');
     gState = 2;
   }, 1);
 }
