@@ -292,6 +292,9 @@ class Pod extends GO {
   }
 }
 
+class EmptyPod extends GO {
+}
+
 class Booster extends GO {
   constructor (x, y) {
     super('booster', [layers[1]]);

@@ -31,6 +31,10 @@ restartQuest = (type) => {
     cwi = 1;
     junoPod.reset();
     contextHint("Reach the pinwheel and return.");
+  } else if (type === 'getSel') {
+    currentWaypoint = fws[0] = capeSantosField;
+    cwi = 0;
+    contextHint("Mine 10 selenium, using your ship's rockets, and return.");
   }
 }
 

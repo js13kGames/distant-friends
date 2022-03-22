@@ -9,11 +9,32 @@ function gen () {
   gxPod.name = 'Galaxian Pinwheel';
   gxPod.x = planets[2].x; gxPod.y = planets[2].y + 3000; gxPod.size = 30; gxPod.hits = 'p'; gxPod.scale = 1; gxPod.rotSpeed = 0;
 
+  capeSantosField = new EmptyPod('blank', [layers[1]]);
+  capeSantosField.name = 'Los Santos Field';
+  capeSantosField.x = planets[1].x + 3000;
+  capeSantosField.y = planets[1].y + 3000;
+  capeSantosField.size = 30;
+  capeSantosField.scale = 1;
+
+
   ponds = [];
   ponds.push(new Lake(gxPod.x, gxPod.y + 500));
 
   // Race track between Ceres and Juno
   raceTrack(planets[0], planets[2], 1);
+
+  seleniumAsteroidField();
+}
+
+function seleniumAsteroidField() {
+  for (let i = 0; i < ASTEROID_RINGS * ASTEROIDS_PER_RING; i++) {
+    const distance = rand.range(-1000, 1000);
+    const aDirection = rand.range(0, 2 * Math.PI);
+    const x = capeSantosField.x + distance * Math.cos(aDirection);
+    const y = capeSantosField.y + distance * Math.sin(aDirection);
+    new Asteroid(x, y, rand.range(1, 3), true);
+    asteroids++;
+  }
 }
 
 function raceTrack(p1, p2, diff) {

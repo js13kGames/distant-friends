@@ -52,7 +52,7 @@ const FRIENDS = [
         city: 'Arkadia',
         person: 'fox',
         sequence: [
-          "I heard you are looking for Kori. He used to mine the nearby Selenium fields... until he got tired of it.",
+          "I heard you are looking for Kori. He used to mine the Selenium fields near Cape Santos... until he got tired of it.",
           "I'm almost out of Selenium. If you bring me 10 orbs I'll tell you where I think he went."
         ],
         quest: 'getSel',

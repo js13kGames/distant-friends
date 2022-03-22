@@ -114,11 +114,13 @@ function victory() {
   completeTime = Math.floor((Date.now() - startTime) / 10)/100;
 }
 
+/*
+Dynamic asteroid field generation disabled due to lack of control, performance issues and little gameplay contribution.
 setInterval (() => {
   if (gState != 2) return;
   if (p1.isCruising() && !hook && rand.b(30))
     asteroidField(p1.rotation);
-}, 2000);
+}, 2000); */
 
 
 function asteroidField(direction) {
