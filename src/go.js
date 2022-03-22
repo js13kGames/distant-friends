@@ -183,7 +183,8 @@ class Planet extends GO {
           p.landOnCity(this, city);
         }
       } else {
-        contextHint("Use the reverse thrusters to land.");
+        const reverseInstruction = mo ? '[Back] button' : 'Down Arrow';
+        contextHint(`Rotate and use the reverse thrusters (${reverseInstruction}) to land.`);
         p.crash(this);
       }
     }
