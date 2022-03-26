@@ -74,7 +74,7 @@ typed('Enter', () => {
       title()
     }
   } else if (gState == 1) {
-    zzfxX=new(top.AudioContext||webkitAudioContext);
+    zzfxX=new(window.AudioContext||webkitAudioContext);
     playMusic(1);
     playSound(4);
     startGame();
