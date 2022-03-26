@@ -65,6 +65,9 @@ function renderUI(c,d) {
     // Stats
     if (p1.won) {
       c.fillText("Game Completed: " + completeTime,W - 30, 30);
+    } else {
+      const runTime = Math.floor((Date.now() - startTime) / 1000);
+      c.fillText("Game Time: " + runTime, W - 30, 30);
     }
 
     /* FPS
