@@ -23,6 +23,10 @@ function gen () {
   // Race track between Ceres and Juno
   raceTrack(planets[0], planets[2], 1);
 
+  boosterTrack(planets[1], planets[4]);
+  boosterTrack(planets[2], planets[4]);
+  boosterTrack(planets[2], planets[3]);
+
   seleniumAsteroidField();
 }
 
@@ -56,6 +60,28 @@ function raceTrack(p1, p2, diff) {
         new Booster(x, y);
       } else { 
         new Asteroid(x,y,rand.range(1, 3), true);
+      }
+    }
+  }
+}
+
+function boosterTrack(p1, p2) {
+  point = {x: p1.x, y: p1.y};
+  angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+  point.x = point.x + Math.cos(angle) * (p1.size + 1000);
+  point.y = point.y + Math.sin(angle) * (p1.size + 1000);
+  j = 0;
+  while (dist(point, p2) > p2.size + 1000) {
+    j++;
+    point.x = point.x + Math.cos(angle) * 1200;
+    point.y = point.y + Math.sin(angle) * 1200;
+    for (i = 0; i < 10; i++) {
+      x = point.x + Math.cos(angle + Math.PI / 2) * (i+1-5) * 300;
+      y = point.y + Math.sin(angle + Math.PI / 2) * (i+1-5) * 300;
+      x+= rands.range(-200, 200);
+      y+= rands.range(-200, 200);
+      if(rands.int(100) < 10) {
+        new Booster(x, y);
       }
     }
   }
