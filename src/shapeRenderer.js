@@ -13,7 +13,7 @@ const Renderer = {
       if (!camera) {
         camera = mainCamera;
       }
-      c.lineCap = "round"; // TODO: Check how this affects performance?
+      //c.lineCap = "round"; // TODO: Check how this affects performance?
 
       shapes.forEach(sh => {
         if (sh[0] == "C") {
