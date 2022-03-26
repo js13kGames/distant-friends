@@ -1,5 +1,5 @@
 friendNames = ['Kori', 'Ponchi', 'Patty'];
-friendHints = ['Creta', 'Cape Santos', 'Los Pinos'];
+friendHints = ['Creta, Ceres', 'Cape Santos, Ceres', 'Los Pinos, Ceres'];
 fws = [];
 
 const ve = () => mo ? 'Tap' : 'Enter'; 
