@@ -12,7 +12,11 @@ Mobile: Tap on the screen areas to control the ship, fire rockets, and change wa
 
 Check the postmortem and devlog https://blog.slashie.net/2021/09/21/distant-friends-js13k-2021/
 
+## Post jam fixes
+1. https://blog.slashie.net/2022/03/26/distant-friends-on-itch-io-with-improvements/
+
 ## Play online
+* itch.io (latest version): https://slash.itch.io/distant-friends
 * Official Jam page: https://js13kgames.com/entries/distant-friends
 * Slashie.net: https://slashie.net/distantFriends
 
