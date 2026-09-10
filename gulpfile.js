@@ -78,7 +78,7 @@ gulp.task('build_source', ['concat'], function() {
     .on('error', browserifyError)
     .pipe(source('b.js'))
     .pipe(buffer())
-    .pipe(gulpif(prod, uglify().on('error', function(e){
+    .pipe(gulpif(prod, uglify({compress: {passes: 5, unsafe: true, unsafe_math: true, pure_getters: true}}).on('error', function(e){
             console.log(e);
          })))
     .pipe(gulp.dest('build'));

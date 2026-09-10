@@ -67,26 +67,31 @@ function startGame() {
 }
 
 typed('Enter', () => {
-  if (gState == 0) {
-    if (musicLoaded) {
-      // zzfxX - the common audio context
+  switch (gState) {
+    case 0:
+      if (musicLoaded) {
+        // zzfxX - the common audio context
+        zzfxX=new(window.AudioContext||webkitAudioContext);
+        title()
+      }
+      break;
+    case 1:
       zzfxX=new(window.AudioContext||webkitAudioContext);
-      title()
-    }
-  } else if (gState == 1) {
-    zzfxX=new(window.AudioContext||webkitAudioContext);
-    playMusic(1);
-    playSound(4);
-    startGame();
-    gState = 2;
-  } else if (gState == 2) {
-    cwi++;
-    if (cwi >= fws.length) {
-      cwi = 0;
-    }
-    currentWaypoint = fws[cwi];
-  } else if (gState == 10) {
-    conversationNext();
+      playMusic(1);
+      playSound(4);
+      startGame();
+      gState = 2;
+      break;
+    case 2:
+      cwi++;
+      if (cwi >= fws.length) {
+        cwi = 0;
+      }
+      currentWaypoint = fws[cwi];
+      break;
+    case 10:
+      conversationNext();
+      break;
   }
 
 });
