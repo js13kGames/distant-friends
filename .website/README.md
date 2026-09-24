@@ -1,4 +1,7 @@
 ---
+genres:
+  - adventure
+  - simulation
 post: https://blog.slashie.net/2021/09/21/distant-friends-js13k-2021
 # See github.com/js13kGames/hello-world for supported frontmatter
 ---
